@@ -1,16 +1,20 @@
+import Categories from "./Home/Categories"
+import FeaturedProducts from "./Home/FeaturedProducts"
+import Hero from "./Home/Hero"
+import Newsletter from "./Home/Newsletter"
+import WhyChooseUs from "./Home/WhyChooseUs"
+
 function Home() {
 
   return (
 
-    <div>
-
-      <h1>
-
-        Welcome to ElectroMart
-
-      </h1>
-
-    </div>
+    <>
+<Hero/>
+<Categories/>
+<FeaturedProducts/>
+<WhyChooseUs/>
+<Newsletter/>
+    </>
 
   )
 

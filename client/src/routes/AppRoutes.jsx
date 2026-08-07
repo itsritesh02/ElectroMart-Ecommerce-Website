@@ -8,8 +8,8 @@ import AuthLayout from "../layouts/AuthLayout";
 
 // Public Pages
 import Home from "../pages/public/Home";
-import Products from "../pages/public/Products";
-import ProductDetails from "../pages/public/ProductDetails";
+// import Products from "../pages/public/Products";
+// import ProductDetails from "../pages/public/ProductDetails";
 
 // Auth Pages
 import Login from "../pages/auth/Login";
@@ -26,8 +26,10 @@ const AppRoutes = () => {
         {/* Public Routes */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/products" element={<Products />} />
-          <Route path="/product/:id" element={<ProductDetails />} />
+          <Route path="/cart" element={<h1>Cart Page</h1>} />
+          <Route path="/wishlist" element={<h1>Wishlist Page</h1>} />
+          {/* <Route pat<Route path="/cart" element={<h1>Cart Page</h1>} />h="/products" element={<Products />} /> */}
+          {/* <Route path="/product/:id" element={<ProductDetails />} /> */}
         </Route>
 
         {/* Authentication Routes */}

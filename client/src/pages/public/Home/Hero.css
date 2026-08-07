@@ -1,0 +1,105 @@
+.hero{
+
+    width:100%;
+
+    min-height:90vh;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    padding:60px 8%;
+
+    background:#f5f7fa;
+
+}
+
+.hero-content{
+
+    width:50%;
+}
+
+.hero-content h1{
+
+    font-size:55px;
+
+    margin-bottom:20px;
+
+    color:#131921;
+}
+
+.hero-content p{
+
+    font-size:18px;
+
+    line-height:30px;
+
+    color:#555;
+
+    margin-bottom:35px;
+}
+
+.hero-buttons{
+
+    display:flex;
+
+    gap:20px;
+}
+
+.shop-btn{
+
+    background:#131921;
+
+    color:white;
+
+    padding:14px 30px;
+
+    text-decoration:none;
+
+    border-radius:6px;
+
+    font-weight:bold;
+}
+
+.shop-btn:hover{
+
+    background:#f3a847;
+
+    color:black;
+}
+
+.explore-btn{
+
+    border:2px solid #131921;
+
+    color:#131921;
+
+    padding:14px 30px;
+
+    border-radius:6px;
+
+    text-decoration:none;
+
+    font-weight:bold;
+}
+
+.explore-btn:hover{
+
+    background:#131921;
+
+    color:white;
+}
+
+.hero-image{
+
+    width:45%;
+}
+
+.hero-image img{
+
+    width:100%;
+
+    border-radius:15px;
+}
