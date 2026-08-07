@@ -7,6 +7,10 @@ import Login from '../pages/auth/Login'
 
 import UserDashboard from '../pages/user/userDashboard'
 import AdminDashboard from '../pages/admin/AdminDashboard'
+
+import ProtectedRoute from './ProtectedRoute'
+import AdminRoute from "./AdminRoute";
+
 const AppRoutes = () => {
   return (
     <div>
@@ -14,8 +18,20 @@ const AppRoutes = () => {
 
         <Route path='/register' element={<Register/>} />
         <Route path='/login' element={<Login />} />
-        <Route path='/user/dashboard' element={<UserDashboard/>} />
-        <Route path='/admin/dashboard' element={<AdminDashboard/>} />
+
+
+<Route element={<ProtectedRoute/>} >
+<Route path='/user/dashboard' element={<UserDashboard />} />
+</Route>
+
+<Route element={<AdminRoute/>}>
+          <Route path='/admin/dashboard' element={<AdminDashboard />} />
+</Route>
+
+
+
+
+        
       </Routes>
     </div>
   )
