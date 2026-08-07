@@ -1,19 +1,19 @@
-import Categories from "./Home/Categories"
-import FeaturedProducts from "./Home/FeaturedProducts"
-import Hero from "./Home/Hero"
-import Newsletter from "./Home/Newsletter"
-import WhyChooseUs from "./Home/WhyChooseUs"
+import Categories from "../../components/Home/Categories"
+import FeaturedProducts from "../../components/Home/FeaturedProducts"
+import Hero from "../../components/Home/Hero"
+import Newsletter from "../../components/Home/Newsletter"
+import WhyChooseUs from "../../components/Home/WhyChooseUs"
 
 function Home() {
 
   return (
 
     <>
-<Hero/>
-<Categories/>
-<FeaturedProducts/>
-<WhyChooseUs/>
-<Newsletter/>
+      <Hero />
+      <Categories />
+      <FeaturedProducts />
+      <WhyChooseUs />
+      <Newsletter />
     </>
 
   )
