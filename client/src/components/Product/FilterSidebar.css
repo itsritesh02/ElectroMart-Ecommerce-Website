@@ -1,0 +1,29 @@
+.filter-sidebar{
+
+    background:white;
+
+    padding:20px;
+
+    border-radius:10px;
+
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.filter-group{
+
+    margin-top:25px;
+}
+
+.filter-group h4{
+
+    margin-bottom:10px;
+}
+
+.filter-group label{
+
+    display:block;
+
+    margin-bottom:10px;
+
+    cursor:pointer;
+}

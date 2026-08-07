@@ -1,4 +1,4 @@
-import ProductCard from "../HomeProduct/ProductCard";
+import ProductCard from "../ProductCard/ProductCard";
 import "./FeaturedProducts.css";
 
 

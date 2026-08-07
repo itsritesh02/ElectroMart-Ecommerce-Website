@@ -14,6 +14,7 @@ import Home from "../pages/public/Home";
 // Auth Pages
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
+import Product from '../pages/public/Product';
 
 const AppRoutes = () => {
   return (
@@ -28,7 +29,8 @@ const AppRoutes = () => {
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<h1>Cart Page</h1>} />
           <Route path="/wishlist" element={<h1>Wishlist Page</h1>} />
-          {/* <Route pat<Route path="/cart" element={<h1>Cart Page</h1>} />h="/products" element={<Products />} /> */}
+          <Route  path="/cart" element={<h1>Cart Page</h1>} />
+          <Route path='products' element={<Product/>}/>
           {/* <Route path="/product/:id" element={<ProductDetails />} /> */}
         </Route>
 
