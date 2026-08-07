@@ -1,13 +1,25 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slice/authSlice";
+import { useNavigate } from "react-router-dom";
 
 function UserDashboard() {
   const { user } = useSelector((state) => state.auth);
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const handlelogout=()=>{
+    dispatch(logout());
+    navigate("/login");
+  }
+
 
   return (
     <div>
       <h1>User Dashboard</h1>
 
       <h2>Welcome {user?.name}</h2>
+      <button onClick={handlelogout}>Logout</button>
     </div>
   );
 }
