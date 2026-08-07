@@ -1,0 +1,29 @@
+.navbar{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+padding:20px 50px;
+
+background:#111;
+
+}
+
+.navbar h2{
+
+color:white;
+
+}
+
+.navbar a{
+
+color:white;
+
+text-decoration:none;
+
+margin-left:20px;
+
+}

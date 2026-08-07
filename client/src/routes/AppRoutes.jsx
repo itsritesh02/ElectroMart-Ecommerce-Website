@@ -2,34 +2,39 @@
 import { Routes, Route } from 'react-router-dom'
 
  
-import Register from '../pages/auth/Register'
-import Login from '../pages/auth/Login'
+// Layouts
+import MainLayout from "../layouts/MainLayout";
+import AuthLayout from "../layouts/AuthLayout";
 
-import UserDashboard from '../pages/user/userDashboard'
-import AdminDashboard from '../pages/admin/AdminDashboard'
+// Public Pages
+import Home from "../pages/public/Home";
+import Products from "../pages/public/Products";
+import ProductDetails from "../pages/public/ProductDetails";
 
-import ProtectedRoute from './ProtectedRoute'
-import AdminRoute from "./AdminRoute";
+// Auth Pages
+import Login from "../pages/auth/Login";
+import Register from "../pages/auth/Register";
 
 const AppRoutes = () => {
   return (
     <div>
+
+
+
       <Routes>
 
-        <Route path='/register' element={<Register/>} />
-        <Route path='/login' element={<Login />} />
+        {/* Public Routes */}
+        <Route element={<MainLayout />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/products" element={<Products />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+        </Route>
 
-
-<Route element={<ProtectedRoute/>} >
-<Route path='/user/dashboard' element={<UserDashboard />} />
-</Route>
-
-<Route element={<AdminRoute/>}>
-          <Route path='/admin/dashboard' element={<AdminDashboard />} />
-</Route>
-
-
-
+        {/* Authentication Routes */}
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+        </Route>
 
         
       </Routes>
