@@ -1,81 +1,225 @@
-import { Link } from "react-router-dom";
 import {
-  FaSearch,
   FaShoppingCart,
   FaHeart,
-  FaUser
+  FaSearch,
+  FaUser,
 } from "react-icons/fa";
-import { useSelector } from "react-redux";
+
+import { Link, useNavigate } from "react-router-dom";
+
+import { useSelector, useDispatch } from "react-redux";
+
+import { logout } from "../../redux/slice/authSlice";
 
 import "./Navbar.css";
 
+
 function Navbar() {
+
+  // Redux se auth data lena
+  const { user, isAuthenticated } = useSelector(
+    (state) => state.auth
+  );
+
+
   // Redux se cart items lena
   const cartItems = useSelector(
     (state) => state.cart.items
   );
 
-  // Total quantity calculate karna
+
+  // Redux se wishlist items lena
+  const wishlistItems = useSelector(
+    (state) => state.wishlist.items
+  );
+
+
+  // Redux action ke liye
+  const dispatch = useDispatch();
+
+
+  // Page change karne ke liye
+  const navigate = useNavigate();
+
+
+  // Cart total quantity
   const cartCount = cartItems.reduce(
-    (total, item) => total + item.quantity,
+    (total, item) => {
+      return total + item.quantity;
+    },
     0
   );
 
+
+  // Wishlist total products
+  const wishlistCount = wishlistItems.length;
+
+
+  // Logout function
+  const handleLogout = () => {
+
+    dispatch(logout());
+
+    navigate("/login");
+
+  };
+
+
   return (
-    <header className="navbar">
+    <nav className="navbar">
 
-      {/* Logo */}
-      <div className="logo">
-        <Link to="/">ElectroMart</Link>
-      </div>
 
-      {/* Search */}
+      {/* =========================
+          LOGO
+      ========================== */}
+
+      <Link
+        to="/"
+        className="navbar-logo"
+      >
+        ElectroMart
+      </Link>
+
+
+      {/* =========================
+          SEARCH
+      ========================== */}
+
       <div className="search-box">
+
         <input
           type="text"
-          placeholder="Search Electronics..."
+          placeholder="Search products..."
         />
 
         <button>
           <FaSearch />
         </button>
+
       </div>
 
-      {/* Navigation */}
-      <nav className="nav-links">
 
-        <Link to="/">Home</Link>
+      {/* =========================
+          NAV LINKS
+      ========================== */}
 
-        <Link to="/products">Products</Link>
+      <div className="navbar-links">
 
-        <Link to="/wishlist" className="icon-link">
-          <FaHeart />
-          <span>Wishlist</span>
+
+        <Link to="/">
+          Home
         </Link>
 
-        <Link to="/cart" className="icon-link cart">
+
+        <Link to="/products">
+          Products
+        </Link>
+
+
+        {/* =========================
+            WISHLIST
+        ========================== */}
+
+        <Link
+          to="/wishlist"
+          className="nav-icon-link"
+        >
+
+          <FaHeart />
+
+          <span>
+            Wishlist
+          </span>
+
+          {wishlistCount > 0 && (
+            <span className="nav-count">
+              {wishlistCount}
+            </span>
+          )}
+
+        </Link>
+
+
+        {/* =========================
+            CART
+        ========================== */}
+
+        <Link
+          to="/cart"
+          className="nav-icon-link"
+        >
 
           <FaShoppingCart />
 
-          <span>Cart</span>
+          <span>
+            Cart
+          </span>
 
           {cartCount > 0 && (
-            <span className="cart-count">
+            <span className="nav-count">
               {cartCount}
             </span>
           )}
 
         </Link>
 
-        <Link to="/login" className="login-btn">
-          <FaUser />
-          Login
-        </Link>
 
-      </nav>
+        {/* =========================
+            AUTH LINKS
+        ========================== */}
 
-    </header>
+        {isAuthenticated ? (
+
+          <>
+
+            {/* Profile */}
+
+            <Link
+              to="/profile"
+              className="profile-link"
+            >
+
+              <FaUser />
+
+              <span>
+                {user?.name || "Profile"}
+              </span>
+
+            </Link>
+
+
+            {/* Logout */}
+
+            <button
+              className="logout-btn"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+
+          </>
+
+        ) : (
+
+          <>
+
+            <Link to="/login">
+              Login
+            </Link>
+
+            <Link to="/register">
+              Register
+            </Link>
+
+          </>
+
+        )}
+
+      </div>
+
+    </nav>
   );
 }
+
 
 export default Navbar;
