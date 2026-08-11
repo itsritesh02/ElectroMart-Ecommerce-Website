@@ -1,17 +1,23 @@
 import { FaShoppingCart, FaStar } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import "./ProductCard.css";
 
 function ProductCard({ product }) {
   return (
     <div className="product-card">
 
-      <img
-        src={product.image}
-        alt={product.name}
-        className="product-image"
-      />
+      <Link
+        to={`/product/${product.id}`}
+        className="product-link"
+      >
+        <img
+          src={product.image}
+          alt={product.name}
+          className="product-image"
+        />
 
-      <h3>{product.name}</h3>
+        <h3>{product.name}</h3>
+      </Link>
 
       <div className="rating">
         <FaStar />

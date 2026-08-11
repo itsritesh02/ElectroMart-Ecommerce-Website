@@ -8,17 +8,18 @@ import AuthLayout from "../layouts/AuthLayout";
 
 // Public Pages
 import Home from "../pages/public/Home";
-// import Products from "../pages/public/Products";
-// import ProductDetails from "../pages/public/ProductDetails";
+import Product from "../pages/public/Product";
+import ProductDetails from "../pages/public/ProductDetails";
 
 // Auth Pages
 import Login from "../pages/auth/Login";
 import Register from "../pages/auth/Register";
-import Product from '../pages/public/Product';
+import Cart from '../pages/user/Cart';
+
 
 const AppRoutes = () => {
   return (
-    <div>
+    
 
 
 
@@ -27,11 +28,12 @@ const AppRoutes = () => {
         {/* Public Routes */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
-          <Route path="/cart" element={<h1>Cart Page</h1>} />
+          <Route path="/cart" element={<Cart/>} />
           <Route path="/wishlist" element={<h1>Wishlist Page</h1>} />
-          <Route  path="/cart" element={<h1>Cart Page</h1>} />
-          <Route path='products' element={<Product/>}/>
-          {/* <Route path="/product/:id" element={<ProductDetails />} /> */}
+       
+          <Route path=
+          "products" element={<Product/>}/>
+          <Route path="/product/:id" element={<ProductDetails/>} />
         </Route>
 
         {/* Authentication Routes */}
@@ -42,7 +44,7 @@ const AppRoutes = () => {
 
         
       </Routes>
-    </div>
+    
   )
 }
 

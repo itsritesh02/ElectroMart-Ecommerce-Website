@@ -1,6 +1,6 @@
-import FilterSidebar from "../../components/Product/FilterSidebar"
-import ProductGrid from "../../components/Product/ProductGrid"
-import SearchBar from "../../components/Product/SearchBar"
+import FilterSidebar from "../../components/ProductPage/FilterSidebar"
+import ProductGrid from "../../components/ProductPage/ProductGrid"
+import SearchBar from "../../components/ProductPage/SearchBar"
 
 import './Product.css'
 const Product = () => {

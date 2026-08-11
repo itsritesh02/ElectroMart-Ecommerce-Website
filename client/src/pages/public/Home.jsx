@@ -1,8 +1,8 @@
-import Categories from "../../components/Home/Categories"
-import FeaturedProducts from "../../components/Home/FeaturedProducts"
-import Hero from "../../components/Home/Hero"
-import Newsletter from "../../components/Home/Newsletter"
-import WhyChooseUs from "../../components/Home/WhyChooseUs"
+import Categories from "../../components/HomePage/Categories"
+import FeaturedProducts from "../../components/HomePage/FeaturedProducts"
+import Hero from "../../components/HomePage/Hero"
+import Newsletter from "../../components/HomePage/Newsletter"
+import WhyChooseUs from "../../components/HomePage/WhyChooseUs"
 
 function Home() {
 

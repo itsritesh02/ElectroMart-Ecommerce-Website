@@ -5,10 +5,22 @@ import {
   FaHeart,
   FaUser
 } from "react-icons/fa";
+import { useSelector } from "react-redux";
 
 import "./Navbar.css";
 
 function Navbar() {
+  // Redux se cart items lena
+  const cartItems = useSelector(
+    (state) => state.cart.items
+  );
+
+  // Total quantity calculate karna
+  const cartCount = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
   return (
     <header className="navbar">
 
@@ -47,7 +59,11 @@ function Navbar() {
 
           <span>Cart</span>
 
-          <div className="count">0</div>
+          {cartCount > 0 && (
+            <span className="cart-count">
+              {cartCount}
+            </span>
+          )}
 
         </Link>
 

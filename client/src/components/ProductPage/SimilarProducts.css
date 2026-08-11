@@ -1,0 +1,9 @@
+.similar-products {
+  position: relative;
+  z-index: 1000;
+}
+
+.similar-grid {
+  position: relative;
+  z-index: 1000;
+}
