@@ -1,15 +1,16 @@
+import { Routes, Route } from "react-router-dom";
 
-import { Routes, Route } from 'react-router-dom'
 
- 
 // Layouts
 import MainLayout from "../layouts/MainLayout";
 import AuthLayout from "../layouts/AuthLayout";
+
 
 // Public Pages
 import Home from "../pages/public/Home";
 import Product from "../pages/public/Product";
 import ProductDetails from "../pages/public/ProductDetails";
+
 
 // Auth Pages
 import Login from "../pages/auth/Login";
@@ -18,72 +19,105 @@ import Register from "../pages/auth/Register";
 
 // User Pages
 import Cart from "../pages/user/Cart";
-import UserDashboard from "../pages/user/UserDashboard";
+import Wishlist from "../pages/user/Wishlist";
+import Profile from "../pages/user/Profile";
 
-// Admin Pages
-import AdminDashboard from "../pages/admin/AdminDashboard";
 
-// Route Protection
-import ProtectedRoute from "./ProtectedRoute";
-import AdminRoute from "./AdminRoute";
 const AppRoutes = () => {
+
   return (
-    
 
+    <Routes>
 
-
-      <Routes>
-
-        {/* Public Routes */}
-        <Route element={<MainLayout />}>
-          <Route path="/" element={<Home />} />
-          <Route path="products" element={<Product/>}/>
-          <Route path="/product/:id" element={<ProductDetails/>} />
-          <Route path="/cart" element={<Cart/>} />
-          <Route path="/wishlist" element={<h1>Wishlist Page</h1>} /> 
-        </Route>
 
       {/* =========================
-            USER PROTECTED ROUTES
-        ========================== */}
+          MAIN LAYOUT
+      ========================== */}
 
-      <Route element={<ProtectedRoute/>}>
+      <Route element={<MainLayout />}>
+
+
+        {/* Home */}
 
         <Route
-          path="/user/dashboard"
-          element={<UserDashboard />}
+          path="/"
+          element={<Home />}
         />
+
+
+        {/* Products */}
+
+        <Route
+          path="/products"
+          element={<Product />}
+        />
+
+
+        {/* Product Details */}
+
+        <Route
+          path="/product/:id"
+          element={<ProductDetails />}
+        />
+
+
+        {/* Cart */}
+
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
+
+
+        {/* Wishlist */}
+
+        <Route
+          path="/wishlist"
+          element={<Wishlist />}
+        />
+
+
+        {/* Profile */}
+
+        <Route
+          path="/profile"
+          element={<Profile />}
+        />
+
 
       </Route>
 
 
       {/* =========================
-            ADMIN PROTECTED ROUTES
-        ========================== */}
+          AUTH LAYOUT
+      ========================== */}
 
-      <Route element={<AdminRoute />}>
+      <Route element={<AuthLayout />}>
+
+
+        {/* Login */}
 
         <Route
-          path="/admin/dashboard"
-          element={<AdminDashboard />}
+          path="/login"
+          element={<Login />}
         />
+
+
+        {/* Register */}
+
+        <Route
+          path="/register"
+          element={<Register />}
+        />
+
 
       </Route>
 
-  
+
+    </Routes>
+
+  );
+};
 
 
-        {/* Authentication Routes */}
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
-        </Route>
-
-        
-      </Routes>
-    
-  )
-}
-
-export default AppRoutes
-
+export default AppRoutes;

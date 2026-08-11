@@ -16,18 +16,20 @@ function Cart() {
     (state) => state.cart.items
   );
 
-  // Redux action bhejne ke liye
+  // Redux actions ke liye
   const dispatch = useDispatch();
 
-  // Total price calculate karna
-  const totalPrice = cartItems.reduce(
+
+  // Subtotal
+  const subtotal = cartItems.reduce(
     (total, item) => {
       return total + item.price * item.quantity;
     },
     0
   );
 
-  // Total quantity calculate karna
+
+  // Total quantity
   const totalItems = cartItems.reduce(
     (total, item) => {
       return total + item.quantity;
@@ -35,12 +37,26 @@ function Cart() {
     0
   );
 
-  // Agar cart empty hai
+
+  // Delivery charge
+  const deliveryCharge =
+    subtotal >= 50000 ? 0 : 100;
+
+
+  // Grand total
+  const grandTotal =
+    subtotal + deliveryCharge;
+
+
+  // Empty cart
   if (cartItems.length === 0) {
+
     return (
       <div className="cart-empty">
 
-        <h1>Your Cart is Empty</h1>
+        <h1>
+          Your Cart is Empty
+        </h1>
 
         <p>
           Add some products to your cart.
@@ -48,16 +64,24 @@ function Cart() {
 
       </div>
     );
+
   }
+
 
   return (
     <div className="cart-page">
 
-      <h1>Shopping Cart</h1>
+      <h1>
+        Shopping Cart
+      </h1>
+
 
       <div className="cart-container">
 
-        {/* LEFT SIDE - PRODUCTS */}
+
+        {/* =========================
+            LEFT SIDE - PRODUCTS
+        ========================== */}
 
         <div className="cart-items">
 
@@ -77,7 +101,7 @@ function Cart() {
               />
 
 
-              {/* Product Information */}
+              {/* Product Details */}
 
               <div className="cart-details">
 
@@ -85,8 +109,18 @@ function Cart() {
                   {item.name}
                 </h2>
 
+
+                {/* Price */}
+
                 <p className="cart-price">
-                  ₹{item.price}
+                  ₹{item.price} × {item.quantity}
+                </p>
+
+
+                {/* Product Total */}
+
+                <p className="item-total">
+                  ₹{item.price * item.quantity}
                 </p>
 
 
@@ -104,9 +138,11 @@ function Cart() {
                     -
                   </button>
 
+
                   <span>
                     {item.quantity}
                   </span>
+
 
                   <button
                     onClick={() =>
@@ -143,7 +179,9 @@ function Cart() {
         </div>
 
 
-        {/* RIGHT SIDE - SUMMARY */}
+        {/* =========================
+            RIGHT SIDE - SUMMARY
+        ========================== */}
 
         <div className="cart-summary">
 
@@ -151,23 +189,89 @@ function Cart() {
             Cart Summary
           </h2>
 
-          <p>
-            Total Items: {totalItems}
-          </p>
 
-          <h2>
-            Total: ₹{totalPrice}
-          </h2>
+          {/* Total Items */}
+
+          <div className="summary-row">
+
+            <span>
+              Total Items
+            </span>
+
+            <span>
+              {totalItems}
+            </span>
+
+          </div>
 
 
-          <button className="checkout-btn">
+          {/* Subtotal */}
+
+          <div className="summary-row">
+
+            <span>
+              Subtotal
+            </span>
+
+            <span>
+              ₹{subtotal}
+            </span>
+
+          </div>
+
+
+          {/* Delivery */}
+
+          <div className="summary-row">
+
+            <span>
+              Delivery
+            </span>
+
+            <span>
+              {deliveryCharge === 0
+                ? "FREE"
+                : `₹${deliveryCharge}`
+              }
+            </span>
+
+          </div>
+
+
+          <hr />
+
+
+          {/* Grand Total */}
+
+          <div className="summary-total">
+
+            <span>
+              Grand Total
+            </span>
+
+            <strong>
+              ₹{grandTotal}
+            </strong>
+
+          </div>
+
+
+          {/* Checkout */}
+
+          <button
+            className="checkout-btn"
+          >
             Proceed To Checkout
           </button>
 
 
+          {/* Clear Cart */}
+
           <button
             className="clear-btn"
-            onClick={() => dispatch(clearCart())}
+            onClick={() =>
+              dispatch(clearCart())
+            }
           >
             Clear Cart
           </button>
