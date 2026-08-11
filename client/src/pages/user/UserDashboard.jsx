@@ -2,27 +2,56 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slice/authSlice";
 import { useNavigate } from "react-router-dom";
 
-function UserDashboard() {
-  const { user } = useSelector((state) => state.auth);
 
+function UserDashboard() {
+
+  // Redux se logged-in user lena
+  const { user } = useSelector(
+    (state) => state.auth
+  );
+
+
+  // Redux action dispatch karne ke liye
   const dispatch = useDispatch();
+
+
+  // Page navigate karne ke liye
   const navigate = useNavigate();
 
-  const handlelogout=()=>{
+
+  // Logout function
+  const handleLogout = () => {
+
     dispatch(logout());
+
     navigate("/login");
-  }
+
+  };
 
 
   return (
-    <div>
-      <h1>User Dashboard</h1>
 
-      <h2>Welcome {user?.name}</h2>
-      <button onClick={handlelogout}>Logout</button>
+    <div>
+
+      <h1>
+        User Dashboard
+      </h1>
+
+
+      <h2>
+        Welcome {user?.name}
+      </h2>
+
+
+      <button onClick={handleLogout}>
+        Logout
+      </button>
+
     </div>
+
   );
 }
+
 
 export default UserDashboard;
 

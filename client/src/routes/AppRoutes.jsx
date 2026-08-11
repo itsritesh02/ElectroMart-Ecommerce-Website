@@ -18,9 +18,21 @@ import Register from "../pages/auth/Register";
 
 
 // User Pages
+import UserDashboard from "../pages/user/UserDashboard";
 import Cart from "../pages/user/Cart";
 import Wishlist from "../pages/user/Wishlist";
 import Profile from "../pages/user/Profile";
+
+
+// Admin Pages
+import AdminDashboard from "../pages/admin/AdminDashboard";
+
+
+// Route Protection
+import ProtectedRoute from "./ProtectedRoute";
+import AdminRoute from "./AdminRoute";
+import AdminProducts from "../pages/admin/AdminProducts";
+import AddProduct from "../pages/admin/AddProduct";
 
 
 const AppRoutes = () => {
@@ -30,12 +42,11 @@ const AppRoutes = () => {
     <Routes>
 
 
-      {/* =========================
-          MAIN LAYOUT
-      ========================== */}
+      {/* =================================
+          PUBLIC ROUTES
+      ================================= */}
 
       <Route element={<MainLayout />}>
-
 
         {/* Home */}
 
@@ -60,40 +71,86 @@ const AppRoutes = () => {
           element={<ProductDetails />}
         />
 
-
-        {/* Cart */}
-
-        <Route
-          path="/cart"
-          element={<Cart />}
-        />
+      </Route>
 
 
-        {/* Wishlist */}
+      {/* =================================
+          USER PROTECTED ROUTES
+      ================================= */}
 
-        <Route
-          path="/wishlist"
-          element={<Wishlist />}
-        />
+      <Route element={<ProtectedRoute />}>
+
+        <Route element={<MainLayout />}>
+
+          {/* User Dashboard */}
+
+          <Route
+            path="/user/dashboard"
+            element={<UserDashboard />}
+          />
 
 
-        {/* Profile */}
+          {/* Cart */}
 
-        <Route
-          path="/profile"
-          element={<Profile />}
-        />
+          <Route
+            path="/cart"
+            element={<Cart />}
+          />
 
+
+          {/* Wishlist */}
+
+          <Route
+            path="/wishlist"
+            element={<Wishlist />}
+          />
+
+
+          {/* Profile */}
+
+          <Route
+            path="/profile"
+            element={<Profile />}
+          />
+
+        </Route>
 
       </Route>
 
 
-      {/* =========================
-          AUTH LAYOUT
-      ========================== */}
+      {/* =================================
+          ADMIN PROTECTED ROUTES
+      ================================= */}
+
+      <Route element={<AdminRoute />}>
+
+        <Route element={<MainLayout />}>
+
+          {/* Admin Dashboard */}
+
+          <Route
+            path="/admin/dashboard"
+            element={<AdminDashboard />}
+          />
+          <Route
+            path="/admin/products"
+            element={<AdminProducts/>}
+          />
+          <Route
+            path="/admin/products/add"
+            element={<AddProduct/>}
+          />
+
+        </Route>
+
+      </Route>
+
+
+      {/* =================================
+          AUTH ROUTES
+      ================================= */}
 
       <Route element={<AuthLayout />}>
-
 
         {/* Login */}
 
@@ -109,7 +166,6 @@ const AppRoutes = () => {
           path="/register"
           element={<Register />}
         />
-
 
       </Route>
 
