@@ -1,17 +1,152 @@
-.products-page{
-
-    width:90%;
-
-    margin:auto;
+.products-page {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  box-sizing: border-box;
 }
 
-.products-container{
 
-    display:grid;
+/* ==========================
+   SEARCH BAR
+========================== */
 
-    grid-template-columns:280px 1fr;
+.products-page > .search-bar-container {
+  margin-bottom: 30px;
+}
 
-    gap:30px;
 
-    margin:30px 0 60px;
+/* ==========================
+   PRODUCTS CONTAINER
+========================== */
+
+.products-container {
+  display: grid;
+
+  grid-template-columns: 240px 1fr;
+
+  gap: 30px;
+
+  align-items: start;
+}
+
+
+/* ==========================
+   LEFT SIDEBAR
+========================== */
+
+.products-container .left {
+  width: 100%;
+
+  position: sticky;
+  top: 20px;
+}
+
+
+/* ==========================
+   RIGHT SIDE
+========================== */
+
+.products-container .right {
+  min-width: 0;
+}
+
+.products-container .right h1 {
+  margin: 0 0 5px;
+
+  font-size: 28px;
+
+  color: #111827;
+}
+
+.products-container .right > p {
+  margin: 0 0 20px;
+
+  color: #666;
+
+  font-size: 14px;
+}
+
+
+/* ==========================
+   NO PRODUCTS
+========================== */
+
+.no-products {
+  width: 100%;
+
+  min-height: 250px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+}
+
+.no-products h2 {
+  margin: 0 0 8px;
+
+  color: #222;
+}
+
+.no-products p {
+  margin: 0;
+
+  color: #777;
+}
+
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 900px) {
+
+  .products-container {
+    grid-template-columns: 200px 1fr;
+
+    gap: 20px;
+  }
+
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 700px) {
+
+  .products-page {
+    padding: 20px 15px;
+  }
+
+
+  .products-container {
+    grid-template-columns: 1fr;
+
+    gap: 25px;
+  }
+
+
+  .products-container .left {
+    position: static;
+  }
+
+
+  .products-container .right h1 {
+    font-size: 24px;
+  }
+
 }
