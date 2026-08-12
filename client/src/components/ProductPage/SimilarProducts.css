@@ -1,9 +1,166 @@
 .similar-products {
-  position: relative;
-  z-index: 1000;
+  width: 100%;
+  max-width: 1400px;
+
+  margin: 50px auto 0;
+
+  padding: 30px 20px;
+
+  box-sizing: border-box;
 }
 
-.similar-grid {
-  position: relative;
-  z-index: 1000;
+.similar-products h2 {
+  margin-bottom: 25px;
+
+  font-size: 26px;
+
+  color: #111827;
+}
+
+
+/* ==========================
+   GRID
+========================== */
+
+.similar-products-grid {
+  display: grid;
+
+  grid-template-columns: repeat(
+    4,
+    minmax(0, 1fr)
+  );
+
+  gap: 20px;
+}
+
+
+/* ==========================
+   CARD
+========================== */
+
+.similar-product-card {
+  background: #fff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+
+  transition: 0.3s ease;
+}
+
+.similar-product-card:hover {
+  transform: translateY(-4px);
+
+  box-shadow:
+    0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+/* ==========================
+   IMAGE
+========================== */
+
+.similar-product-card img {
+  width: 100%;
+
+  height: 190px;
+
+  object-fit: contain;
+
+  background: #f5f5f5;
+}
+
+
+/* ==========================
+   INFO
+========================== */
+
+.similar-product-info {
+  padding: 15px;
+}
+
+.similar-product-info h3 {
+  margin: 0 0 7px;
+
+  font-size: 17px;
+}
+
+.similar-product-info p {
+  margin: 0 0 8px;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+.similar-product-info h4 {
+  margin: 0 0 15px;
+
+  font-size: 18px;
+}
+
+
+/* ==========================
+   BUTTON
+========================== */
+
+.similar-view-btn {
+  display: block;
+
+  width: 100%;
+
+  padding: 9px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  border-radius: 6px;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 14px;
+}
+
+.similar-view-btn:hover {
+  background: #000;
+}
+
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 900px) {
+
+  .similar-products-grid {
+    grid-template-columns: repeat(
+      2,
+      minmax(0, 1fr)
+    );
+  }
+
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 500px) {
+
+  .similar-products {
+    padding: 20px 15px;
+  }
+
+  .similar-products-grid {
+    grid-template-columns: 1fr;
+  }
+
 }

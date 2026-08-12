@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
-import { useDispatch } from "react-redux";
+import api from "../../services/api";
+
 import { addToCart } from "../../redux/slice/cartSlice";
 
 import QuantitySelector from "../../components/ProductPage/QuantitySelector";
 import SimilarProducts from "../../components/ProductPage/SimilarProducts";
-
-import api from "../../services/api";
 
 import "./ProductDetails.css";
 
@@ -19,13 +19,27 @@ function ProductDetails() {
 
   const dispatch = useDispatch();
 
+  const navigate = useNavigate();
+
+
+  // ==========================
+  // PRODUCT
+  // ==========================
+
   const [product, setProduct] = useState(null);
 
   const [loading, setLoading] = useState(true);
 
 
   // ==========================
-  // GET PRODUCT
+  // QUANTITY
+  // ==========================
+
+  const [quantity, setQuantity] = useState(1);
+
+
+  // ==========================
+  // GET SINGLE PRODUCT
   // ==========================
 
   useEffect(() => {
@@ -34,11 +48,18 @@ function ProductDetails() {
 
       try {
 
-        const res = await api.get(`/products/${id}`);
+        const res = await api.get(
+          `/products/${id}`
+        );
 
-        console.log("PRODUCT:", res.data);
+        console.log(
+          "PRODUCT:",
+          res.data
+        );
 
-        setProduct(res.data.product);
+        setProduct(
+          res.data.product
+        );
 
       } catch (error) {
 
@@ -62,12 +83,51 @@ function ProductDetails() {
 
 
   // ==========================
+  // ADD TO CART
+  // ==========================
+
+  const handleAddToCart = () => {
+
+    dispatch(
+      addToCart({
+        product,
+        quantity,
+      })
+    );
+
+    alert(
+      `${quantity} product added to cart`
+    );
+
+  };
+
+
+  // ==========================
+  // BUY NOW
+  // ==========================
+
+  const handleBuyNow = () => {
+
+    dispatch(
+      addToCart({
+        product,
+        quantity,
+      })
+    );
+
+    navigate("/cart");
+
+  };
+
+
+  // ==========================
   // LOADING
   // ==========================
 
   if (loading) {
 
     return (
+
       <div className="details-container">
 
         <h2>
@@ -75,6 +135,7 @@ function ProductDetails() {
         </h2>
 
       </div>
+
     );
 
   }
@@ -87,6 +148,7 @@ function ProductDetails() {
   if (!product) {
 
     return (
+
       <div className="details-container">
 
         <h2>
@@ -94,6 +156,7 @@ function ProductDetails() {
         </h2>
 
       </div>
+
     );
 
   }
@@ -106,7 +169,9 @@ function ProductDetails() {
       <div className="details-container">
 
 
-        {/* Product Image */}
+        {/* ==========================
+            PRODUCT IMAGE
+        ========================== */}
 
         <div className="left">
 
@@ -118,13 +183,24 @@ function ProductDetails() {
         </div>
 
 
-        {/* Product Information */}
+        {/* ==========================
+            PRODUCT INFORMATION
+        ========================== */}
 
         <div className="right">
 
           <h1>
             {product.name}
           </h1>
+
+
+          {/* Category */}
+
+          <p className="product-category">
+
+            Category: {product.category}
+
+          </p>
 
 
           {/* Rating */}
@@ -156,33 +232,53 @@ function ProductDetails() {
 
           {/* Quantity */}
 
-          <QuantitySelector />
+          <QuantitySelector
+            quantity={quantity}
+            setQuantity={setQuantity}
+          />
 
 
-          {/* Add To Cart */}
+          {/* ==========================
+              BUTTONS
+          ========================== */}
 
-          <button
-            className="cart-btn"
-            onClick={() => dispatch(addToCart(product))}
-          >
-            Add To Cart
-          </button>
+          <div className="details-buttons">
 
 
-          {/* Buy Now */}
+            {/* ADD TO CART */}
 
-          <button className="buy-btn">
-            Buy Now
-          </button>
+            <button
+              className="cart-btn"
+              onClick={handleAddToCart}
+            >
+              Add To Cart
+            </button>
+
+
+            {/* BUY NOW */}
+
+            <button
+              className="buy-btn"
+              onClick={handleBuyNow}
+            >
+              Buy Now
+            </button>
+
+
+          </div>
 
         </div>
 
       </div>
 
 
-      {/* Similar Products */}
-
-      <SimilarProducts />
+      {/* ==========================
+          SIMILAR PRODUCTS
+      ========================== */}
+      <SimilarProducts
+        category={product.category}
+        currentProductId={product._id}
+      />
 
     </>
 
