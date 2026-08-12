@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  items: [],
+  items: JSON.parse(localStorage.getItem("wishlistItems")) || [],
 };
 
 const wishlistSlice = createSlice({
@@ -17,19 +17,20 @@ const wishlistSlice = createSlice({
     addToWishlist: (state, action) => {
       const product = action.payload;
 
-      const productId = product.id || product._id;
-
-      const alreadyExists = state.items.some(
-        (item) => (item.id || item._id) === productId,
-      );
+      const alreadyExists = state.items.some((item) => item.id === product._id);
 
       if (!alreadyExists) {
         state.items.push({
-          ...product,
-
-          id: productId,
+          id: product._id,
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          category: product.category,
+          rating: product.rating,
         });
       }
+
+      localStorage.setItem("wishlistItems", JSON.stringify(state.items));
     },
 
     // ==========================
@@ -38,6 +39,8 @@ const wishlistSlice = createSlice({
 
     removeFromWishlist: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
+
+      localStorage.setItem("wishlistItems", JSON.stringify(state.items));
     },
 
     // ==========================
@@ -46,6 +49,8 @@ const wishlistSlice = createSlice({
 
     clearWishlist: (state) => {
       state.items = [];
+
+      localStorage.removeItem("wishlistItems");
     },
   },
 });

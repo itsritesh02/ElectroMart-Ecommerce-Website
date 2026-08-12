@@ -15,23 +15,58 @@ const cartSlice = createSlice({
     // ==========================
 
     addToCart: (state, action) => {
-      const { product, quantity = 1 } = action.payload;
+      const product = action.payload;
 
       const existingProduct = state.items.find(
-        (item) => item.id === product.id || item._id === product._id,
+        (item) => item.id === product._id,
       );
 
       if (existingProduct) {
-        existingProduct.quantity += quantity;
+        existingProduct.quantity += product.quantity || 1;
       } else {
         state.items.push({
-          ...product,
+          id: product._id,
 
-          quantity: quantity,
+          name: product.name,
 
-          // Cart ke liye consistent ID
-          id: product.id || product._id,
+          price: Number(product.price),
+
+          image: product.image,
+
+          category: product.category,
+
+          quantity: product.quantity || 1,
         });
+      }
+    },
+
+    // ==========================
+    // INCREASE QUANTITY
+    // ==========================
+
+    increaseQuantity: (state, action) => {
+      const item = state.items.find((item) => item.id === action.payload);
+
+      if (item) {
+        item.quantity += 1;
+      }
+    },
+
+    // ==========================
+    // DECREASE QUANTITY
+    // ==========================
+
+    decreaseQuantity: (state, action) => {
+      const item = state.items.find((item) => item.id === action.payload);
+
+      if (!item) {
+        return;
+      }
+
+      if (item.quantity > 1) {
+        item.quantity -= 1;
+      } else {
+        state.items = state.items.filter((item) => item.id !== action.payload);
       }
     },
 
@@ -44,30 +79,6 @@ const cartSlice = createSlice({
     },
 
     // ==========================
-    // INCREASE QUANTITY
-    // ==========================
-
-    increaseQuantity: (state, action) => {
-      const product = state.items.find((item) => item.id === action.payload);
-
-      if (product) {
-        product.quantity += 1;
-      }
-    },
-
-    // ==========================
-    // DECREASE QUANTITY
-    // ==========================
-
-    decreaseQuantity: (state, action) => {
-      const product = state.items.find((item) => item.id === action.payload);
-
-      if (product && product.quantity > 1) {
-        product.quantity -= 1;
-      }
-    },
-
-    // ==========================
     // CLEAR CART
     // ==========================
 
@@ -77,12 +88,20 @@ const cartSlice = createSlice({
   },
 });
 
+// ==========================
+// ACTIONS
+// ==========================
+
 export const {
   addToCart,
-  removeFromCart,
   increaseQuantity,
   decreaseQuantity,
+  removeFromCart,
   clearCart,
 } = cartSlice.actions;
+
+// ==========================
+// REDUCER
+// ==========================
 
 export default cartSlice.reducer;

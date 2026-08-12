@@ -34,6 +34,7 @@ import AdminRoute from "./AdminRoute";
 import AdminProducts from "../pages/admin/AdminProducts";
 import AddProduct from "../pages/admin/AddProduct";
 import EditProduct from "../pages/admin/EditProduct";
+import Checkout from "../pages/user/checkout";
 
 
 const AppRoutes = () => {
@@ -54,6 +55,10 @@ const AppRoutes = () => {
         <Route path="/products" element={<Product />} />
 
         <Route path="/product/:id" element={<ProductDetails />} />
+        <Route
+          path="/checkout"
+          element={<Checkout/>}
+        />
 
       </Route>
 
