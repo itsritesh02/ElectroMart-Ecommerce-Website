@@ -1,13 +1,19 @@
 import "./SearchBar.css";
 
-function SearchBar() {
+function SearchBar({ search, setSearch }) {
   return (
-    <div className="search-container">
+    <div className="search-bar-container">
 
       <input
         type="text"
-        placeholder="Search Products..."
+        placeholder="Search products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
       />
+
+      <button type="button">
+        Search
+      </button>
 
     </div>
   );

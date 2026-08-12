@@ -1,189 +1,178 @@
 .product-card {
-  background: white;
-
-  padding: 15px;
-
-  border-radius: 8px;
-
-  box-shadow:
-    0 2px 8px
-    rgba(0, 0, 0, 0.08);
-
-  transition: 0.3s;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.3s ease;
+  height: 100%;
 }
-
 
 .product-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
 }
 
 
-/* =========================
-   PRODUCT LINK
-========================= */
-
-.product-link {
-  text-decoration: none;
-
-  color: inherit;
-
-  display: block;
-}
-
-
-/* =========================
+/* ==========================
    PRODUCT IMAGE
-========================= */
+========================== */
 
-.product-image {
+.product-image-link {
+  display: block;
   width: 100%;
-
-  height: 220px;
-
-  object-fit: cover;
-
-  border-radius: 6px;
-}
-
-
-/* =========================
-   PRODUCT NAME
-========================= */
-
-.product-card h3 {
-  margin: 12px 0;
-
-  font-size: 20px;
-}
-
-
-/* =========================
-   RATING
-========================= */
-
-.rating {
-  display: flex;
-
-  align-items: center;
-
-  gap: 6px;
-
-  margin: 8px 0;
-}
-
-.rating svg {
-  color: #f5a623;
-}
-
-
-/* =========================
-   PRICE
-========================= */
-
-.product-card h2 {
-  margin: 10px 0;
-
-  font-size: 21px;
-}
-
-
-/* =========================
-   WISHLIST BUTTON
-========================= */
-
-.wishlist-btn {
-  width: 100%;
-
-  padding: 10px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 8px;
-
-  border: 1px solid #ddd;
-
-  background: white;
-
-  color: #333;
-
-  border-radius: 5px;
-
-  cursor: pointer;
-
-  font-size: 14px;
-
-  margin-bottom: 8px;
-}
-
-
-.wishlist-btn:hover {
+  height: 230px;
+  overflow: hidden;
   background: #f5f5f5;
 }
 
-
-/* Wishlist active */
-
-.wishlist-btn.active {
-  color: #e91e63;
-
-  border-color: #e91e63;
-}
-
-
-/* =========================
-   CART BUTTON
-========================= */
-
-.cart-btn {
+.product-image {
   width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: 0.3s ease;
+}
 
-  padding: 11px;
+.product-card:hover .product-image {
+  transform: scale(1.05);
+}
 
+
+/* ==========================
+   PRODUCT INFO
+========================== */
+
+.product-info {
+  padding: 18px;
+}
+
+.product-info h2 {
+  margin: 0 0 8px;
+  font-size: 18px;
+  color: #222;
+}
+
+
+/* ==========================
+   CATEGORY
+========================== */
+
+.product-category {
+  margin: 0 0 10px;
+  font-size: 14px;
+  color: #777;
+}
+
+
+/* ==========================
+   RATING
+========================== */
+
+.product-rating {
   display: flex;
-
   align-items: center;
+  gap: 6px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
 
-  justify-content: center;
+.product-rating svg {
+  color: #f59e0b;
+}
 
-  gap: 8px;
 
+/* ==========================
+   PRICE
+========================== */
+
+.product-price {
+  margin: 8px 0 16px;
+  font-size: 21px;
+  color: #111;
+}
+
+
+/* ==========================
+   BUTTONS
+========================== */
+
+.product-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+
+.view-btn,
+.cart-btn {
+  flex: 1;
   border: none;
-
-  background: #ff9900;
-
-  color: white;
-
-  border-radius: 5px;
-
+  border-radius: 7px;
+  padding: 10px 12px;
+  font-size: 14px;
   cursor: pointer;
-
-  font-weight: bold;
-
-  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+  transition: 0.2s ease;
 }
 
 
-.cart-btn:hover {
-  background: #e68a00;
+/* View Details */
+
+.view-btn {
+  background: #f1f1f1;
+  color: #222;
+}
+
+.view-btn:hover {
+  background: #e2e2e2;
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* Add To Cart */
 
-@media (max-width: 500px) {
+.product-buttons .cart-btn {
+  background: #111827;
+  color: white;
+}
 
-  .product-image {
+.product-buttons .cart-btn:hover {
+  background: #000;
+}
+
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media (max-width: 768px) {
+
+  .product-image-link {
     height: 200px;
   }
 
-  .product-card h3 {
-    font-size: 18px;
+  .product-info {
+    padding: 14px;
+  }
+
+  .product-info h2 {
+    font-size: 16px;
+  }
+
+  .product-price {
+    font-size: 19px;
+  }
+
+}
+
+
+@media (max-width: 480px) {
+
+  .product-buttons {
+    flex-direction: column;
+  }
+
+  .view-btn,
+  .cart-btn {
+    width: 100%;
   }
 
 }

@@ -1,60 +1,26 @@
-import { FaShoppingCart, FaStar, FaHeart } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { FaStar } from "react-icons/fa";
 
 import { addToCart } from "../../redux/slice/cartSlice";
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "../../redux/slice/wishlistSlice";
 
 import "./ProductCard.css";
 
 
 function ProductCard({ product }) {
 
-  // Redux dispatch
   const dispatch = useDispatch();
 
 
-  // Wishlist se products lena
-  const wishlistItems = useSelector(
-    (state) => state.wishlist.items
-  );
+  // ==========================
+  // ADD TO CART
+  // ==========================
 
-
-  // Check karna ki product wishlist me already hai ya nahi
-  const isWishlisted = wishlistItems.some(
-    (item) => item.id === product.id
-  );
-
-
-  // Wishlist button
-  const handleWishlist = () => {
-
-    if (isWishlisted) {
-
-      dispatch(
-        removeFromWishlist(product.id)
-      );
-
-    } else {
-
-      dispatch(
-        addToWishlist(product)
-      );
-
-    }
-
-  };
-
-
-  // Cart button
   const handleAddToCart = () => {
 
-    dispatch(
-      addToCart(product)
-    );
+    dispatch(addToCart(product));
+
+    alert("Product added to cart");
 
   };
 
@@ -64,13 +30,13 @@ function ProductCard({ product }) {
     <div className="product-card">
 
 
-      {/* =========================
-          PRODUCT LINK
+      {/* ==========================
+          PRODUCT IMAGE
       ========================== */}
 
       <Link
-        to={`/product/${product.id}`}
-        className="product-link"
+        to={`/product/${product._id}`}
+        className="product-image-link"
       >
 
         <img
@@ -79,80 +45,85 @@ function ProductCard({ product }) {
           className="product-image"
         />
 
-
-        <h3>
-          {product.name}
-        </h3>
-
       </Link>
 
 
-      {/* =========================
-          RATING
+      {/* ==========================
+          PRODUCT DETAILS
       ========================== */}
 
-      <div className="rating">
+      <div className="product-info">
 
-        <FaStar />
 
-        <span>
-          {product.rating}
-        </span>
+        {/* Product Name */}
+
+        <h2>
+          {product.name}
+        </h2>
+
+
+        {/* Category */}
+
+        <p className="product-category">
+          {product.category}
+        </p>
+
+
+        {/* Rating */}
+
+        <div className="product-rating">
+
+          <FaStar />
+
+          <span>
+            {product.rating || "No rating"}
+          </span>
+
+        </div>
+
+
+        {/* Price */}
+
+        <h3 className="product-price">
+          ₹{product.price}
+        </h3>
+
+
+        {/* ==========================
+            BUTTONS
+        ========================== */}
+
+        <div className="product-buttons">
+
+
+          {/* View Details */}
+
+          <Link
+            to={`/product/${product._id}`}
+            className="view-btn"
+          >
+            View Details
+          </Link>
+
+
+          {/* Add To Cart */}
+
+          <button
+            className="cart-btn"
+            onClick={handleAddToCart}
+          >
+            Add To Cart
+          </button>
+
+
+        </div>
 
       </div>
-
-
-      {/* =========================
-          PRICE
-      ========================== */}
-
-      <h2>
-        ₹ {product.price}
-      </h2>
-
-
-      {/* =========================
-          WISHLIST
-      ========================== */}
-
-      <button
-        className={
-          isWishlisted
-            ? "wishlist-btn active"
-            : "wishlist-btn"
-        }
-        onClick={handleWishlist}
-      >
-
-        <FaHeart />
-
-        {isWishlisted
-          ? "Remove Wishlist"
-          : "Add To Wishlist"
-        }
-
-      </button>
-
-
-      {/* =========================
-          CART
-      ========================== */}
-
-      <button
-        className="cart-btn"
-        onClick={handleAddToCart}
-      >
-
-        <FaShoppingCart />
-
-        Add To Cart
-
-      </button>
-
 
     </div>
 
   );
+
 }
 
 
