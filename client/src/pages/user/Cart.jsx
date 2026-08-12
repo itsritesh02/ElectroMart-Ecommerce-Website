@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-
+import { useNavigate } from "react-router-dom";
 import {
   increaseQuantity,
   decreaseQuantity,
@@ -12,6 +12,11 @@ import "./Cart.css";
 
 function Cart() {
 
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+
+
   // ==========================
   // GET CART ITEMS FROM REDUX
   // ==========================
@@ -19,13 +24,6 @@ function Cart() {
   const cartItems = useSelector(
     (state) => state.cart.items
   );
-
-
-  // ==========================
-  // DISPATCH
-  // ==========================
-
-  const dispatch = useDispatch();
 
 
   // ==========================
@@ -80,11 +78,16 @@ function Cart() {
 
   }
 
+  
 
   return (
 
     <div className="cart-page">
 
+
+      {/* ==========================
+          PAGE TITLE
+      ========================== */}
 
       <h1>
         Shopping Cart
@@ -109,7 +112,9 @@ function Cart() {
             >
 
 
-              {/* PRODUCT IMAGE */}
+              {/* ==========================
+                  PRODUCT IMAGE
+              ========================== */}
 
               <img
                 src={item.image}
@@ -118,21 +123,28 @@ function Cart() {
               />
 
 
-              {/* PRODUCT DETAILS */}
+              {/* ==========================
+                  PRODUCT DETAILS
+              ========================== */}
 
               <div className="cart-details">
+
 
                 <h2>
                   {item.name}
                 </h2>
 
 
+                {/* PRICE */}
+
                 <p className="cart-price">
                   ₹{item.price}
                 </p>
 
 
-                {/* QUANTITY */}
+                {/* ==========================
+                    QUANTITY
+                ========================== */}
 
                 <div className="quantity">
 
@@ -167,15 +179,21 @@ function Cart() {
                 </div>
 
 
-                {/* ITEM TOTAL */}
+                {/* ==========================
+                    ITEM TOTAL
+                ========================== */}
 
                 <p className="item-total">
+
                   Item Total: ₹
                   {item.price * item.quantity}
+
                 </p>
 
 
-                {/* REMOVE */}
+                {/* ==========================
+                    REMOVE
+                ========================== */}
 
                 <button
                   type="button"
@@ -188,6 +206,7 @@ function Cart() {
                 >
                   Remove
                 </button>
+
 
               </div>
 
@@ -211,6 +230,8 @@ function Cart() {
           </h2>
 
 
+          {/* TOTAL ITEMS */}
+
           <div className="summary-row">
 
             <span>
@@ -223,6 +244,8 @@ function Cart() {
 
           </div>
 
+
+          {/* TOTAL PRICE */}
 
           <div className="summary-row">
 
@@ -237,17 +260,21 @@ function Cart() {
           </div>
 
 
-          {/* CHECKOUT */}
+          {/* ==========================
+              CHECKOUT
+          ========================== */}
 
           <button
             type="button"
             className="checkout-btn"
+            onClick={() => navigate("/checkout")}
           >
             Proceed To Checkout
           </button>
 
-
-          {/* CLEAR CART */}
+          {/* ==========================
+              CLEAR CART
+          ========================== */}
 
           <button
             type="button"
@@ -261,7 +288,6 @@ function Cart() {
 
 
         </div>
-
 
       </div>
 
