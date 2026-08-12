@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   increaseQuantity,
@@ -9,50 +9,62 @@ import {
 
 import "./Cart.css";
 
+
 function Cart() {
 
-  // Redux se cart items lena
+  // ==========================
+  // GET CART ITEMS FROM REDUX
+  // ==========================
+
   const cartItems = useSelector(
     (state) => state.cart.items
   );
 
-  // Redux actions ke liye
+
+  // ==========================
+  // DISPATCH
+  // ==========================
+
   const dispatch = useDispatch();
 
 
-  // Subtotal
-  const subtotal = cartItems.reduce(
+  // ==========================
+  // TOTAL PRICE
+  // ==========================
+
+  const totalPrice = cartItems.reduce(
     (total, item) => {
+
       return total + item.price * item.quantity;
+
     },
     0
   );
 
 
-  // Total quantity
+  // ==========================
+  // TOTAL ITEMS
+  // ==========================
+
   const totalItems = cartItems.reduce(
     (total, item) => {
+
       return total + item.quantity;
+
     },
     0
   );
 
 
-  // Delivery charge
-  const deliveryCharge =
-    subtotal >= 50000 ? 0 : 100;
+  // ==========================
+  // EMPTY CART
+  // ==========================
 
-
-  // Grand total
-  const grandTotal =
-    subtotal + deliveryCharge;
-
-
-  // Empty cart
   if (cartItems.length === 0) {
 
     return (
-      <div className="cart-empty">
+
+      <div className="empty-cart">
 
         <h1>
           Your Cart is Empty
@@ -63,13 +75,16 @@ function Cart() {
         </p>
 
       </div>
+
     );
 
   }
 
 
   return (
+
     <div className="cart-page">
+
 
       <h1>
         Shopping Cart
@@ -79,11 +94,12 @@ function Cart() {
       <div className="cart-container">
 
 
-        {/* =========================
-            LEFT SIDE - PRODUCTS
+        {/* ==========================
+            LEFT SIDE
         ========================== */}
 
         <div className="cart-items">
+
 
           {cartItems.map((item) => (
 
@@ -92,7 +108,8 @@ function Cart() {
               key={item.id}
             >
 
-              {/* Product Image */}
+
+              {/* PRODUCT IMAGE */}
 
               <img
                 src={item.image}
@@ -101,7 +118,7 @@ function Cart() {
               />
 
 
-              {/* Product Details */}
+              {/* PRODUCT DETAILS */}
 
               <div className="cart-details">
 
@@ -110,25 +127,17 @@ function Cart() {
                 </h2>
 
 
-                {/* Price */}
-
                 <p className="cart-price">
-                  ₹{item.price} × {item.quantity}
+                  ₹{item.price}
                 </p>
 
 
-                {/* Product Total */}
-
-                <p className="item-total">
-                  ₹{item.price * item.quantity}
-                </p>
-
-
-                {/* Quantity */}
+                {/* QUANTITY */}
 
                 <div className="quantity">
 
                   <button
+                    type="button"
                     onClick={() =>
                       dispatch(
                         decreaseQuantity(item.id)
@@ -145,6 +154,7 @@ function Cart() {
 
 
                   <button
+                    type="button"
                     onClick={() =>
                       dispatch(
                         increaseQuantity(item.id)
@@ -157,9 +167,18 @@ function Cart() {
                 </div>
 
 
-                {/* Remove */}
+                {/* ITEM TOTAL */}
+
+                <p className="item-total">
+                  Item Total: ₹
+                  {item.price * item.quantity}
+                </p>
+
+
+                {/* REMOVE */}
 
                 <button
+                  type="button"
                   className="remove-btn"
                   onClick={() =>
                     dispatch(
@@ -176,21 +195,21 @@ function Cart() {
 
           ))}
 
+
         </div>
 
 
-        {/* =========================
-            RIGHT SIDE - SUMMARY
+        {/* ==========================
+            RIGHT SIDE
         ========================== */}
 
         <div className="cart-summary">
+
 
           <h2>
             Cart Summary
           </h2>
 
-
-          {/* Total Items */}
 
           <div className="summary-row">
 
@@ -205,69 +224,33 @@ function Cart() {
           </div>
 
 
-          {/* Subtotal */}
-
           <div className="summary-row">
 
             <span>
-              Subtotal
-            </span>
-
-            <span>
-              ₹{subtotal}
-            </span>
-
-          </div>
-
-
-          {/* Delivery */}
-
-          <div className="summary-row">
-
-            <span>
-              Delivery
-            </span>
-
-            <span>
-              {deliveryCharge === 0
-                ? "FREE"
-                : `₹${deliveryCharge}`
-              }
-            </span>
-
-          </div>
-
-
-          <hr />
-
-
-          {/* Grand Total */}
-
-          <div className="summary-total">
-
-            <span>
-              Grand Total
+              Total
             </span>
 
             <strong>
-              ₹{grandTotal}
+              ₹{totalPrice}
             </strong>
 
           </div>
 
 
-          {/* Checkout */}
+          {/* CHECKOUT */}
 
           <button
+            type="button"
             className="checkout-btn"
           >
             Proceed To Checkout
           </button>
 
 
-          {/* Clear Cart */}
+          {/* CLEAR CART */}
 
           <button
+            type="button"
             className="clear-btn"
             onClick={() =>
               dispatch(clearCart())
@@ -276,12 +259,17 @@ function Cart() {
             Clear Cart
           </button>
 
+
         </div>
+
 
       </div>
 
     </div>
+
   );
+
 }
+
 
 export default Cart;

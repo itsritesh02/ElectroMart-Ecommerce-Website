@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaHeart } from "react-icons/fa";
 
 import { addToCart } from "../../redux/slice/cartSlice";
+import { addToWishlist } from "../../redux/slice/wishlistSlice";
 
 import "./ProductCard.css";
 
@@ -18,9 +19,29 @@ function ProductCard({ product }) {
 
   const handleAddToCart = () => {
 
-    dispatch(addToCart(product));
+    dispatch(
+      addToCart({
+        product,
+        quantity: 1,
+      })
+    );
 
     alert("Product added to cart");
+
+  };
+
+
+  // ==========================
+  // ADD TO WISHLIST
+  // ==========================
+
+  const handleAddToWishlist = () => {
+
+    dispatch(
+      addToWishlist(product)
+    );
+
+    alert("Product added to wishlist");
 
   };
 
@@ -109,6 +130,7 @@ function ProductCard({ product }) {
           {/* Add To Cart */}
 
           <button
+            type="button"
             className="cart-btn"
             onClick={handleAddToCart}
           >
@@ -117,6 +139,24 @@ function ProductCard({ product }) {
 
 
         </div>
+
+
+        {/* ==========================
+            WISHLIST
+        ========================== */}
+
+        <button
+          type="button"
+          className="wishlist-card-btn"
+          onClick={handleAddToWishlist}
+        >
+
+          <FaHeart />
+
+          Add To Wishlist
+
+        </button>
+
 
       </div>
 

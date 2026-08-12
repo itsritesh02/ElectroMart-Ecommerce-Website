@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaStar } from "react-icons/fa";
+import { FaStar, FaHeart } from "react-icons/fa";
 
 import api from "../../services/api";
 
 import { addToCart } from "../../redux/slice/cartSlice";
+import { addToWishlist } from "../../redux/slice/wishlistSlice";
 
 import QuantitySelector from "../../components/ProductPage/QuantitySelector";
 import SimilarProducts from "../../components/ProductPage/SimilarProducts";
@@ -97,6 +98,23 @@ function ProductDetails() {
 
     alert(
       `${quantity} product added to cart`
+    );
+
+  };
+
+
+  // ==========================
+  // ADD TO WISHLIST
+  // ==========================
+
+  const handleAddToWishlist = () => {
+
+    dispatch(
+      addToWishlist(product)
+    );
+
+    alert(
+      "Product added to wishlist"
     );
 
   };
@@ -197,9 +215,7 @@ function ProductDetails() {
           {/* Category */}
 
           <p className="product-category">
-
             Category: {product.category}
-
           </p>
 
 
@@ -267,6 +283,23 @@ function ProductDetails() {
 
           </div>
 
+
+          {/* ==========================
+              WISHLIST
+          ========================== */}
+
+          <button
+            className="wishlist-btn"
+            onClick={handleAddToWishlist}
+          >
+
+            <FaHeart />
+
+            Add To Wishlist
+
+          </button>
+
+
         </div>
 
       </div>
@@ -275,6 +308,7 @@ function ProductDetails() {
       {/* ==========================
           SIMILAR PRODUCTS
       ========================== */}
+
       <SimilarProducts
         category={product.category}
         currentProductId={product._id}

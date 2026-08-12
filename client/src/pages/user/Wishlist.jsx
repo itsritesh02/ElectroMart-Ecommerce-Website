@@ -1,34 +1,60 @@
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   removeFromWishlist,
   clearWishlist,
 } from "../../redux/slice/wishlistSlice";
 
-import {
-  addToCart,
-} from "../../redux/slice/cartSlice";
+import { addToCart } from "../../redux/slice/cartSlice";
 
 import "./Wishlist.css";
 
 
 function Wishlist() {
 
-  // Redux se wishlist items lena
+  // ==========================
+  // GET WISHLIST FROM REDUX
+  // ==========================
+
   const wishlistItems = useSelector(
     (state) => state.wishlist.items
   );
 
 
-  // Redux actions ke liye
+  // ==========================
+  // DISPATCH
+  // ==========================
+
   const dispatch = useDispatch();
 
 
-  // Wishlist empty
+  // ==========================
+  // ADD TO CART
+  // ==========================
+
+  const handleAddToCart = (product) => {
+
+    dispatch(
+      addToCart({
+        product,
+        quantity: 1,
+      })
+    );
+
+    alert("Product added to cart");
+
+  };
+
+
+  // ==========================
+  // EMPTY WISHLIST
+  // ==========================
+
   if (wishlistItems.length === 0) {
 
     return (
-      <div className="wishlist-empty">
+
+      <div className="empty-wishlist">
 
         <h1>
           Your Wishlist is Empty
@@ -39,19 +65,36 @@ function Wishlist() {
         </p>
 
       </div>
+
     );
 
   }
 
 
   return (
+
     <div className="wishlist-page">
+
+
+      {/* ==========================
+          HEADER
+      ========================== */}
 
       <div className="wishlist-header">
 
-        <h1>
-          My Wishlist
-        </h1>
+        <div>
+
+          <h1>
+            My Wishlist
+          </h1>
+
+          <p>
+            {wishlistItems.length} product
+            {wishlistItems.length > 1 ? "s" : ""}
+          </p>
+
+        </div>
+
 
         <button
           className="clear-wishlist-btn"
@@ -65,6 +108,10 @@ function Wishlist() {
       </div>
 
 
+      {/* ==========================
+          PRODUCTS
+      ========================== */}
+
       <div className="wishlist-grid">
 
         {wishlistItems.map((product) => (
@@ -75,7 +122,7 @@ function Wishlist() {
           >
 
 
-            {/* Product Image */}
+            {/* IMAGE */}
 
             <img
               src={product.image}
@@ -84,7 +131,7 @@ function Wishlist() {
             />
 
 
-            {/* Product Details */}
+            {/* DETAILS */}
 
             <div className="wishlist-details">
 
@@ -93,40 +140,44 @@ function Wishlist() {
               </h2>
 
 
-              <p className="wishlist-price">
+              <p className="wishlist-category">
+                {product.category}
+              </p>
+
+
+              <h3 className="wishlist-price">
                 ₹{product.price}
-              </p>
+              </h3>
 
 
-              <p>
-                ⭐ {product.rating}
-              </p>
+              {/* ACTIONS */}
+
+              <div className="wishlist-actions">
 
 
-              {/* Add To Cart */}
-
-              <button
-                className="wishlist-cart-btn"
-                onClick={() =>
-                  dispatch(addToCart(product))
-                }
-              >
-                Add To Cart
-              </button>
+                <button
+                  className="wishlist-cart-btn"
+                  onClick={() =>
+                    handleAddToCart(product)
+                  }
+                >
+                  Add To Cart
+                </button>
 
 
-              {/* Remove */}
+                <button
+                  className="wishlist-remove-btn"
+                  onClick={() =>
+                    dispatch(
+                      removeFromWishlist(product.id)
+                    )
+                  }
+                >
+                  Remove
+                </button>
 
-              <button
-                className="wishlist-remove-btn"
-                onClick={() =>
-                  dispatch(
-                    removeFromWishlist(product.id)
-                  )
-                }
-              >
-                Remove
-              </button>
+
+              </div>
 
             </div>
 
@@ -137,7 +188,9 @@ function Wishlist() {
       </div>
 
     </div>
+
   );
+
 }
 
 
