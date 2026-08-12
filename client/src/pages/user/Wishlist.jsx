@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 import {
   removeFromWishlist,
@@ -12,8 +13,11 @@ import "./Wishlist.css";
 
 function Wishlist() {
 
+  const dispatch = useDispatch();
+
+
   // ==========================
-  // GET WISHLIST FROM REDUX
+  // GET WISHLIST
   // ==========================
 
   const wishlistItems = useSelector(
@@ -22,21 +26,20 @@ function Wishlist() {
 
 
   // ==========================
-  // DISPATCH
-  // ==========================
-
-  const dispatch = useDispatch();
-
-
-  // ==========================
   // ADD TO CART
   // ==========================
 
-  const handleAddToCart = (product) => {
+  const handleAddToCart = (item) => {
 
     dispatch(
       addToCart({
-        product,
+        product: {
+          _id: item.id,
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          category: item.category,
+        },
         quantity: 1,
       })
     );
@@ -61,8 +64,15 @@ function Wishlist() {
         </h1>
 
         <p>
-          Add some products to your wishlist.
+          Save products you like here.
         </p>
+
+        <Link
+          to="/products"
+          className="wishlist-shop-btn"
+        >
+          Continue Shopping
+        </Link>
 
       </div>
 
@@ -90,17 +100,34 @@ function Wishlist() {
 
           <p>
             {wishlistItems.length} product
-            {wishlistItems.length > 1 ? "s" : ""}
+            {wishlistItems.length > 1
+              ? "s"
+              : ""}{" "}
+            saved
           </p>
 
         </div>
 
 
+        {/* CLEAR WISHLIST */}
+
         <button
+          type="button"
           className="clear-wishlist-btn"
-          onClick={() =>
-            dispatch(clearWishlist())
-          }
+          onClick={() => {
+
+            const confirmClear =
+              window.confirm(
+                "Are you sure you want to clear your wishlist?"
+              );
+
+            if (confirmClear) {
+
+              dispatch(clearWishlist());
+
+            }
+
+          }}
         >
           Clear Wishlist
         </button>
@@ -109,67 +136,98 @@ function Wishlist() {
 
 
       {/* ==========================
-          PRODUCTS
+          WISHLIST GRID
       ========================== */}
 
       <div className="wishlist-grid">
 
-        {wishlistItems.map((product) => (
+
+        {wishlistItems.map((item) => (
 
           <div
             className="wishlist-card"
-            key={product.id}
+            key={item.id}
           >
 
 
-            {/* IMAGE */}
+            {/* ==========================
+                IMAGE
+            ========================== */}
 
-            <img
-              src={product.image}
-              alt={product.name}
-              className="wishlist-image"
-            />
+            <Link
+              to={`/product/${item.id}`}
+              className="wishlist-image-link"
+            >
+
+              <img
+                src={item.image}
+                alt={item.name}
+                className="wishlist-image"
+              />
+
+            </Link>
 
 
-            {/* DETAILS */}
+            {/* ==========================
+                INFO
+            ========================== */}
 
-            <div className="wishlist-details">
+            <div className="wishlist-info">
+
 
               <h2>
-                {product.name}
+                {item.name}
               </h2>
 
 
-              <p className="wishlist-category">
-                {product.category}
+              <p>
+                {item.category}
               </p>
 
 
-              <h3 className="wishlist-price">
-                ₹{product.price}
+              <h3>
+                ₹{item.price}
               </h3>
 
 
-              {/* ACTIONS */}
+              {/* ==========================
+                  BUTTONS
+              ========================== */}
 
-              <div className="wishlist-actions">
+              <div className="wishlist-buttons">
 
+
+                {/* VIEW PRODUCT */}
+
+                <Link
+                  to={`/product/${item.id}`}
+                  className="wishlist-view-btn"
+                >
+                  View Product
+                </Link>
+
+
+                {/* ADD TO CART */}
 
                 <button
+                  type="button"
                   className="wishlist-cart-btn"
                   onClick={() =>
-                    handleAddToCart(product)
+                    handleAddToCart(item)
                   }
                 >
                   Add To Cart
                 </button>
 
 
+                {/* REMOVE */}
+
                 <button
+                  type="button"
                   className="wishlist-remove-btn"
                   onClick={() =>
                     dispatch(
-                      removeFromWishlist(product.id)
+                      removeFromWishlist(item.id)
                     )
                   }
                 >
@@ -179,11 +237,13 @@ function Wishlist() {
 
               </div>
 
+
             </div>
 
           </div>
 
         ))}
+
 
       </div>
 

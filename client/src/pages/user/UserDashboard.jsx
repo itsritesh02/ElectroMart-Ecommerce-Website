@@ -1,25 +1,59 @@
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slice/authSlice";
 import { useNavigate } from "react-router-dom";
+
+import { logout } from "../../redux/slice/authSlice";
+
+import "./UserDashboard.css";
 
 
 function UserDashboard() {
 
-  // Redux se logged-in user lena
+  const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+
+  // ==========================
+  // GET USER
+  // ==========================
+
   const { user } = useSelector(
     (state) => state.auth
   );
 
 
-  // Redux action dispatch karne ke liye
-  const dispatch = useDispatch();
+  // ==========================
+  // GET CART
+  // ==========================
+
+  const cartItems = useSelector(
+    (state) => state.cart.items
+  );
 
 
-  // Page navigate karne ke liye
-  const navigate = useNavigate();
+  // ==========================
+  // GET WISHLIST
+  // ==========================
+
+  const wishlistItems = useSelector(
+    (state) => state.wishlist.items
+  );
 
 
-  // Logout function
+  // ==========================
+  // CART COUNT
+  // ==========================
+
+  const cartCount = cartItems.reduce(
+    (total, item) => total + item.quantity,
+    0
+  );
+
+
+  // ==========================
+  // LOGOUT
+  // ==========================
+
   const handleLogout = () => {
 
     dispatch(logout());
@@ -31,95 +65,250 @@ function UserDashboard() {
 
   return (
 
-    <div>
-
-      <h1>
-        User Dashboard
-      </h1>
+    <div className="user-dashboard">
 
 
-      <h2>
-        Welcome {user?.name}
-      </h2>
+      {/* ==========================
+          WELCOME SECTION
+      ========================== */}
+
+      <div className="dashboard-welcome">
+
+        <div>
+
+          <p className="welcome-text">
+            Welcome back,
+          </p>
+
+          <h1>
+            {user?.name || "User"} 👋
+          </h1>
+
+          <p className="welcome-description">
+            Manage your account and
+            shopping activity.
+          </p>
+
+        </div>
 
 
-      <button onClick={handleLogout}>
-        Logout
-      </button>
+        <button
+          type="button"
+          className="dashboard-logout"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+
+      </div>
+
+
+      {/* ==========================
+          STAT CARDS
+      ========================== */}
+
+      <div className="dashboard-stats">
+
+
+        {/* CART */}
+
+        <div
+          className="dashboard-stat-card"
+          onClick={() => navigate("/cart")}
+        >
+
+          <div className="stat-icon">
+            🛒
+          </div>
+
+          <div>
+
+            <h2>
+              {cartCount}
+            </h2>
+
+            <p>
+              Cart Items
+            </p>
+
+          </div>
+
+        </div>
+
+
+        {/* WISHLIST */}
+
+        <div
+          className="dashboard-stat-card"
+          onClick={() => navigate("/wishlist")}
+        >
+
+          <div className="stat-icon">
+            ❤️
+          </div>
+
+          <div>
+
+            <h2>
+              {wishlistItems.length}
+            </h2>
+
+            <p>
+              Wishlist Items
+            </p>
+
+          </div>
+
+        </div>
+
+
+        {/* ACCOUNT */}
+
+        <div className="dashboard-stat-card">
+
+          <div className="stat-icon">
+            👤
+          </div>
+
+          <div>
+
+            <h2>
+              {user?.role || "User"}
+            </h2>
+
+            <p>
+              Account Type
+            </p>
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+      {/* ==========================
+          QUICK ACTIONS
+      ========================== */}
+
+      <div className="quick-actions">
+
+
+        <h2>
+          Quick Actions
+        </h2>
+
+
+        <div className="quick-actions-grid">
+
+
+          {/* PRODUCTS */}
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/products")
+            }
+          >
+
+            <span>
+              🛍️
+            </span>
+
+            <strong>
+              Browse Products
+            </strong>
+
+            <small>
+              Explore our products
+            </small>
+
+          </button>
+
+
+          {/* CART */}
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/cart")
+            }
+          >
+
+            <span>
+              🛒
+            </span>
+
+            <strong>
+              My Cart
+            </strong>
+
+            <small>
+              View your shopping cart
+            </small>
+
+          </button>
+
+
+          {/* WISHLIST */}
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/wishlist")
+            }
+          >
+
+            <span>
+              ❤️
+            </span>
+
+            <strong>
+              My Wishlist
+            </strong>
+
+            <small>
+              View saved products
+            </small>
+
+          </button>
+
+
+          {/* PROFILE */}
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/profile")
+            }
+          >
+
+            <span>
+              👤
+            </span>
+
+            <strong>
+              My Profile
+            </strong>
+
+            <small>
+              Manage your account
+            </small>
+
+          </button>
+
+
+        </div>
+
+      </div>
+
 
     </div>
 
   );
+
 }
 
 
 export default UserDashboard;
-
-
-
-// import { useSelector } from "react-redux"
-                                 // react-redux se useSelector hook import kiya.
-                                // Is hook ka use Redux Store se data lene ke liye hota hai.
-
-// const Dashboard = () => {
-                                // Dashboard naam ka Functional Component banaya.
-
-  // const { user } = useSelector((state) => state.auth)
-                                 // useSelector Redux Store se data nikalta hai.
-                                       // state => poora Redux Store hai.
-                                           // state.auth => auth slice ka data.
-                                        // { user } => auth object me se user ko destructure kiya.
-                                              //
-                                                // Example:
-                                               // state = {
-                                                  //   auth: {
-                                                    //     user: {
-                                           //       name: "Ritesh",
-                                     //       email: "ritesh@gmail.com"
-                                                     //     }
-                                            //   }
-                                       // }
-                                          //
-                                           // To user ki value hogi:
-                                                // {
-                                           //   name: "Ritesh",
-                                       //   email: "ritesh@gmail.com"
-                                                               // }
-
-  // return (
-                                             // JSX return ho raha hai jo browser me display hoga.
-
-    // <div>
-                                  {/* Sab elements ko wrap karne ke liye div use kiya hai. */}
-
-      // <h1>User Dashboard</h1>
-                                            {/* Dashboard ka heading show karega.  */}
-
-      // <h2>Welcome {user?.name}</h2>
-                                           {/* user ka name show karega. */}
-
-                                          {/* ?. (Optional Chaining) ka matlab:
-                             Agar user exist karta hai to uska name   dikhao.
-                                 Agar user null ya undefined hai to error mat do.
-                                              */}
-
-                                                  {/* Example:
-                                                   user = {
-                                                    name: "Ritesh"
-                                                      }
-
-                                           Output:
-                                            Welcome Ritesh
-                                                 */}
-
-                                        {/* Agar user = null ho to output:
-                                           Welcome
-                                  (Error nahi aayega)
-                                   */}
-    // </div>
-  // )
-// }
-
-// export default Dashboard
-                                            // Dashboard component ko export kiya.
-                                   // Ab is component ko kisi bhi file me import karke use kar sakte hain.
