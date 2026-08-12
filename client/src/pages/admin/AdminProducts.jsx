@@ -1,56 +1,154 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
+import api from "../../services/api";
 
 import "./AdminProducts.css";
 
 
 function AdminProducts() {
 
-  const [products, setProducts] = useState([
-    {
-      id: 1,
-      name: "MacBook Air",
-      price: 99999,
-      category: "Laptop",
-    },
-    {
-      id: 2,
-      name: "iPhone 16",
-      price: 79999,
-      category: "Mobile",
-    },
-    {
-      id: 3,
-      name: "Samsung S26",
-      price: 65999,
-      category: "Mobile",
-    },
-  ]);
+  const navigate = useNavigate();
 
 
-  const handleDelete = (id) => {
+  // ==========================
+  // PRODUCTS STATE
+  // ==========================
+
+  const [products, setProducts] = useState([]);
+
+  const [loading, setLoading] = useState(true);
+
+
+  // ==========================
+  // GET ALL PRODUCTS
+  // ==========================
+
+  useEffect(() => {
+
+    const getProducts = async () => {
+
+      try {
+
+        const res = await api.get("/products");
+
+        console.log("PRODUCTS:", res.data);
+
+        setProducts(res.data.products);
+
+      } catch (error) {
+
+        console.error(
+          "Fetch Products Error:",
+          error
+        );
+
+        alert(
+          error.response?.data?.message ||
+          "Failed to load products"
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+    getProducts();
+
+  }, []);
+
+
+  // ==========================
+  // DELETE PRODUCT
+  // ==========================
+
+  const handleDelete = async (id) => {
 
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?"
     );
 
+
     if (!confirmDelete) {
       return;
     }
 
-    setProducts(
-      products.filter(
-        (product) => product.id !== id
-      )
-    );
+
+    try {
+
+      await api.delete(
+        `/products/${id}`
+      );
+
+
+      alert(
+        "Product deleted successfully"
+      );
+
+
+      // Deleted product ko UI se remove karo
+      setProducts((prevProducts) =>
+        prevProducts.filter(
+          (product) => product._id !== id
+        )
+      );
+
+
+    } catch (error) {
+
+      console.error(
+        "Delete Product Error:",
+        error
+      );
+
+
+      alert(
+        error.response?.data?.message ||
+        "Failed to delete product"
+      );
+
+    }
 
   };
 
+
+  // ==========================
+  // LOADING
+  // ==========================
+
+  if (loading) {
+
+    return (
+
+      <div className="admin-products">
+
+        <h2>
+          Loading products...
+        </h2>
+
+      </div>
+
+    );
+
+  }
+
+
+  // ==========================
+  // PAGE
+  // ==========================
 
   return (
 
     <div className="admin-products">
 
-      {/* Header */}
+
+      {/* ==========================
+          HEADER
+      ========================== */}
 
       <div className="products-header">
 
@@ -67,100 +165,168 @@ function AdminProducts() {
         </div>
 
 
-        <button className="add-product-btn">
+        <button
+          className="add-product-btn"
+          onClick={() =>
+            navigate("/admin/products/add")
+          }
+        >
           + Add Product
         </button>
 
       </div>
 
 
-      {/* Product Table */}
+      {/* ==========================
+          NO PRODUCTS
+      ========================== */}
 
-      <div className="products-table-container">
+      {products.length === 0 ? (
 
-        <table className="products-table">
+        <div className="no-products">
 
-          <thead>
+          <h2>
+            No Products Found
+          </h2>
 
-            <tr>
+          <p>
+            Add your first product.
+          </p>
 
-              <th>
-                ID
-              </th>
+        </div>
 
-              <th>
-                Product
-              </th>
+      ) : (
 
-              <th>
-                Category
-              </th>
+        /* ==========================
+           PRODUCTS TABLE
+        ========================== */
 
-              <th>
-                Price
-              </th>
+        <div className="products-table-container">
 
-              <th>
-                Actions
-              </th>
+          <table className="products-table">
 
-            </tr>
+            <thead>
 
-          </thead>
+              <tr>
 
+                <th>
+                  ID
+                </th>
 
-          <tbody>
+                <th>
+                  Product
+                </th>
 
-            {products.map((product) => (
+                <th>
+                  Category
+                </th>
 
-              <tr key={product.id}>
+                <th>
+                  Price
+                </th>
 
-                <td>
-                  {product.id}
-                </td>
-
-                <td>
-                  {product.name}
-                </td>
-
-                <td>
-                  {product.category}
-                </td>
-
-                <td>
-                  ₹{product.price}
-                </td>
-
-                <td>
-
-                  <button className="edit-btn">
-                    Edit
-                  </button>
-
-                  <button
-                    className="delete-btn"
-                    onClick={() =>
-                      handleDelete(product.id)
-                    }
-                  >
-                    Delete
-                  </button>
-
-                </td>
+                <th>
+                  Actions
+                </th>
 
               </tr>
 
-            ))}
+            </thead>
 
-          </tbody>
 
-        </table>
+            <tbody>
 
-      </div>
+              {products.map((product) => (
+
+                <tr
+                  key={product._id}
+                >
+
+                  {/* ID */}
+
+                  <td>
+                    {product._id}
+                  </td>
+
+
+                  {/* Product */}
+
+                  <td>
+
+                    <div>
+
+                      <strong>
+                        {product.name}
+                      </strong>
+
+                    </div>
+
+                  </td>
+
+
+                  {/* Category */}
+
+                  <td>
+                    {product.category}
+                  </td>
+
+
+                  {/* Price */}
+
+                  <td>
+                    ₹{product.price}
+                  </td>
+
+
+                  {/* Actions */}
+
+                  <td>
+
+                    {/* EDIT */}
+
+                    <button
+                      className="edit-btn"
+                      onClick={() =>
+                        navigate(
+                          `/admin/products/edit/${product._id}`
+                        )
+                      }
+                    >
+                      Edit
+                    </button>
+
+
+                    {/* DELETE */}
+
+                    <button
+                      className="delete-btn"
+                      onClick={() =>
+                        handleDelete(
+                          product._id
+                        )
+                      }
+                    >
+                      Delete
+                    </button>
+
+                  </td>
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
 
     </div>
 
   );
+
 }
 
 

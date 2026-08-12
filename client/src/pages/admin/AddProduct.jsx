@@ -239,8 +239,8 @@ function AddProduct() {
               value={formData.description}
               onChange={handleChange}
               rows="5"
-              value={formData.description}
-              onChange={handleChange}
+              
+       
               required
             />
 
