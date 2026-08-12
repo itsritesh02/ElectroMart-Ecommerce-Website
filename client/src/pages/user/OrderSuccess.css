@@ -1,0 +1,215 @@
+.order-success-page {
+  min-height: 70vh;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  padding: 40px 20px;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================
+   CARD
+========================== */
+
+.order-success-card {
+  width: 100%;
+
+  max-width: 600px;
+
+  padding: 45px 30px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  text-align: center;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================
+   SUCCESS ICON
+========================== */
+
+.success-icon {
+  width: 70px;
+
+  height: 70px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #16a34a;
+
+  color: white;
+
+  font-size: 38px;
+
+  font-weight: bold;
+}
+
+
+/* ==========================
+   HEADING
+========================== */
+
+.order-success-card h1 {
+  margin: 0 0 12px;
+
+  font-size: 28px;
+
+  color: #111827;
+}
+
+
+.order-success-card > p {
+  margin: 0 auto 25px;
+
+  max-width: 450px;
+
+  color: #666;
+
+  line-height: 1.6;
+}
+
+
+/* ==========================
+   ORDER ID
+========================== */
+
+.order-id-box {
+  margin: 25px 0;
+
+  padding: 15px;
+
+  background: #f9fafb;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 7px;
+}
+
+
+.order-id-box span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  font-size: 13px;
+
+  color: #777;
+}
+
+
+.order-id-box strong {
+  display: block;
+
+  word-break: break-all;
+
+  font-size: 14px;
+
+  color: #111827;
+}
+
+
+/* ==========================
+   BUTTONS
+========================== */
+
+.success-buttons {
+  display: flex;
+
+  justify-content: center;
+
+  gap: 12px;
+
+  margin-top: 25px;
+}
+
+
+.success-buttons a {
+  padding: 12px 20px;
+
+  border-radius: 7px;
+
+  text-decoration: none;
+
+  font-size: 14px;
+
+  transition: 0.2s ease;
+}
+
+
+/* CONTINUE SHOPPING */
+
+.continue-shopping-btn {
+  background: #111827;
+
+  color: white;
+}
+
+
+.continue-shopping-btn:hover {
+  background: #000;
+}
+
+
+/* VIEW ORDERS */
+
+.view-orders-btn {
+  background: #f1f1f1;
+
+  color: #222;
+}
+
+
+.view-orders-btn:hover {
+  background: #e2e2e2;
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 600px) {
+
+  .order-success-page {
+    padding: 25px 15px;
+  }
+
+  .order-success-card {
+    padding: 35px 20px;
+  }
+
+  .order-success-card h1 {
+    font-size: 24px;
+  }
+
+  .success-buttons {
+    flex-direction: column;
+  }
+
+  .success-buttons a {
+    width: 100%;
+
+    box-sizing: border-box;
+  }
+
+}
