@@ -33,6 +33,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 import AdminProducts from "../pages/admin/AdminProducts";
 import AddProduct from "../pages/admin/AddProduct";
+import EditProduct from "../pages/admin/EditProduct";
 
 
 const AppRoutes = () => {
@@ -48,28 +49,11 @@ const AppRoutes = () => {
 
       <Route element={<MainLayout />}>
 
-        {/* Home */}
+        <Route path="/" element={<Home />} />
 
-        <Route
-          path="/"
-          element={<Home />}
-        />
+        <Route path="/products" element={<Product />} />
 
-
-        {/* Products */}
-
-        <Route
-          path="/products"
-          element={<Product />}
-        />
-
-
-        {/* Product Details */}
-
-        <Route
-          path="/product/:id"
-          element={<ProductDetails />}
-        />
+        <Route path="/product/:id" element={<ProductDetails />} />
 
       </Route>
 
@@ -84,8 +68,7 @@ const AppRoutes = () => {
 
           {/* User Dashboard */}
 
-          <Route
-            path="/user/dashboard"
+          <Route path="/user/dashboard"
             element={<UserDashboard />}
           />
 
@@ -134,11 +117,15 @@ const AppRoutes = () => {
           />
           <Route
             path="/admin/products"
-            element={<AdminProducts/>}
+            element={<AdminProducts />}
           />
           <Route
             path="/admin/products/add"
-            element={<AddProduct/>}
+            element={<AddProduct />}
+          />
+          <Route
+            path="/admin/products/edit/:id"
+            element={<EditProduct/>}
           />
 
         </Route>

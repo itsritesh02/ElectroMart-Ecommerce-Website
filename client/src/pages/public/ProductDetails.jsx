@@ -1,89 +1,113 @@
+import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
-import { useDispatch } from "react-redux";
 
+import { useDispatch } from "react-redux";
 import { addToCart } from "../../redux/slice/cartSlice";
 
 import QuantitySelector from "../../components/ProductPage/QuantitySelector";
 import SimilarProducts from "../../components/ProductPage/SimilarProducts";
 
+import api from "../../services/api";
+
 import "./ProductDetails.css";
+
 
 function ProductDetails() {
 
-  // URL se product id lena
-  // Example: /product/2
-  // id = "2"
   const { id } = useParams();
 
-  // Redux action ko dispatch karne ke liye
   const dispatch = useDispatch();
 
-  // Temporary products data
-  const products = [
-    {
-      id: 1,
-      name: "MacBook Air",
-      price: 99999,
-      rating: 4.8,
-      image: "https://picsum.photos/500?1",
-      description:
-        "Apple MacBook Air with powerful performance, Retina Display and all day battery.",
-    },
+  const [product, setProduct] = useState(null);
 
-    {
-      id: 2,
-      name: "iPhone 16",
-      price: 79999,
-      rating: 4.9,
-      image: "https://picsum.photos/500?2",
-      description:
-        "iPhone 16 with powerful performance, beautiful display and advanced camera.",
-    },
+  const [loading, setLoading] = useState(true);
 
-    {
-      id: 3,
-      name: "Samsung S26",
-      price: 65999,
-      rating: 4.7,
-      image: "https://picsum.photos/500?3",
-      description:
-        "Samsung S26 with premium design, powerful processor and excellent camera.",
-    },
 
-    {
-      id: 4,
-      name: "Sony Headphones",
-      price: 12999,
-      rating: 4.6,
-      image: "https://picsum.photos/500?4",
-      description:
-        "Sony wireless headphones with high quality sound and comfortable design.",
-    },
-  ];
+  // ==========================
+  // GET PRODUCT
+  // ==========================
 
-  // URL se mili id string hoti hai
-  // Isliye Number(id) karke number me convert kar rahe hain
-  const product = products.find(
-    (item) => item.id === Number(id)
-  );
+  useEffect(() => {
 
-  // Console me check karne ke liye
-  console.log("URL ID:", id);
-  console.log("PRODUCT:", product);
+    const getProduct = async () => {
 
-  // Agar product nahi mila
-  if (!product) {
-    return <h1>Product Not Found</h1>;
-  }
+      try {
 
-  return (
-    <div className="details">
+        const res = await api.get(`/products/${id}`);
 
-      {/* Product Details Section */}
+        console.log("PRODUCT:", res.data);
+
+        setProduct(res.data.product);
+
+      } catch (error) {
+
+        console.error(
+          "Fetch Product Error:",
+          error
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+    getProduct();
+
+  }, [id]);
+
+
+  // ==========================
+  // LOADING
+  // ==========================
+
+  if (loading) {
+
+    return (
       <div className="details-container">
 
-        {/* Left Side - Product Image */}
+        <h2>
+          Loading Product...
+        </h2>
+
+      </div>
+    );
+
+  }
+
+
+  // ==========================
+  // PRODUCT NOT FOUND
+  // ==========================
+
+  if (!product) {
+
+    return (
+      <div className="details-container">
+
+        <h2>
+          Product Not Found
+        </h2>
+
+      </div>
+    );
+
+  }
+
+
+  return (
+
+    <>
+
+      <div className="details-container">
+
+
+        {/* Product Image */}
+
         <div className="left">
 
           <img
@@ -93,36 +117,50 @@ function ProductDetails() {
 
         </div>
 
-        {/* Right Side - Product Information */}
+
+        {/* Product Information */}
+
         <div className="right">
 
-          <h1>{product.name}</h1>
+          <h1>
+            {product.name}
+          </h1>
+
 
           {/* Rating */}
+
           <div className="rating">
 
             <FaStar />
 
             <span>
-              {product.rating}
+              {product.rating || "No rating"}
             </span>
 
           </div>
 
+
           {/* Price */}
+
           <h2>
             ₹{product.price}
           </h2>
 
+
           {/* Description */}
+
           <p>
             {product.description}
           </p>
 
+
           {/* Quantity */}
+
           <QuantitySelector />
 
+
           {/* Add To Cart */}
+
           <button
             className="cart-btn"
             onClick={() => dispatch(addToCart(product))}
@@ -130,7 +168,9 @@ function ProductDetails() {
             Add To Cart
           </button>
 
+
           {/* Buy Now */}
+
           <button className="buy-btn">
             Buy Now
           </button>
@@ -139,11 +179,16 @@ function ProductDetails() {
 
       </div>
 
+
       {/* Similar Products */}
+
       <SimilarProducts />
 
-    </div>
+    </>
+
   );
+
 }
+
 
 export default ProductDetails;
