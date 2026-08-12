@@ -1,53 +1,51 @@
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../redux/slice/authSlice";
 import { useNavigate } from "react-router-dom";
 
-import "./AdminDashboard.css";
+import { logout } from "../../redux/slice/authSlice.js";
 
+import "./AdminDashBoard.css"
 
 function AdminDashboard() {
-
-  const { user } = useSelector(
-    (state) => state.auth
-  );
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
+  const { user } = useSelector((state) => state.auth);
+
+  const wishlistItems = useSelector(
+    (state) => state.wishlist?.items || []
+  );
 
   const handleLogout = () => {
-
     dispatch(logout());
-
     navigate("/login");
-
   };
 
-
   return (
-
     <div className="admin-dashboard">
 
-      {/* Header */}
+      {/* =========================
+          HEADER
+      ========================= */}
 
-      <div className="admin-header">
+      <div className="admin-dashboard-header">
 
         <div>
-
-          <h1>
-            Admin Dashboard
-          </h1>
-
-          <p>
-            Manage your ElectroMart store
+          <p className="admin-welcome-text">
+            Admin Panel
           </p>
 
+          <h1>
+            Welcome, {user?.name || "Admin"} 👋
+          </h1>
+
+          <p className="admin-description">
+            Manage your ElectroMart store from here.
+          </p>
         </div>
 
-
         <button
-          className="admin-logout"
+          type="button"
+          className="admin-logout-btn"
           onClick={handleLogout}
         >
           Logout
@@ -56,88 +54,191 @@ function AdminDashboard() {
       </div>
 
 
-      {/* Welcome */}
+      {/* =========================
+          STATS
+      ========================= */}
 
-      <div className="admin-welcome">
+      <div className="admin-stats">
 
-        <h2>
-          Welcome, {user?.name || "Admin"} 👋
-        </h2>
+        {/* Products */}
 
-        <p>
-          You are logged in as an administrator.
-        </p>
+        <div
+          className="admin-stat-card"
+          onClick={() => navigate("/admin/products")}
+        >
+          <div className="admin-stat-icon">
+            📦
+          </div>
+
+          <div>
+            <h2>Products</h2>
+
+            <p>
+              Manage Products
+            </p>
+          </div>
+        </div>
+
+
+        {/* Users */}
+
+        <div className="admin-stat-card">
+
+          <div className="admin-stat-icon">
+            👥
+          </div>
+
+          <div>
+            <h2>Users</h2>
+
+            <p>
+              Manage Customers
+            </p>
+          </div>
+
+        </div>
+
+
+        {/* Orders */}
+
+        <div className="admin-stat-card">
+
+          <div className="admin-stat-icon">
+            🛒
+          </div>
+
+          <div>
+            <h2>Orders</h2>
+
+            <p>
+              Manage Orders
+            </p>
+          </div>
+
+        </div>
+
+
+        {/* Wishlist */}
+
+        <div className="admin-stat-card">
+
+          <div className="admin-stat-icon">
+            ❤️
+          </div>
+
+          <div>
+            <h2>
+              {wishlistItems.length}
+            </h2>
+
+            <p>
+              Wishlist Items
+            </p>
+          </div>
+
+        </div>
 
       </div>
 
 
-      {/* Dashboard Cards */}
+      {/* =========================
+          QUICK ACTIONS
+      ========================= */}
 
-      <div className="admin-cards">
+      <div className="admin-quick-actions">
 
-        <div className="admin-card">
+        <h2>
+          Quick Actions
+        </h2>
 
-          <h3>
-            Products
-          </h3>
 
-          <p>
-            0
-          </p>
+        <div className="admin-actions-grid">
 
-          <button>
-            Manage Products
+          {/* Add Product */}
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/admin/products/add")
+            }
+          >
+            <span>
+              ➕
+            </span>
+
+            <strong>
+              Add Product
+            </strong>
+
+            <small>
+              Add a new product
+            </small>
           </button>
 
-        </div>
 
+          {/* Manage Products */}
 
-        <div className="admin-card">
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/admin/products")
+            }
+          >
+            <span>
+              📦
+            </span>
 
-          <h3>
-            Orders
-          </h3>
+            <strong>
+              Manage Products
+            </strong>
 
-          <p>
-            0
-          </p>
-
-          <button>
-            Manage Orders
+            <small>
+              View and edit products
+            </small>
           </button>
 
-        </div>
 
+          {/* View Store */}
 
-        <div className="admin-card">
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/products")
+            }
+          >
+            <span>
+              🛍️
+            </span>
 
-          <h3>
-            Users
-          </h3>
+            <strong>
+              View Store
+            </strong>
 
-          <p>
-            0
-          </p>
-
-          <button>
-            Manage Users
+            <small>
+              Open customer store
+            </small>
           </button>
 
-        </div>
 
+          {/* Profile */}
 
-        <div className="admin-card">
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/profile")
+            }
+          >
+            <span>
+              👤
+            </span>
 
-          <h3>
-            Revenue
-          </h3>
+            <strong>
+              My Profile
+            </strong>
 
-          <p>
-            ₹0
-          </p>
-
-          <button>
-            View Revenue
+            <small>
+              View your profile
+            </small>
           </button>
 
         </div>
@@ -145,35 +246,7 @@ function AdminDashboard() {
       </div>
 
     </div>
-
   );
 }
 
-
 export default AdminDashboard;
-
-
-
-//import { useSelector } from "react-redux"; 
-                                    // Redux Store se data lene ke liye useSelector hook import kiya
-
-// const Dashboard = () => {
-                                  // Redux Store ke auth slice se user object nikal rahe hain
-  // const { user } = useSelector((state) => state.auth);
-
-  // return (
-    // <div>
-                                     {/* Dashboard ka Heading */}
-      // <h1>User Dashboard</h1>
-
-                                      {/* Logged-in user ka name show hoga */}
-                                         {/* ?. ka matlab hai agar user available hai to uska name dikhao,
-                                          warna error mat do */}
-      // <h2>Welcome {user?.name}</h2>
-    // </div>
-  // );
-// };
-
-// export default Dashboard; 
-
-                                           // Dashboard component ko dusri files me use karne ke liye export kiya
