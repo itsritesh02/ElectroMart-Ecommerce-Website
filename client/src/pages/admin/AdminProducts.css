@@ -1,124 +1,251 @@
+/* ==========================
+   MAIN PAGE
+========================== */
+
 .admin-products {
-  padding: 30px;
+  width: 100%;
+  max-width: 1200px;
 
+  margin: 0 auto;
+  padding: 40px 20px;
+
+  box-sizing: border-box;
+
+  background: #f8fafc;
   min-height: 70vh;
-
-  background: #f5f6f8;
 }
 
 
-/* Header */
+/* ==========================
+   HEADER
+========================== */
 
 .products-header {
   display: flex;
 
+  align-items: center;
   justify-content: space-between;
 
-  align-items: center;
+  margin-bottom: 30px;
 
-  margin-bottom: 25px;
+  padding: 25px 30px;
+
+  background: #111827;
+
+  border-radius: 12px;
+
+  color: white;
 }
 
 
 .products-header h1 {
-  margin: 0;
+  margin: 0 0 8px;
 
   font-size: 30px;
 
-  color: #111827;
+  color: white;
 }
 
 
 .products-header p {
-  margin-top: 6px;
+  margin: 0;
 
-  color: #6b7280;
-}
-
-
-/* Add Product */
-
-.add-product-btn {
-  padding: 11px 18px;
-
-  border: none;
-
-  border-radius: 6px;
-
-  background: #111827;
-
-  color: white;
-
-  font-weight: 600;
-
-  cursor: pointer;
-}
-
-
-.add-product-btn:hover {
-  background: #374151;
-}
-
-
-/* Table */
-
-.products-table-container {
-  background: white;
-
-  border-radius: 10px;
-
-  overflow-x: auto;
-
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
-}
-
-
-.products-table {
-  width: 100%;
-
-  border-collapse: collapse;
-}
-
-
-.products-table th,
-.products-table td {
-  padding: 16px;
-
-  text-align: left;
-
-  border-bottom: 1px solid #e5e7eb;
-}
-
-
-.products-table th {
-  background: #f9fafb;
-
-  color: #374151;
+  color: #d1d5db;
 
   font-size: 14px;
 }
 
 
-.products-table td {
-  color: #4b5563;
-}
+/* ==========================
+   ADD PRODUCT BUTTON
+========================== */
 
-
-/* Buttons */
-
-.edit-btn,
-.delete-btn {
-  padding: 7px 12px;
+.add-product-btn {
+  padding: 12px 20px;
 
   border: none;
 
-  border-radius: 5px;
+  border-radius: 7px;
+
+  background: #f59e0b;
+
+  color: white;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: 0.2s ease;
+}
+
+
+.add-product-btn:hover {
+  background: #d97706;
+
+  transform: translateY(-2px);
+}
+
+
+/* ==========================
+   LOADING
+========================== */
+
+.admin-products > h2 {
+  text-align: center;
+
+  padding: 50px;
+
+  color: #6b7280;
+}
+
+
+/* ==========================
+   TABLE CONTAINER
+========================== */
+
+.products-table-container {
+  width: 100%;
+
+  overflow-x: auto;
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.04);
+}
+
+
+/* ==========================
+   TABLE
+========================== */
+
+.products-table {
+  width: 100%;
+
+  border-collapse: collapse;
+
+  min-width: 750px;
+}
+
+
+/* ==========================
+   TABLE HEADER
+========================== */
+
+.products-table thead {
+  background: #f3f4f6;
+}
+
+
+.products-table th {
+  padding: 16px;
+
+  text-align: left;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #374151;
+
+  border-bottom: 1px solid #e5e7eb;
+}
+
+
+/* ==========================
+   TABLE BODY
+========================== */
+
+.products-table td {
+  padding: 16px;
+
+  font-size: 14px;
+
+  color: #374151;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  vertical-align: middle;
+}
+
+
+.products-table tbody tr {
+  transition: 0.2s ease;
+}
+
+
+.products-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+
+.products-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+
+/* ==========================
+   PRODUCT NAME
+========================== */
+
+.products-table td strong {
+  color: #111827;
+
+  font-size: 15px;
+}
+
+
+/* ==========================
+   CATEGORY
+========================== */
+
+.products-table td:nth-child(3) {
+  color: #6b7280;
+
+  font-weight: 500;
+}
+
+
+/* ==========================
+   PRICE
+========================== */
+
+.products-table td:nth-child(4) {
+  font-weight: 600;
+
+  color: #111827;
+}
+
+
+/* ==========================
+   ACTION BUTTONS
+========================== */
+
+.edit-btn,
+.delete-btn {
+  padding: 8px 14px;
+
+  border: none;
+
+  border-radius: 6px;
+
+  font-size: 13px;
 
   cursor: pointer;
 
   margin-right: 8px;
+
+  transition: 0.2s ease;
 }
 
+
+/* EDIT */
 
 .edit-btn {
   background: #e5e7eb;
@@ -127,33 +254,126 @@
 }
 
 
+.edit-btn:hover {
+  background: #d1d5db;
+}
+
+
+/* DELETE */
+
 .delete-btn {
+  background: #fee2e2;
+
+  color: #dc2626;
+}
+
+
+.delete-btn:hover {
   background: #dc2626;
 
   color: white;
 }
 
 
-.delete-btn:hover {
-  background: #b91c1c;
+/* ==========================
+   NO PRODUCTS
+========================== */
+
+.no-products {
+  padding: 70px 20px;
+
+  text-align: center;
+
+  background: white;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
 }
 
 
-/* Mobile */
+.no-products h2 {
+  margin: 0 0 10px;
 
-@media (max-width: 600px) {
+  font-size: 24px;
+
+  color: #111827;
+}
+
+
+.no-products p {
+  margin: 0;
+
+  color: #6b7280;
+}
+
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 768px) {
 
   .admin-products {
-    padding: 20px;
+    padding: 25px 15px;
   }
 
 
   .products-header {
-    align-items: flex-start;
-
     flex-direction: column;
 
-    gap: 15px;
+    align-items: flex-start;
+
+    gap: 20px;
+  }
+
+
+  .add-product-btn {
+    width: 100%;
+  }
+
+
+  .products-header h1 {
+    font-size: 26px;
+  }
+
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 480px) {
+
+  .admin-products {
+    padding: 20px 10px;
+  }
+
+
+  .products-header {
+    padding: 20px;
+  }
+
+
+  .products-header h1 {
+    font-size: 23px;
+  }
+
+
+  .products-table th,
+  .products-table td {
+    padding: 12px;
+  }
+
+
+  .edit-btn,
+  .delete-btn {
+    display: block;
+
+    width: 100%;
+
+    margin: 0 0 6px;
   }
 
 }

@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FaStar, FaHeart } from "react-icons/fa";
 
 import { addToCart } from "../../redux/slice/cartSlice";
@@ -14,6 +14,24 @@ function ProductCard({ product }) {
 
 
   // ==========================
+  // GET WISHLIST FROM REDUX
+  // ==========================
+
+  const wishlistItems = useSelector(
+    (state) => state.wishlist.items
+  );
+
+
+  // ==========================
+  // CHECK WISHLIST
+  // ==========================
+
+  const isWishlisted = wishlistItems.some(
+    (item) => item.id === product._id
+  );
+
+
+  // ==========================
   // ADD TO CART
   // ==========================
 
@@ -21,13 +39,12 @@ function ProductCard({ product }) {
 
     dispatch(
       addToCart({
-        product,
+        ...product,
         quantity: 1,
       })
     );
 
     alert("Product added to cart");
-
   };
 
 
@@ -36,6 +53,15 @@ function ProductCard({ product }) {
   // ==========================
 
   const handleAddToWishlist = () => {
+
+    if (isWishlisted) {
+
+      alert("Product already in wishlist");
+
+      return;
+
+    }
+
 
     dispatch(
       addToWishlist(product)
@@ -70,27 +96,27 @@ function ProductCard({ product }) {
 
 
       {/* ==========================
-          PRODUCT DETAILS
+          PRODUCT INFO
       ========================== */}
 
       <div className="product-info">
 
 
-        {/* Product Name */}
+        {/* PRODUCT NAME */}
 
         <h2>
           {product.name}
         </h2>
 
 
-        {/* Category */}
+        {/* CATEGORY */}
 
         <p className="product-category">
           {product.category}
         </p>
 
 
-        {/* Rating */}
+        {/* RATING */}
 
         <div className="product-rating">
 
@@ -103,7 +129,7 @@ function ProductCard({ product }) {
         </div>
 
 
-        {/* Price */}
+        {/* PRICE */}
 
         <h3 className="product-price">
           ₹{product.price}
@@ -117,7 +143,7 @@ function ProductCard({ product }) {
         <div className="product-buttons">
 
 
-          {/* View Details */}
+          {/* VIEW DETAILS */}
 
           <Link
             to={`/product/${product._id}`}
@@ -127,7 +153,7 @@ function ProductCard({ product }) {
           </Link>
 
 
-          {/* Add To Cart */}
+          {/* ADD TO CART */}
 
           <button
             type="button"
@@ -147,13 +173,19 @@ function ProductCard({ product }) {
 
         <button
           type="button"
-          className="wishlist-card-btn"
+          className={`wishlist-card-btn ${isWishlisted
+              ? "wishlisted"
+              : ""
+            }`}
           onClick={handleAddToWishlist}
         >
 
           <FaHeart />
 
-          Add To Wishlist
+          {isWishlisted
+            ? "Wishlisted"
+            : "Add To Wishlist"
+          }
 
         </button>
 

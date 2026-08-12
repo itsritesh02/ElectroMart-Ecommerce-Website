@@ -5,11 +5,8 @@ import api from "../../services/api";
 
 import "./AddProduct.css";
 
-
 function AddProduct() {
-
   const navigate = useNavigate();
-
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,88 +16,75 @@ function AddProduct() {
     image: "",
   });
 
-
   const [loading, setLoading] = useState(false);
 
+  // ==========================
+  // INPUT CHANGE
+  // ==========================
 
-  // Input value change
   const handleChange = (e) => {
-
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-
   };
 
+  // ==========================
+  // ADD PRODUCT
+  // ==========================
 
-  // Form submit
   const handleSubmit = async (e) => {
-
     e.preventDefault();
 
     setLoading(true);
 
-
     try {
-
-      // Backend API call
       const res = await api.post(
         "/products",
-        formData
+        {
+          name: formData.name,
+          price: Number(formData.price),
+          category: formData.category,
+          description: formData.description,
+          image: formData.image,
+        }
       );
-
-
-      console.log(
-        "Product Created:",
-        res.data
-      );
-
 
       alert(
         res.data.message ||
-        "Product added successfully!"
+        "Product added successfully"
       );
 
-
-      // Products page par jao
       navigate("/admin/products");
 
-
     } catch (error) {
-
       console.error(
         "Add Product Error:",
         error
       );
-
 
       alert(
         error.response?.data?.message ||
         "Failed to add product"
       );
 
-
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
-
   return (
-
     <div className="add-product-page">
 
       <div className="add-product-card">
 
+        {/* ==========================
+            HEADER
+        ========================== */}
 
         <h1>
           Add Product
         </h1>
-
 
         <p>
           Add a new product to your store
@@ -109,15 +93,13 @@ function AddProduct() {
 
         <form onSubmit={handleSubmit}>
 
-
-          {/* Product Name */}
+          {/* PRODUCT NAME */}
 
           <div className="form-group">
 
             <label>
               Product Name
             </label>
-
 
             <input
               type="text"
@@ -131,14 +113,13 @@ function AddProduct() {
           </div>
 
 
-          {/* Price */}
+          {/* PRICE */}
 
           <div className="form-group">
 
             <label>
               Price
             </label>
-
 
             <input
               type="number"
@@ -153,14 +134,13 @@ function AddProduct() {
           </div>
 
 
-          {/* Category */}
+          {/* CATEGORY */}
 
           <div className="form-group">
 
             <label>
               Category
             </label>
-
 
             <select
               name="category"
@@ -173,26 +153,21 @@ function AddProduct() {
                 Select Category
               </option>
 
-
               <option value="Mobile">
                 Mobile
               </option>
-
 
               <option value="Laptop">
                 Laptop
               </option>
 
-
               <option value="Headphones">
                 Headphones
               </option>
 
-
               <option value="Tablet">
                 Tablet
               </option>
-
 
               <option value="Accessories">
                 Accessories
@@ -203,7 +178,7 @@ function AddProduct() {
           </div>
 
 
-          {/* Image */}
+          {/* IMAGE */}
 
           <div className="form-group">
 
@@ -211,11 +186,10 @@ function AddProduct() {
               Product Image URL
             </label>
 
-
             <input
               type="url"
               name="image"
-              placeholder="Enter image URL"
+              placeholder="https://example.com/image.jpg"
               value={formData.image}
               onChange={handleChange}
               required
@@ -224,7 +198,7 @@ function AddProduct() {
           </div>
 
 
-          {/* Description */}
+          {/* DESCRIPTION */}
 
           <div className="form-group">
 
@@ -232,27 +206,21 @@ function AddProduct() {
               Description
             </label>
 
-
             <textarea
               name="description"
               placeholder="Enter product description"
               value={formData.description}
               onChange={handleChange}
               rows="5"
-              
-       
               required
             />
 
           </div>
 
 
-          {/* Buttons */}
+          {/* BUTTONS */}
 
           <div className="form-buttons">
-
-
-            {/* Cancel */}
 
             <button
               type="button"
@@ -266,33 +234,24 @@ function AddProduct() {
             </button>
 
 
-            {/* Submit */}
-
             <button
               type="submit"
               className="save-btn"
               disabled={loading}
             >
-
               {loading
                 ? "Adding..."
-                : "Add Product"
-              }
-
+                : "Add Product"}
             </button>
 
-
           </div>
-
 
         </form>
 
       </div>
 
     </div>
-
   );
 }
-
 
 export default AddProduct;
