@@ -1,55 +1,206 @@
 import "./FilterSidebar.css";
 
-function FilterSidebar() {
+
+function FilterSidebar({
+  category,
+  setCategory,
+  sort,
+  setSort,
+}) {
+
   return (
-    <div className="filter-sidebar">
 
-      <h2>Filters</h2>
+    <aside className="filter-sidebar">
 
-      <div className="filter-group">
 
-        <h4>Category</h4>
+      {/* ==========================
+          FILTER TITLE
+      ========================== */}
+
+      <div className="filter-header">
+
+        <h2>
+          Filters
+        </h2>
+
+      </div>
+
+
+      {/* ==========================
+          CATEGORY
+      ========================== */}
+
+      <div className="filter-section">
+
+        <h3>
+          Category
+        </h3>
+
 
         <label>
-          <input type="checkbox" />
-          Laptop
+
+          <input
+            type="radio"
+            name="category"
+            value="All"
+            checked={category === "All"}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
+          />
+
+          All Products
+
         </label>
 
+
         <label>
-          <input type="checkbox" />
+
+          <input
+            type="radio"
+            name="category"
+            value="Mobile"
+            checked={category === "Mobile"}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
+          />
+
           Mobile
+
         </label>
 
+
         <label>
-          <input type="checkbox" />
+
+          <input
+            type="radio"
+            name="category"
+            value="Laptop"
+            checked={category === "Laptop"}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
+          />
+
+          Laptop
+
+        </label>
+
+
+        <label>
+
+          <input
+            type="radio"
+            name="category"
+            value="Headphones"
+            checked={category === "Headphones"}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
+          />
+
           Headphones
+
+        </label>
+
+
+        <label>
+
+          <input
+            type="radio"
+            name="category"
+            value="Tablet"
+            checked={category === "Tablet"}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
+          />
+
+          Tablet
+
+        </label>
+
+
+        <label>
+
+          <input
+            type="radio"
+            name="category"
+            value="Accessories"
+            checked={category === "Accessories"}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
+          />
+
+          Accessories
+
         </label>
 
       </div>
 
-      <div className="filter-group">
 
-        <h4>Price</h4>
+      {/* ==========================
+          SORT
+      ========================== */}
 
-        <label>
-          <input type="radio" name="price" />
-          Under ₹20,000
-        </label>
+      <div className="filter-section">
 
-        <label>
-          <input type="radio" name="price" />
-          ₹20k - ₹50k
-        </label>
+        <h3>
+          Sort By
+        </h3>
 
-        <label>
-          <input type="radio" name="price" />
-          Above ₹50k
-        </label>
+
+        <select
+          value={sort}
+          onChange={(e) =>
+            setSort(e.target.value)
+          }
+        >
+
+          <option value="">
+            Default
+          </option>
+
+
+          <option value="low-high">
+            Price: Low to High
+          </option>
+
+
+          <option value="high-low">
+            Price: High to Low
+          </option>
+
+        </select>
 
       </div>
 
-    </div>
+
+      {/* ==========================
+          CLEAR FILTER
+      ========================== */}
+
+      <button
+        className="clear-filter-btn"
+        onClick={() => {
+
+          setCategory("All");
+
+          setSort("");
+
+        }}
+      >
+        Clear Filters
+      </button>
+
+
+    </aside>
+
   );
+
 }
+
 
 export default FilterSidebar;
