@@ -1,4 +1,6 @@
-import express from "express";
+
+
+ import express from "express";
 
 import {
   addProduct,
@@ -10,11 +12,60 @@ import {
 
 const router = express.Router();
 
-router.post("/", addProduct);
-router.get("/", getProducts);// Get All Products
-router.get("/:id",getSingleProduct);// Get Single Product
-router.put("/:id", updateProduct); 
-router.delete("/:id", deleteProduct);
+
+// ==========================
+// ADD PRODUCT
+// POST /api/products
+// ==========================
+
+router.post(
+  "/",
+  addProduct
+);
+
+
+// ==========================
+// GET ALL PRODUCTS
+// GET /api/products
+// ==========================
+
+router.get(
+  "/",
+  getProducts
+);
+
+
+// ==========================
+// GET SINGLE PRODUCT
+// GET /api/products/:id
+// ==========================
+
+router.get(
+  "/:id",
+  getSingleProduct
+);
+
+
+// ==========================
+// UPDATE PRODUCT
+// PUT /api/products/:id
+// ==========================
+
+router.put(
+  "/:id",
+  updateProduct
+);
+
+
+// ==========================
+// DELETE PRODUCT
+// DELETE /api/products/:id
+// ==========================
+
+router.delete(
+  "/:id",
+  deleteProduct
+);
 
 
 export default router;
