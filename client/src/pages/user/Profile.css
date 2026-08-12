@@ -1,71 +1,294 @@
+/* ==========================
+   PROFILE PAGE
+========================== */
+
 .profile-page {
+  width: 100%;
   min-height: 70vh;
 
   display: flex;
-
+  align-items: center;
   justify-content: center;
 
-  align-items: center;
+  padding: 40px 20px;
 
-  padding: 30px;
+  box-sizing: border-box;
+
+  background: #f8fafc;
 }
 
+
+/* ==========================
+   PROFILE CARD
+========================== */
 
 .profile-card {
   width: 100%;
+  max-width: 650px;
 
-  max-width: 500px;
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
 
   padding: 30px;
 
-  background: white;
+  box-sizing: border-box;
 
-  border-radius: 10px;
-
-  box-shadow:
-    0 3px 12px
-    rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
 
-.profile-card h1 {
-  margin-bottom: 25px;
+/* ==========================
+   PROFILE HEADER
+========================== */
+
+.profile-header {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding-bottom: 25px;
+
+  border-bottom: 1px solid #e5e7eb;
 }
 
+
+.profile-avatar {
+  width: 70px;
+  height: 70px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  flex-shrink: 0;
+
+  border-radius: 50%;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  font-size: 28px;
+
+  font-weight: 700;
+}
+
+
+.profile-header h1 {
+  margin: 0 0 5px;
+
+  font-size: 26px;
+
+  color: #111827;
+}
+
+
+.profile-header p {
+  margin: 0;
+
+  font-size: 14px;
+
+  color: #6b7280;
+
+  text-transform: capitalize;
+}
+
+
+/* ==========================
+   PROFILE INFORMATION
+========================== */
 
 .profile-info {
-  margin-bottom: 25px;
+  padding: 10px 0;
 }
 
 
-.profile-info p {
-  margin: 12px 0;
+.profile-row {
+  display: flex;
 
-  font-size: 17px;
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding: 18px 0;
+
+  border-bottom: 1px solid #f1f1f1;
 }
 
 
-.profile-logout-btn {
-  width: 100%;
+.profile-row:last-child {
+  border-bottom: none;
+}
 
-  padding: 12px;
 
-  border: none;
+.profile-row span {
+  font-size: 14px;
 
-  border-radius: 5px;
+  color: #6b7280;
+}
 
-  background: #d32f2f;
 
-  color: white;
+.profile-row strong {
+  font-size: 15px;
+
+  color: #111827;
+
+  text-align: right;
+
+  word-break: break-word;
+}
+
+
+/* ==========================
+   ACTIONS
+========================== */
+
+.profile-actions {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 20px;
+}
+
+
+.profile-actions button {
+  flex: 1;
+
+  padding: 12px 18px;
+
+  border-radius: 7px;
+
+  font-size: 14px;
 
   cursor: pointer;
 
-  font-size: 16px;
-
-  font-weight: bold;
+  transition: 0.2s ease;
 }
 
 
-.profile-logout-btn:hover {
-  background: #b71c1c;
+/* ==========================
+   DASHBOARD BUTTON
+========================== */
+
+.dashboard-btn {
+  border: none;
+
+  background: #111827;
+
+  color: #ffffff;
+}
+
+
+.dashboard-btn:hover {
+  background: #000000;
+}
+
+
+/* ==========================
+   LOGOUT BUTTON
+========================== */
+
+.logout-btn {
+  border: 1px solid #dc2626;
+
+  background: #ffffff;
+
+  color: #dc2626;
+}
+
+
+.logout-btn:hover {
+  background: #dc2626;
+
+  color: #ffffff;
+}
+
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 600px) {
+
+  .profile-page {
+    padding: 25px 15px;
+  }
+
+
+  .profile-card {
+    padding: 22px;
+  }
+
+
+  .profile-header h1 {
+    font-size: 22px;
+  }
+
+
+  .profile-avatar {
+    width: 60px;
+    height: 60px;
+
+    font-size: 24px;
+  }
+
+
+  .profile-row {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 6px;
+  }
+
+
+  .profile-row strong {
+    text-align: left;
+  }
+
+
+  .profile-actions {
+    flex-direction: column;
+  }
+
+}
+
+
+/* ==========================
+   SMALL MOBILE
+========================== */
+
+@media (max-width: 400px) {
+
+  .profile-card {
+    padding: 18px;
+  }
+
+
+  .profile-header {
+    gap: 12px;
+  }
+
+
+  .profile-avatar {
+    width: 52px;
+    height: 52px;
+
+    font-size: 20px;
+  }
+
+
+  .profile-header h1 {
+    font-size: 20px;
+  }
+
 }

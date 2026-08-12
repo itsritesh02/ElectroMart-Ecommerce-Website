@@ -5,17 +5,9 @@ import api from "../../services/api";
 
 import "./AddProduct.css";
 
-
 function EditProduct() {
-
   const { id } = useParams();
-
   const navigate = useNavigate();
-
-
-  // ==========================
-  // FORM DATA
-  // ==========================
 
   const [formData, setFormData] = useState({
     name: "",
@@ -25,33 +17,21 @@ function EditProduct() {
     image: "",
   });
 
-
-  // ==========================
-  // LOADING STATES
-  // ==========================
-
   const [loading, setLoading] = useState(true);
-
   const [updating, setUpdating] = useState(false);
-
 
   // ==========================
   // GET SINGLE PRODUCT
   // ==========================
 
   useEffect(() => {
-
-    const getProduct = async () => {
-
+    const fetchProduct = async () => {
       try {
-
         const res = await api.get(
           `/products/${id}`
         );
 
-
         const product = res.data.product;
-
 
         setFormData({
           name: product.name || "",
@@ -61,147 +41,110 @@ function EditProduct() {
           image: product.image || "",
         });
 
-
       } catch (error) {
-
         console.error(
           "Fetch Product Error:",
           error
         );
-
 
         alert(
           error.response?.data?.message ||
           "Failed to load product"
         );
 
-
         navigate("/admin/products");
 
-
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
-
-    getProduct();
-
+    fetchProduct();
   }, [id, navigate]);
-
 
   // ==========================
   // INPUT CHANGE
   // ==========================
 
   const handleChange = (e) => {
-
     setFormData({
-
       ...formData,
-
       [e.target.name]: e.target.value,
-
     });
-
   };
-
 
   // ==========================
   // UPDATE PRODUCT
   // ==========================
 
   const handleSubmit = async (e) => {
-
     e.preventDefault();
-
 
     setUpdating(true);
 
-
     try {
-
       const res = await api.put(
         `/products/${id}`,
-        formData
+        {
+          name: formData.name,
+          price: Number(formData.price),
+          category: formData.category,
+          description: formData.description,
+          image: formData.image,
+        }
       );
-
 
       alert(
         res.data.message ||
         "Product updated successfully"
       );
 
-
       navigate("/admin/products");
 
-
     } catch (error) {
-
       console.error(
         "Update Product Error:",
         error
       );
-
 
       alert(
         error.response?.data?.message ||
         "Failed to update product"
       );
 
-
     } finally {
-
       setUpdating(false);
-
     }
-
   };
 
-
   // ==========================
-  // LOADING SCREEN
+  // LOADING
   // ==========================
 
   if (loading) {
-
     return (
-
       <div className="add-product-page">
-
         <div className="add-product-card">
-
           <h2>
-            Loading product...
+            Loading Product...
           </h2>
-
         </div>
-
       </div>
-
     );
-
   }
 
-
   // ==========================
-  // EDIT FORM
+  // PAGE
   // ==========================
 
   return (
-
     <div className="add-product-page">
 
       <div className="add-product-card">
 
-
         <h1>
           Edit Product
         </h1>
-
 
         <p>
           Update product information
@@ -210,17 +153,13 @@ function EditProduct() {
 
         <form onSubmit={handleSubmit}>
 
-
-          {/* ==========================
-              PRODUCT NAME
-          ========================== */}
+          {/* PRODUCT NAME */}
 
           <div className="form-group">
 
             <label>
               Product Name
             </label>
-
 
             <input
               type="text"
@@ -234,16 +173,13 @@ function EditProduct() {
           </div>
 
 
-          {/* ==========================
-              PRICE
-          ========================== */}
+          {/* PRICE */}
 
           <div className="form-group">
 
             <label>
               Price
             </label>
-
 
             <input
               type="number"
@@ -258,16 +194,13 @@ function EditProduct() {
           </div>
 
 
-          {/* ==========================
-              CATEGORY
-          ========================== */}
+          {/* CATEGORY */}
 
           <div className="form-group">
 
             <label>
               Category
             </label>
-
 
             <select
               name="category"
@@ -280,26 +213,21 @@ function EditProduct() {
                 Select Category
               </option>
 
-
               <option value="Mobile">
                 Mobile
               </option>
-
 
               <option value="Laptop">
                 Laptop
               </option>
 
-
               <option value="Headphones">
                 Headphones
               </option>
 
-
               <option value="Tablet">
                 Tablet
               </option>
-
 
               <option value="Accessories">
                 Accessories
@@ -310,9 +238,7 @@ function EditProduct() {
           </div>
 
 
-          {/* ==========================
-              IMAGE
-          ========================== */}
+          {/* IMAGE */}
 
           <div className="form-group">
 
@@ -320,11 +246,10 @@ function EditProduct() {
               Product Image URL
             </label>
 
-
             <input
               type="url"
               name="image"
-              placeholder="Enter image URL"
+              placeholder="https://example.com/image.jpg"
               value={formData.image}
               onChange={handleChange}
               required
@@ -333,16 +258,13 @@ function EditProduct() {
           </div>
 
 
-          {/* ==========================
-              DESCRIPTION
-          ========================== */}
+          {/* DESCRIPTION */}
 
           <div className="form-group">
 
             <label>
               Description
             </label>
-
 
             <textarea
               name="description"
@@ -356,12 +278,9 @@ function EditProduct() {
           </div>
 
 
-          {/* ==========================
-              BUTTONS
-          ========================== */}
+          {/* BUTTONS */}
 
           <div className="form-buttons">
-
 
             <button
               type="button"
@@ -380,27 +299,19 @@ function EditProduct() {
               className="save-btn"
               disabled={updating}
             >
-
               {updating
                 ? "Updating..."
-                : "Update Product"
-              }
-
+                : "Update Product"}
             </button>
 
-
           </div>
-
 
         </form>
 
       </div>
 
     </div>
-
   );
-
 }
-
 
 export default EditProduct;

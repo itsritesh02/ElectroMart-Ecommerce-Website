@@ -1,27 +1,23 @@
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { FaStar, FaHeart } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 
 import api from "../../services/api";
 
 import { addToCart } from "../../redux/slice/cartSlice";
-import { addToWishlist } from "../../redux/slice/wishlistSlice";
 
 import QuantitySelector from "../../components/ProductPage/QuantitySelector";
 import SimilarProducts from "../../components/ProductPage/SimilarProducts";
 
 import "./ProductDetails.css";
 
-
 function ProductDetails() {
-
   const { id } = useParams();
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
-
 
   // ==========================
   // PRODUCT
@@ -31,67 +27,49 @@ function ProductDetails() {
 
   const [loading, setLoading] = useState(true);
 
-
   // ==========================
   // QUANTITY
   // ==========================
 
   const [quantity, setQuantity] = useState(1);
 
-
   // ==========================
   // GET SINGLE PRODUCT
   // ==========================
 
   useEffect(() => {
-
     const getProduct = async () => {
-
       try {
-
         const res = await api.get(
           `/products/${id}`
         );
 
-        console.log(
-          "PRODUCT:",
-          res.data
-        );
+        console.log("PRODUCT:", res.data);
 
-        setProduct(
-          res.data.product
-        );
+        setProduct(res.data.product);
 
       } catch (error) {
-
         console.error(
           "Fetch Product Error:",
           error
         );
 
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
-
     getProduct();
-
   }, [id]);
-
 
   // ==========================
   // ADD TO CART
   // ==========================
-
   const handleAddToCart = () => {
 
     dispatch(
       addToCart({
-        product,
+        ...product,
         quantity,
       })
     );
@@ -99,26 +77,7 @@ function ProductDetails() {
     alert(
       `${quantity} product added to cart`
     );
-
   };
-
-
-  // ==========================
-  // ADD TO WISHLIST
-  // ==========================
-
-  const handleAddToWishlist = () => {
-
-    dispatch(
-      addToWishlist(product)
-    );
-
-    alert(
-      "Product added to wishlist"
-    );
-
-  };
-
 
   // ==========================
   // BUY NOW
@@ -128,24 +87,19 @@ function ProductDetails() {
 
     dispatch(
       addToCart({
-        product,
+        ...product,
         quantity,
       })
     );
 
     navigate("/cart");
-
   };
-
-
   // ==========================
   // LOADING
   // ==========================
 
   if (loading) {
-
     return (
-
       <div className="details-container">
 
         <h2>
@@ -153,20 +107,15 @@ function ProductDetails() {
         </h2>
 
       </div>
-
     );
-
   }
-
 
   // ==========================
   // PRODUCT NOT FOUND
   // ==========================
 
   if (!product) {
-
     return (
-
       <div className="details-container">
 
         <h2>
@@ -174,18 +123,12 @@ function ProductDetails() {
         </h2>
 
       </div>
-
     );
-
   }
 
-
   return (
-
     <>
-
       <div className="details-container">
-
 
         {/* ==========================
             PRODUCT IMAGE
@@ -212,14 +155,14 @@ function ProductDetails() {
           </h1>
 
 
-          {/* Category */}
+          {/* CATEGORY */}
 
           <p className="product-category">
             Category: {product.category}
           </p>
 
 
-          {/* Rating */}
+          {/* RATING */}
 
           <div className="rating">
 
@@ -232,21 +175,21 @@ function ProductDetails() {
           </div>
 
 
-          {/* Price */}
+          {/* PRICE */}
 
           <h2>
             ₹{product.price}
           </h2>
 
 
-          {/* Description */}
+          {/* DESCRIPTION */}
 
           <p>
             {product.description}
           </p>
 
 
-          {/* Quantity */}
+          {/* QUANTITY */}
 
           <QuantitySelector
             quantity={quantity}
@@ -254,16 +197,12 @@ function ProductDetails() {
           />
 
 
-          {/* ==========================
-              BUTTONS
-          ========================== */}
+          {/* BUTTONS */}
 
           <div className="details-buttons">
 
-
-            {/* ADD TO CART */}
-
             <button
+              type="button"
               className="cart-btn"
               onClick={handleAddToCart}
             >
@@ -271,34 +210,15 @@ function ProductDetails() {
             </button>
 
 
-            {/* BUY NOW */}
-
             <button
+              type="button"
               className="buy-btn"
               onClick={handleBuyNow}
             >
               Buy Now
             </button>
 
-
           </div>
-
-
-          {/* ==========================
-              WISHLIST
-          ========================== */}
-
-          <button
-            className="wishlist-btn"
-            onClick={handleAddToWishlist}
-          >
-
-            <FaHeart />
-
-            Add To Wishlist
-
-          </button>
-
 
         </div>
 
@@ -315,10 +235,7 @@ function ProductDetails() {
       />
 
     </>
-
   );
-
 }
-
 
 export default ProductDetails;
