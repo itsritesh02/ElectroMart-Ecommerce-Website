@@ -1,3 +1,7 @@
+/* ==========================
+   ORDER SUCCESS PAGE
+========================== */
+
 .order-success-page {
   min-height: 70vh;
 
@@ -14,7 +18,7 @@
 
 
 /* ==========================
-   CARD
+   SUCCESS CARD
 ========================== */
 
 .order-success-card {
@@ -22,17 +26,20 @@
 
   max-width: 600px;
 
-  padding: 45px 30px;
+  padding: 40px 30px;
+
+  box-sizing: border-box;
+
+  text-align: center;
 
   background: #ffffff;
 
   border: 1px solid #e5e7eb;
 
-  border-radius: 12px;
+  border-radius: 14px;
 
-  text-align: center;
-
-  box-sizing: border-box;
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 
@@ -66,24 +73,30 @@
 
 
 /* ==========================
-   HEADING
+   TITLE
 ========================== */
 
 .order-success-card h1 {
   margin: 0 0 12px;
 
-  font-size: 28px;
+  font-size: 30px;
 
   color: #111827;
 }
 
 
-.order-success-card > p {
+/* ==========================
+   MESSAGE
+========================== */
+
+.success-message {
   margin: 0 auto 25px;
 
   max-width: 450px;
 
   color: #666;
+
+  font-size: 15px;
 
   line-height: 1.6;
 }
@@ -94,37 +107,33 @@
 ========================== */
 
 .order-id-box {
-  margin: 25px 0;
+  margin: 20px 0 30px;
 
   padding: 15px;
 
-  background: #f9fafb;
+  background: #f7f7f7;
 
-  border: 1px solid #e5e7eb;
+  border-radius: 8px;
 
-  border-radius: 7px;
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 6px;
 }
 
-
 .order-id-box span {
-  display: block;
-
-  margin-bottom: 6px;
-
   font-size: 13px;
 
   color: #777;
 }
 
-
 .order-id-box strong {
-  display: block;
-
-  word-break: break-all;
-
   font-size: 14px;
 
   color: #111827;
+
+  word-break: break-all;
 }
 
 
@@ -135,13 +144,10 @@
 .success-buttons {
   display: flex;
 
-  justify-content: center;
-
   gap: 12px;
 
-  margin-top: 25px;
+  justify-content: center;
 }
-
 
 .success-buttons a {
   padding: 12px 20px;
@@ -156,31 +162,29 @@
 }
 
 
-/* CONTINUE SHOPPING */
+/* Dashboard */
 
-.continue-shopping-btn {
+.dashboard-btn {
   background: #111827;
 
   color: white;
 }
 
-
-.continue-shopping-btn:hover {
-  background: #000;
+.dashboard-btn:hover {
+  background: #000000;
 }
 
 
-/* VIEW ORDERS */
+/* Shopping */
 
-.view-orders-btn {
-  background: #f1f1f1;
+.shopping-btn {
+  background: #f59e0b;
 
-  color: #222;
+  color: white;
 }
 
-
-.view-orders-btn:hover {
-  background: #e2e2e2;
+.shopping-btn:hover {
+  background: #d97706;
 }
 
 
@@ -195,7 +199,7 @@
   }
 
   .order-success-card {
-    padding: 35px 20px;
+    padding: 30px 20px;
   }
 
   .order-success-card h1 {

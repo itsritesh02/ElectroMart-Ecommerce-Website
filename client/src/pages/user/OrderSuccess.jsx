@@ -2,11 +2,14 @@ import { Link, useParams } from "react-router-dom";
 
 import "./OrderSuccess.css";
 
+
 function OrderSuccess() {
 
   const { id } = useParams();
 
+
   return (
+
     <div className="order-success-page">
 
       <div className="order-success-card">
@@ -21,15 +24,16 @@ function OrderSuccess() {
 
 
         {/* ==========================
-            MESSAGE
+            TITLE
         ========================== */}
 
         <h1>
           Order Placed Successfully!
         </h1>
 
-        <p>
-          Thank you for your purchase.
+
+        <p className="success-message">
+          Thank you for your order.
           Your order has been placed successfully.
         </p>
 
@@ -58,18 +62,18 @@ function OrderSuccess() {
         <div className="success-buttons">
 
           <Link
-            to="/products"
-            className="continue-shopping-btn"
+            to="/user/dashboard"
+            className="dashboard-btn"
           >
-            Continue Shopping
+            Go To Dashboard
           </Link>
 
 
           <Link
-            to="/user/orders"
-            className="view-orders-btn"
+            to="/products"
+            className="shopping-btn"
           >
-            View My Orders
+            Continue Shopping
           </Link>
 
         </div>
@@ -77,7 +81,10 @@ function OrderSuccess() {
       </div>
 
     </div>
+
   );
+
 }
+
 
 export default OrderSuccess;
