@@ -1,4 +1,5 @@
 import Order from "../models/Order.js";
+import Product from "../models/Product.js";
 
 // ==========================
 // CREATE ORDER
@@ -9,50 +10,39 @@ export const createOrder = async (req, res) => {
     const { items, shippingAddress, paymentMethod, totalAmount } = req.body;
 
     // ==========================
-    // CHECK ITEMS
+    // VALIDATION
     // ==========================
 
     if (!items || items.length === 0) {
       return res.status(400).json({
-        message: "Order items are required",
+        message: "Order must contain at least one product",
+      });
+    }
+
+    if (!shippingAddress) {
+      return res.status(400).json({
+        message: "Shipping address is required",
+      });
+    }
+
+    if (!paymentMethod) {
+      return res.status(400).json({
+        message: "Payment method is required",
       });
     }
 
     // ==========================
-    // CHECK SHIPPING ADDRESS
+    // CHECK PRODUCTS
     // ==========================
 
-    if (
-      !shippingAddress?.fullName ||
-      !shippingAddress?.email ||
-      !shippingAddress?.phone ||
-      !shippingAddress?.address ||
-      !shippingAddress?.city ||
-      !shippingAddress?.pincode
-    ) {
-      return res.status(400).json({
-        message: "Complete shipping address is required",
-      });
-    }
+    for (const item of items) {
+      const product = await Product.findById(item.product);
 
-    // ==========================
-    // CHECK PAYMENT METHOD
-    // ==========================
-
-    if (!paymentMethod || !["cod", "razorpay"].includes(paymentMethod)) {
-      return res.status(400).json({
-        message: "Invalid payment method",
-      });
-    }
-
-    // ==========================
-    // CHECK TOTAL
-    // ==========================
-
-    if (totalAmount === undefined || totalAmount === null || totalAmount < 0) {
-      return res.status(400).json({
-        message: "Valid total amount is required",
-      });
+      if (!product) {
+        return res.status(404).json({
+          message: `Product not found: ${item.name}`,
+        });
+      }
     }
 
     // ==========================
@@ -69,10 +59,6 @@ export const createOrder = async (req, res) => {
       paymentMethod,
 
       totalAmount,
-
-      orderStatus: "Pending",
-
-      paymentStatus: paymentMethod === "cod" ? "Pending" : "Pending",
     });
 
     // ==========================
@@ -103,11 +89,9 @@ export const getMyOrders = async (req, res) => {
   try {
     const orders = await Order.find({
       user: req.user._id,
-    })
-      .populate("items.product", "name image price")
-      .sort({
-        createdAt: -1,
-      });
+    }).sort({
+      createdAt: -1,
+    });
 
     res.status(200).json({
       message: "Orders fetched successfully",
@@ -137,21 +121,13 @@ export const getSingleOrder = async (req, res) => {
       _id: id,
 
       user: req.user._id,
-    }).populate("items.product", "name image price");
-
-    // ==========================
-    // ORDER NOT FOUND
-    // ==========================
+    });
 
     if (!order) {
       return res.status(404).json({
         message: "Order not found",
       });
     }
-
-    // ==========================
-    // RESPONSE
-    // ==========================
 
     res.status(200).json({
       message: "Order fetched successfully",
