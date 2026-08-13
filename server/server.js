@@ -7,6 +7,7 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
+import adminOrderRoutes from "./routes/adminOrderRoutes.js";
 
 const app = express();
 
@@ -48,6 +49,8 @@ app.use("/api/products", productRoutes);
 
 app.use("/api/orders", orderRoutes);
 
+app.use("/api/admin/orders", adminOrderRoutes);
+
 // ==========================
 // HOME
 // ==========================
@@ -59,6 +62,7 @@ app.get("/", (req, res) => {
     message: "ElectroMart API Running",
   });
 });
+
 
 // ==========================
 // SERVER
