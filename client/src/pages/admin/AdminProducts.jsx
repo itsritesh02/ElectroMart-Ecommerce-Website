@@ -1,19 +1,13 @@
+
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import api from "../../services/api";
 
-import "./AdminProducts.css";
+import "./AdminProducts.css"
 
 
 function AdminProducts() {
-
-  const navigate = useNavigate();
-
-
-  // ==========================
-  // PRODUCTS STATE
-  // ==========================
 
   const [products, setProducts] = useState([]);
 
@@ -21,7 +15,7 @@ function AdminProducts() {
 
 
   // ==========================
-  // GET ALL PRODUCTS
+  // GET PRODUCTS
   // ==========================
 
   useEffect(() => {
@@ -32,14 +26,19 @@ function AdminProducts() {
 
         const res = await api.get("/products");
 
-        console.log("PRODUCTS:", res.data);
+        console.log(
+          "PRODUCTS:",
+          res.data
+        );
 
-        setProducts(res.data.products);
+        setProducts(
+          res.data.products || []
+        );
 
       } catch (error) {
 
         console.error(
-          "Fetch Products Error:",
+          "Get Products Error:",
           error
         );
 
@@ -66,7 +65,7 @@ function AdminProducts() {
   // DELETE PRODUCT
   // ==========================
 
-  const handleDelete = async (id) => {
+  const handleDelete = async (productId) => {
 
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?"
@@ -80,21 +79,27 @@ function AdminProducts() {
 
     try {
 
-      await api.delete(
-        `/products/${id}`
+      const res = await api.delete(
+        `/ products / ${ productId } `
+      );
+
+
+      console.log(
+        "DELETE PRODUCT:",
+        res.data
+      );
+
+
+      setProducts((prevProducts) =>
+        prevProducts.filter(
+          (product) =>
+            product._id !== productId
+        )
       );
 
 
       alert(
         "Product deleted successfully"
-      );
-
-
-      // Deleted product ko UI se remove karo
-      setProducts((prevProducts) =>
-        prevProducts.filter(
-          (product) => product._id !== id
-        )
       );
 
 
@@ -150,7 +155,7 @@ function AdminProducts() {
           HEADER
       ========================== */}
 
-      <div className="products-header">
+      <div className="admin-products-header">
 
         <div>
 
@@ -165,14 +170,27 @@ function AdminProducts() {
         </div>
 
 
-        <button
+        <Link
+          to="/admin/products/add"
           className="add-product-btn"
-          onClick={() =>
-            navigate("/admin/products/add")
-          }
         >
           + Add Product
-        </button>
+        </Link>
+
+      </div>
+
+
+      {/* ==========================
+          COUNT
+      ========================== */}
+
+      <div className="product-count">
+
+        Total Products:
+
+        <strong>
+          {products.length}
+        </strong>
 
       </div>
 
@@ -193,9 +211,18 @@ function AdminProducts() {
             Add your first product.
           </p>
 
+
+          <Link
+            to="/admin/products/add"
+            className="add-product-btn"
+          >
+            Add Product
+          </Link>
+
         </div>
 
       ) : (
+
 
         /* ==========================
            PRODUCTS TABLE
@@ -210,7 +237,7 @@ function AdminProducts() {
               <tr>
 
                 <th>
-                  ID
+                  Image
                 </th>
 
                 <th>
@@ -223,6 +250,10 @@ function AdminProducts() {
 
                 <th>
                   Price
+                </th>
+
+                <th>
+                  Date
                 </th>
 
                 <th>
@@ -242,74 +273,106 @@ function AdminProducts() {
                   key={product._id}
                 >
 
-                  {/* ID */}
+
+                  {/* IMAGE */}
 
                   <td>
-                    {product._id}
+
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="admin-product-image"
+                    />
+
                   </td>
 
 
-                  {/* Product */}
+                  {/* PRODUCT */}
 
                   <td>
 
-                    <div>
+                    <div className="admin-product-info">
 
                       <strong>
                         {product.name}
                       </strong>
+
+                      <span>
+                        {product.description}
+                      </span>
 
                     </div>
 
                   </td>
 
 
-                  {/* Category */}
+                  {/* CATEGORY */}
 
                   <td>
                     {product.category}
                   </td>
 
 
-                  {/* Price */}
-
-                  <td>
-                    ₹{product.price}
-                  </td>
-
-
-                  {/* Actions */}
+                  {/* PRICE */}
 
                   <td>
 
-                    {/* EDIT */}
-
-                    <button
-                      className="edit-btn"
-                      onClick={() =>
-                        navigate(
-                          `/admin/products/edit/${product._id}`
-                        )
-                      }
-                    >
-                      Edit
-                    </button>
-
-
-                    {/* DELETE */}
-
-                    <button
-                      className="delete-btn"
-                      onClick={() =>
-                        handleDelete(
-                          product._id
-                        )
-                      }
-                    >
-                      Delete
-                    </button>
+                    <strong>
+                      ₹{product.price}
+                    </strong>
 
                   </td>
+
+
+                  {/* DATE */}
+
+                  <td>
+
+                    {product.createdAt
+                      ? new Date(
+                          product.createdAt
+                        ).toLocaleDateString()
+                      : "N/A"}
+
+                  </td>
+
+
+                  {/* ACTIONS */}
+
+                  <td>
+
+                    <div className="product-actions">
+
+
+                      {/* EDIT */}
+
+                      <Link
+                        to={`/ admin / products / edit / ${ product._id } `}
+                        className="edit-product-btn"
+                      >
+                        Edit
+                      </Link>
+
+
+                      {/* DELETE */}
+
+                      <button
+                        type="button"
+                        className="delete-product-btn"
+                        onClick={() =>
+                          handleDelete(
+                            product._id
+                          )
+                        }
+                      >
+                        Delete
+                      </button>
+
+
+                    </div>
+
+                  </td>
+
 
                 </tr>
 
@@ -331,3 +394,4 @@ function AdminProducts() {
 
 
 export default AdminProducts;
+
