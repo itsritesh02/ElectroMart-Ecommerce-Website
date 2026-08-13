@@ -31,7 +31,7 @@ import EditProduct from "../pages/admin/EditProduct";
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 import Checkout from "../pages/user/Checkout";
-import MyOrders from "../pages/user/MyOrders";
+import MyOrders from "../pages/user/MyOrder";
 
 const AppRoutes = () => {
 
@@ -121,7 +121,7 @@ const AppRoutes = () => {
           />
           <Route
             path="/my-orders"
-            element={<MyOrders />}
+            element={<MyOrders/>}
           />
 
         </Route>

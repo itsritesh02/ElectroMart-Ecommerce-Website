@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 import api from "../../services/api";
 
-import "./MyOrders.css";
+import "./MyOrder.css"
 
 
 function MyOrders() {
