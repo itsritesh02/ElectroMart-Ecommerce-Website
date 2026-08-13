@@ -8,14 +8,16 @@ import { clearCart } from "../../redux/slice/cartSlice";
 
 import "./Checkout.css";
 
+
 function Checkout() {
 
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
 
+
   // ==========================
-  // CART
+  // GET CART
   // ==========================
 
   const cartItems = useSelector(
@@ -24,7 +26,7 @@ function Checkout() {
 
 
   // ==========================
-  // USER
+  // GET USER
   // ==========================
 
   const user = useSelector(
@@ -33,49 +35,77 @@ function Checkout() {
 
 
   // ==========================
-  // FORM
+  // FORM STATE
   // ==========================
 
   const [formData, setFormData] = useState({
+
     fullName: user?.name || "",
+
     email: user?.email || "",
+
     phone: "",
+
     address: "",
+
     city: "",
+
     pincode: "",
-    paymentMethod: "cod",
+
   });
 
 
-  const [placingOrder, setPlacingOrder] =
+  // ==========================
+  // PAYMENT METHOD
+  // ==========================
+
+  const [paymentMethod, setPaymentMethod] =
+    useState("cod");
+
+
+  // ==========================
+  // LOADING
+  // ==========================
+
+  const [loading, setLoading] =
     useState(false);
 
 
   // ==========================
-  // TOTAL
+  // TOTAL PRICE
   // ==========================
 
   const totalPrice = cartItems.reduce(
+
     (total, item) => {
+
       return (
         total +
-        Number(item.price) * item.quantity
+        item.price * item.quantity
       );
+
     },
+
     0
+
   );
 
 
   // ==========================
-  // INPUT CHANGE
+  // FORM CHANGE
   // ==========================
 
   const handleChange = (e) => {
 
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+
+      ...prev,
+
+      [name]: value,
+
+    }));
 
   };
 
@@ -84,42 +114,72 @@ function Checkout() {
   // PLACE ORDER
   // ==========================
 
-  const handleSubmit = async (e) => {
+  const handlePlaceOrder = async (e) => {
 
     e.preventDefault();
+
+
+    // ==========================
+    // EMPTY CART CHECK
+    // ==========================
 
     if (cartItems.length === 0) {
 
       alert("Your cart is empty");
 
-      navigate("/products");
+      navigate("/cart");
 
       return;
+
     }
-
-
-    setPlacingOrder(true);
 
 
     try {
 
+      setLoading(true);
+
+
       // ==========================
-      // ORDER ITEMS
+      // ORDER DATA
       // ==========================
 
-      const orderItems = cartItems.map(
-        (item) => ({
+      const orderData = {
+
+        items: cartItems.map((item) => ({
+
           product: item.id,
 
           name: item.name,
 
-          price: Number(item.price),
+          price: item.price,
 
           image: item.image,
 
           quantity: item.quantity,
-        })
-      );
+
+        })),
+
+        shippingAddress: {
+
+          fullName: formData.fullName,
+
+          email: formData.email,
+
+          phone: formData.phone,
+
+          address: formData.address,
+
+          city: formData.city,
+
+          pincode: formData.pincode,
+
+        },
+
+        paymentMethod,
+
+        totalAmount: totalPrice,
+
+      };
 
 
       // ==========================
@@ -128,40 +188,12 @@ function Checkout() {
 
       const res = await api.post(
         "/orders",
-        {
-          items: orderItems,
-
-          shippingAddress: {
-            fullName:
-              formData.fullName,
-
-            email:
-              formData.email,
-
-            phone:
-              formData.phone,
-
-            address:
-              formData.address,
-
-            city:
-              formData.city,
-
-            pincode:
-              formData.pincode,
-          },
-
-          paymentMethod:
-            formData.paymentMethod,
-
-          totalAmount:
-            totalPrice,
-        }
+        orderData
       );
 
 
       console.log(
-        "ORDER CREATED:",
+        "ORDER RESPONSE:",
         res.data
       );
 
@@ -174,13 +206,8 @@ function Checkout() {
 
 
       // ==========================
-      // SUCCESS
+      // ORDER SUCCESS
       // ==========================
-
-      alert(
-        "Order placed successfully!"
-      );
-
 
       navigate(
         `/order-success/${res.data.order._id}`
@@ -196,13 +223,17 @@ function Checkout() {
 
 
       alert(
+
         error.response?.data?.message ||
+
         "Failed to place order"
+
       );
+
 
     } finally {
 
-      setPlacingOrder(false);
+      setLoading(false);
 
     }
 
@@ -216,36 +247,36 @@ function Checkout() {
   if (cartItems.length === 0) {
 
     return (
-      <div className="checkout-page">
 
-        <div className="empty-checkout">
+      <div className="checkout-empty">
 
-          <h1>
-            Your Cart is Empty
-          </h1>
+        <h1>
+          Your Cart is Empty
+        </h1>
 
-          <p>
-            Please add products before checkout.
-          </p>
-
-          <button
-            type="button"
-            onClick={() =>
-              navigate("/products")
-            }
-          >
-            Continue Shopping
-          </button>
-
-        </div>
+        <button
+          onClick={() =>
+            navigate("/products")
+          }
+        >
+          Continue Shopping
+        </button>
 
       </div>
+
     );
+
   }
 
 
   return (
+
     <div className="checkout-page">
+
+
+      {/* ==========================
+          PAGE TITLE
+      ========================== */}
 
       <h1>
         Checkout
@@ -259,17 +290,19 @@ function Checkout() {
             LEFT - FORM
         ========================== */}
 
-        <div className="checkout-form">
+        <div className="checkout-form-section">
 
           <h2>
-            Delivery Information
+            Delivery Details
           </h2>
 
 
-          <form onSubmit={handleSubmit}>
+          <form
+            onSubmit={handlePlaceOrder}
+          >
 
 
-            {/* NAME */}
+            {/* FULL NAME */}
 
             <div className="form-group">
 
@@ -280,9 +313,9 @@ function Checkout() {
               <input
                 type="text"
                 name="fullName"
-                placeholder="Enter your full name"
                 value={formData.fullName}
                 onChange={handleChange}
+                placeholder="Enter full name"
                 required
               />
 
@@ -300,9 +333,9 @@ function Checkout() {
               <input
                 type="email"
                 name="email"
-                placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleChange}
+                placeholder="Enter email"
                 required
               />
 
@@ -314,15 +347,15 @@ function Checkout() {
             <div className="form-group">
 
               <label>
-                Phone Number
+                Phone
               </label>
 
               <input
                 type="tel"
                 name="phone"
-                placeholder="Enter phone number"
                 value={formData.phone}
                 onChange={handleChange}
+                placeholder="Enter phone number"
                 required
               />
 
@@ -339,10 +372,9 @@ function Checkout() {
 
               <textarea
                 name="address"
-                placeholder="Enter complete address"
                 value={formData.address}
                 onChange={handleChange}
-                rows="4"
+                placeholder="Enter delivery address"
                 required
               />
 
@@ -360,9 +392,9 @@ function Checkout() {
               <input
                 type="text"
                 name="city"
-                placeholder="Enter city"
                 value={formData.city}
                 onChange={handleChange}
+                placeholder="Enter city"
                 required
               />
 
@@ -380,58 +412,87 @@ function Checkout() {
               <input
                 type="text"
                 name="pincode"
-                placeholder="Enter pincode"
                 value={formData.pincode}
                 onChange={handleChange}
+                placeholder="Enter pincode"
                 required
               />
 
             </div>
 
 
-            {/* PAYMENT */}
+            {/* ==========================
+                PAYMENT
+            ========================== */}
 
-            <div className="form-group">
+            <div className="payment-section">
 
-              <label>
+              <h2>
                 Payment Method
+              </h2>
+
+
+              <label className="payment-option">
+
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="cod"
+                  checked={
+                    paymentMethod === "cod"
+                  }
+                  onChange={(e) =>
+                    setPaymentMethod(
+                      e.target.value
+                    )
+                  }
+                />
+
+                Cash On Delivery
+
               </label>
 
-              <select
-                name="paymentMethod"
-                value={
-                  formData.paymentMethod
-                }
-                onChange={handleChange}
-                required
-              >
 
-                <option value="cod">
-                  Cash on Delivery
-                </option>
+              <label className="payment-option">
 
-                <option value="razorpay">
-                  Online Payment
-                </option>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="razorpay"
+                  checked={
+                    paymentMethod === "razorpay"
+                  }
+                  onChange={(e) =>
+                    setPaymentMethod(
+                      e.target.value
+                    )
+                  }
+                />
 
-              </select>
+                Razorpay
+
+              </label>
 
             </div>
 
 
-            {/* PLACE ORDER */}
+            {/* ==========================
+                PLACE ORDER
+            ========================== */}
 
             <button
               type="submit"
               className="place-order-btn"
-              disabled={placingOrder}
+              disabled={loading}
             >
 
-              {placingOrder
+              {loading
                 ? "Placing Order..."
-                : "Place Order"}
+                : "Place Order"
+              }
 
             </button>
+
 
           </form>
 
@@ -439,7 +500,7 @@ function Checkout() {
 
 
         {/* ==========================
-            RIGHT - SUMMARY
+            RIGHT - ORDER SUMMARY
         ========================== */}
 
         <div className="checkout-summary">
@@ -448,6 +509,8 @@ function Checkout() {
             Order Summary
           </h2>
 
+
+          {/* PRODUCTS */}
 
           {cartItems.map((item) => (
 
@@ -469,21 +532,22 @@ function Checkout() {
                 </h3>
 
                 <p>
-                  Quantity: {item.quantity}
+                  ₹{item.price} × {item.quantity}
                 </p>
 
-                <strong>
-                  ₹
-                  {Number(item.price) *
-                    item.quantity}
-                </strong>
-
               </div>
+
+
+              <strong>
+                ₹{item.price * item.quantity}
+              </strong>
 
             </div>
 
           ))}
 
+
+          {/* TOTAL */}
 
           <div className="checkout-total">
 
@@ -497,12 +561,17 @@ function Checkout() {
 
           </div>
 
+
         </div>
+
 
       </div>
 
     </div>
+
   );
+
 }
+
 
 export default Checkout;
