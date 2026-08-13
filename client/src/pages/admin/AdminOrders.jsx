@@ -1,205 +1,42 @@
-import { useEffect, useState } from "react";
+```jsx
+import { Link } from "react-router-dom";
 
-import api from "../../services/api";
+import { useSelector } from "react-redux";
 
-import "./AdminOrders.css";
+import "./AdminDashboard.css";
 
 
-function AdminOrders() {
-
-  // ==========================
-  // ORDERS STATE
-  // ==========================
-
-  const [orders, setOrders] = useState([]);
-
-  const [loading, setLoading] = useState(true);
-
+function AdminDashboard() {
 
   // ==========================
-  // GET ORDERS
+  // GET USER FROM REDUX
   // ==========================
 
-  useEffect(() => {
+  const { user } = useSelector(
+    (state) => state.auth
+  );
 
-    const getOrders = async () => {
-
-      try {
-
-        const res = await api.get(
-          "/admin/orders"
-        );
-
-
-        console.log(
-          "ADMIN ORDERS:",
-          res.data
-        );
-
-
-        setOrders(
-          res.data.orders || []
-        );
-
-
-      } catch (error) {
-
-        console.error(
-          "Get Admin Orders Error:",
-          error
-        );
-
-
-        alert(
-          error.response?.data?.message ||
-          "Failed to load orders"
-        );
-
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
-
-
-    getOrders();
-
-  }, []);
-
-
-  // ==========================
-  // UPDATE ORDER STATUS
-  // ==========================
-
-  const handleStatusChange = async (
-    orderId,
-    newStatus
-  ) => {
-
-    try {
-
-      const res = await api.put(
-        `/admin/orders/${orderId}/status`,
-        {
-          orderStatus: newStatus,
-        }
-      );
-
-
-      console.log(
-        "STATUS UPDATED:",
-        res.data
-      );
-
-
-      // ==========================
-      // UPDATE UI
-      // ==========================
-
-      setOrders((prevOrders) => {
-
-        return prevOrders.map(
-          (order) => {
-
-            if (order._id === orderId) {
-
-              return {
-                ...order,
-                orderStatus: newStatus,
-              };
-
-            }
-
-            return order;
-
-          }
-        );
-
-      });
-
-
-      alert(
-        "Order status updated successfully"
-      );
-
-
-    } catch (error) {
-
-      console.error(
-        "Update Order Status Error:",
-        error
-      );
-
-
-      alert(
-        error.response?.data?.message ||
-        "Failed to update order status"
-      );
-
-    }
-
-  };
-
-
-  // ==========================
-  // LOADING
-  // ==========================
-
-  if (loading) {
-
-    return (
-
-      <div className="admin-orders">
-
-        <h2>
-          Loading orders...
-        </h2>
-
-      </div>
-
-    );
-
-  }
-
-
-  // ==========================
-  // PAGE
-  // ==========================
 
   return (
 
-    <div className="admin-orders">
+    <div className="admin-dashboard">
 
 
       {/* ==========================
           HEADER
       ========================== */}
 
-      <div className="orders-header">
+      <div className="dashboard-header">
 
         <div>
 
           <h1>
-            Orders
+            Admin Dashboard
           </h1>
 
           <p>
-            Manage customer orders
+            Welcome back, {user?.name || "Admin"}
           </p>
-
-        </div>
-
-
-        <div className="orders-count">
-
-          Total Orders:
-
-          <strong>
-            {orders.length}
-          </strong>
 
         </div>
 
@@ -207,212 +44,139 @@ function AdminOrders() {
 
 
       {/* ==========================
-          NO ORDERS
+          DASHBOARD CARDS
       ========================== */}
 
-      {orders.length === 0 ? (
+      <div className="dashboard-cards">
 
-        <div className="no-orders">
 
-          <h2>
-            No Orders Found
-          </h2>
+        {/* ==========================
+            PRODUCTS
+        ========================== */}
 
-          <p>
-            No customer orders are available.
-          </p>
+        <Link
+          to="/admin/products"
+          className="dashboard-card"
+        >
+
+          <div className="card-icon">
+            📦
+          </div>
+
+          <div className="card-content">
+
+            <h2>
+              Products
+            </h2>
+
+            <p>
+              Manage store products
+            </p>
+
+          </div>
+
+        </Link>
+
+
+        {/* ==========================
+            ADD PRODUCT
+        ========================== */}
+
+        <Link
+          to="/admin/products/add"
+          className="dashboard-card"
+        >
+
+          <div className="card-icon">
+            ➕
+          </div>
+
+          <div className="card-content">
+
+            <h2>
+              Add Product
+            </h2>
+
+            <p>
+              Add a new product
+            </p>
+
+          </div>
+
+        </Link>
+
+
+        {/* ==========================
+            ORDERS
+        ========================== */}
+
+        <Link
+          to="/admin/orders"
+          className="dashboard-card"
+        >
+
+          <div className="card-icon">
+            🛒
+          </div>
+
+          <div className="card-content">
+
+            <h2>
+              Orders
+            </h2>
+
+            <p>
+              Manage customer orders
+            </p>
+
+          </div>
+
+        </Link>
+
+
+      </div>
+
+
+      {/* ==========================
+          QUICK ACTIONS
+      ========================== */}
+
+      <div className="quick-actions">
+
+        <h2>
+          Quick Actions
+        </h2>
+
+
+        <div className="quick-action-buttons">
+
+          <Link
+            to="/admin/products"
+            className="quick-btn"
+          >
+            Manage Products
+          </Link>
+
+
+          <Link
+            to="/admin/products/add"
+            className="quick-btn"
+          >
+            Add Product
+          </Link>
+
+
+          <Link
+            to="/admin/orders"
+            className="quick-btn"
+          >
+            Manage Orders
+          </Link>
 
         </div>
 
-      ) : (
+      </div>
 
-        <div className="orders-table-container">
-
-          <table className="orders-table">
-
-            <thead>
-
-              <tr>
-
-                <th>
-                  Order ID
-                </th>
-
-                <th>
-                  Customer
-                </th>
-
-                <th>
-                  Items
-                </th>
-
-                <th>
-                  Total
-                </th>
-
-                <th>
-                  Payment
-                </th>
-
-                <th>
-                  Status
-                </th>
-
-                <th>
-                  Date
-                </th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              {orders.map((order) => (
-
-                <tr
-                  key={order._id}
-                >
-
-                  {/* ORDER ID */}
-
-                  <td>
-
-                    <span className="order-id">
-
-                      {order._id}
-
-                    </span>
-
-                  </td>
-
-
-                  {/* CUSTOMER */}
-
-                  <td>
-
-                    <div className="customer-info">
-
-                      <strong>
-
-                        {order.user?.name ||
-                          "Unknown User"}
-
-                      </strong>
-
-                      <span>
-
-                        {order.user?.email ||
-                          "No email"}
-
-                      </span>
-
-                    </div>
-
-                  </td>
-
-
-                  {/* ITEMS */}
-
-                  <td>
-
-                    {order.items?.length || 0}
-
-                  </td>
-
-
-                  {/* TOTAL */}
-
-                  <td>
-
-                    <strong>
-
-                      ₹{order.totalAmount}
-
-                    </strong>
-
-                  </td>
-
-
-                  {/* PAYMENT */}
-
-                  <td>
-
-                    <span className="payment-method">
-
-                      {order.paymentMethod}
-
-                    </span>
-
-                  </td>
-
-
-                  {/* STATUS */}
-
-                  <td>
-
-                    <select
-                      value={
-                        order.orderStatus
-                      }
-                      onChange={(e) =>
-                        handleStatusChange(
-                          order._id,
-                          e.target.value
-                        )
-                      }
-                      className={`status-select status-${order.orderStatus.toLowerCase()}`}
-                    >
-
-                      <option value="Pending">
-                        Pending
-                      </option>
-
-                      <option value="Processing">
-                        Processing
-                      </option>
-
-                      <option value="Shipped">
-                        Shipped
-                      </option>
-
-                      <option value="Delivered">
-                        Delivered
-                      </option>
-
-                      <option value="Cancelled">
-                        Cancelled
-                      </option>
-
-                    </select>
-
-                  </td>
-
-
-                  {/* DATE */}
-
-                  <td>
-
-                    {order.createdAt
-                      ? new Date(
-                        order.createdAt
-                      ).toLocaleDateString()
-                      : "N/A"}
-
-                  </td>
-
-                </tr>
-
-              ))}
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      )}
 
     </div>
 
@@ -421,4 +185,5 @@ function AdminOrders() {
 }
 
 
-export default AdminOrders;
+export default AdminDashboard;
+```

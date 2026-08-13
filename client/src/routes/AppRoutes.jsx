@@ -26,6 +26,7 @@ import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminProducts from "../pages/admin/AdminProducts";
 import AddProduct from "../pages/admin/AddProduct";
 import EditProduct from "../pages/admin/EditProduct";
+import AdminOrders from "../pages/admin/AdminOrders";
 
 // Route Protection
 import ProtectedRoute from "./ProtectedRoute";
@@ -168,7 +169,10 @@ const AppRoutes = () => {
             path="/admin/products/edit/:id"
             element={<EditProduct />}
           />
-
+          <Route
+            path="/admin/orders"
+            element={<AdminOrders />}
+          />
 
         </Route>
 
