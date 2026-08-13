@@ -30,8 +30,8 @@ import EditProduct from "../pages/admin/EditProduct";
 // Route Protection
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
-import Checkout from "../pages/user/checkout";
-
+import Checkout from "../pages/user/Checkout";
+import MyOrders from "../pages/user/MyOrders";
 
 const AppRoutes = () => {
 
@@ -119,7 +119,10 @@ const AppRoutes = () => {
             path="/order-success/:id"
             element={<OrderSuccess />}
           />
-
+          <Route
+            path="/my-orders"
+            element={<MyOrders />}
+          />
 
         </Route>
 

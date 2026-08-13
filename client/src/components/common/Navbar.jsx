@@ -16,46 +16,73 @@ import "./Navbar.css";
 
 function Navbar() {
 
-  // Redux se auth data lena
+  // =========================
+  // AUTH DATA
+  // =========================
+
   const { user, isAuthenticated } = useSelector(
     (state) => state.auth
   );
 
 
-  // Redux se cart items lena
+  // =========================
+  // CART DATA
+  // =========================
+
   const cartItems = useSelector(
     (state) => state.cart.items
   );
 
 
-  // Redux se wishlist items lena
+  // =========================
+  // WISHLIST DATA
+  // =========================
+
   const wishlistItems = useSelector(
     (state) => state.wishlist.items
   );
 
 
-  // Redux action ke liye
+  // =========================
+  // DISPATCH
+  // =========================
+
   const dispatch = useDispatch();
 
 
-  // Page change karne ke liye
+  // =========================
+  // NAVIGATE
+  // =========================
+
   const navigate = useNavigate();
 
 
-  // Cart total quantity
+  // =========================
+  // CART COUNT
+  // =========================
+
   const cartCount = cartItems.reduce(
     (total, item) => {
+
       return total + item.quantity;
+
     },
     0
   );
 
 
-  // Wishlist total products
-  const wishlistCount = wishlistItems.length;
+  // =========================
+  // WISHLIST COUNT
+  // ==========================
+
+  const wishlistCount =
+    wishlistItems.length;
 
 
-  // Logout function
+  // =========================
+  // LOGOUT
+  // =========================
+
   const handleLogout = () => {
 
     dispatch(logout());
@@ -66,6 +93,7 @@ function Navbar() {
 
 
   return (
+
     <nav className="navbar">
 
 
@@ -92,7 +120,7 @@ function Navbar() {
           placeholder="Search products..."
         />
 
-        <button>
+        <button type="button">
           <FaSearch />
         </button>
 
@@ -106,14 +134,31 @@ function Navbar() {
       <div className="navbar-links">
 
 
+        {/* HOME */}
+
         <Link to="/">
           Home
         </Link>
 
 
+        {/* PRODUCTS */}
+
         <Link to="/products">
           Products
         </Link>
+
+
+        {/* =========================
+            MY ORDERS
+        ========================== */}
+
+        {isAuthenticated && (
+
+          <Link to="/my-orders">
+            My Orders
+          </Link>
+
+        )}
 
 
         {/* =========================
@@ -131,10 +176,13 @@ function Navbar() {
             Wishlist
           </span>
 
+
           {wishlistCount > 0 && (
+
             <span className="nav-count">
               {wishlistCount}
             </span>
+
           )}
 
         </Link>
@@ -155,24 +203,46 @@ function Navbar() {
             Cart
           </span>
 
+
           {cartCount > 0 && (
+
             <span className="nav-count">
               {cartCount}
             </span>
+
           )}
 
         </Link>
 
 
         {/* =========================
-            AUTH LINKS
+            AUTH
         ========================== */}
 
         {isAuthenticated ? (
 
           <>
 
-            {/* Profile */}
+
+            {/* =========================
+                ADMIN DASHBOARD
+            ========================== */}
+
+            {user?.role === "admin" && (
+
+              <Link
+                to="/admin/dashboard"
+                className="admin-link"
+              >
+                Admin
+              </Link>
+
+            )}
+
+
+            {/* =========================
+                PROFILE
+            ========================== */}
 
             <Link
               to="/profile"
@@ -188,9 +258,12 @@ function Navbar() {
             </Link>
 
 
-            {/* Logout */}
+            {/* =========================
+                LOGOUT
+            ========================== */}
 
             <button
+              type="button"
               className="logout-btn"
               onClick={handleLogout}
             >
@@ -203,9 +276,15 @@ function Navbar() {
 
           <>
 
+
+            {/* LOGIN */}
+
             <Link to="/login">
               Login
             </Link>
+
+
+            {/* REGISTER */}
 
             <Link to="/register">
               Register
@@ -218,7 +297,9 @@ function Navbar() {
       </div>
 
     </nav>
+
   );
+
 }
 
 
