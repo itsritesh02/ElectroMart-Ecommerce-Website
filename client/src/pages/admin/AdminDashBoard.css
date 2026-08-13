@@ -1,109 +1,54 @@
-/* =========================
-   MAIN DASHBOARD
-========================= */
+
+/* ==========================
+   ADMIN DASHBOARD
+========================== */
 
 .admin-dashboard {
   width: 100%;
   max-width: 1200px;
 
-  margin: 0 auto;
+  margin: 40px auto;
 
-  padding: 40px 20px;
+  padding: 20px;
 
   box-sizing: border-box;
-
-  background: #f8fafc;
 }
 
 
-/* =========================
+/* ==========================
    HEADER
-========================= */
+========================== */
 
-.admin-dashboard-header {
-  display: flex;
-
-  align-items: center;
-
-  justify-content: space-between;
-
-  padding: 30px;
-
+.dashboard-header {
   margin-bottom: 30px;
-
-  background: #111827;
-
-  color: white;
-
-  border-radius: 12px;
 }
 
-
-.admin-welcome-text {
-  margin: 0 0 7px;
-
-  color: #d1d5db;
-
-  font-size: 14px;
-}
-
-
-.admin-dashboard-header h1 {
+.dashboard-header h1 {
   margin: 0 0 8px;
 
   font-size: 32px;
 
-  color: white;
+  color: #111827;
 }
 
-
-.admin-description {
+.dashboard-header p {
   margin: 0;
 
-  color: #d1d5db;
+  color: #777;
 
   font-size: 15px;
 }
 
 
-/* =========================
-   LOGOUT BUTTON
-========================= */
-
-.admin-logout-btn {
-  padding: 11px 20px;
-
-  border: 1px solid white;
-
-  border-radius: 7px;
-
-  background: transparent;
-
-  color: white;
-
-  font-size: 14px;
-
-  cursor: pointer;
-
-  transition: 0.2s ease;
-}
-
-
-.admin-logout-btn:hover {
-  background: white;
-
-  color: #111827;
-}
-
-
-/* =========================
+/* ==========================
    STATS
-========================= */
+========================== */
 
-.admin-stats {
+.dashboard-stats {
   display: grid;
 
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns:
+    repeat(4, 1fr);
 
   gap: 20px;
 
@@ -111,248 +56,335 @@
 }
 
 
-/* =========================
+/* ==========================
    STAT CARD
-========================= */
+========================== */
 
-.admin-stat-card {
+.stat-card {
+  padding: 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+}
+
+.stat-card span {
+  display: block;
+
+  margin-bottom: 10px;
+
+  color: #777;
+
+  font-size: 13px;
+}
+
+.stat-card strong {
+  font-size: 28px;
+
+  color: #111827;
+}
+
+
+/* ==========================
+   RECENT ORDERS CARD
+========================== */
+
+.recent-orders-card {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+
+  overflow: hidden;
+}
+
+
+/* ==========================
+   RECENT ORDERS HEADER
+========================== */
+
+.recent-orders-header {
   display: flex;
 
   align-items: center;
 
-  gap: 15px;
+  justify-content: space-between;
 
-  padding: 22px;
+  gap: 20px;
 
-  background: white;
+  padding: 20px;
 
-  border: 1px solid #e5e7eb;
+  border-bottom: 1px solid #eeeeee;
+}
 
-  border-radius: 12px;
+.recent-orders-header h2 {
+  margin: 0 0 5px;
 
-  cursor: pointer;
+  font-size: 20px;
 
-  transition: 0.3s ease;
+  color: #111827;
+}
 
-  box-sizing: border-box;
+.recent-orders-header p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 13px;
 }
 
 
-.admin-stat-card:hover {
-  transform: translateY(-5px);
+/* ==========================
+   VIEW ALL
+========================== */
 
-  box-shadow:
-    0 10px 25px rgba(0, 0, 0, 0.08);
+.view-all-btn {
+  padding: 9px 14px;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  border-radius: 6px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+.view-all-btn:hover {
+  background: #374151;
 }
 
 
-/* =========================
-   STAT ICON
-========================= */
+/* ==========================
+   TABLE CONTAINER
+========================== */
 
-.admin-stat-icon {
-  width: 55px;
+.recent-orders-table-container {
+  width: 100%;
 
-  height: 55px;
+  overflow-x: auto;
+}
 
-  min-width: 55px;
+
+/* ==========================
+   TABLE
+========================== */
+
+.recent-orders-table {
+  width: 100%;
+
+  min-width: 750px;
+
+  border-collapse: collapse;
+}
+
+
+/* ==========================
+   TABLE HEADER
+========================== */
+
+.recent-orders-table th {
+  padding: 14px;
+
+  text-align: left;
+
+  background: #f8f9fa;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  color: #555;
+
+  font-size: 12px;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================
+   TABLE DATA
+========================== */
+
+.recent-orders-table td {
+  padding: 14px;
+
+  border-bottom: 1px solid #eeeeee;
+
+  font-size: 13px;
+
+  color: #333;
+
+  vertical-align: middle;
+}
+
+.recent-orders-table tbody tr:hover {
+  background: #fafafa;
+}
+
+
+/* ==========================
+   ORDER ID
+========================== */
+
+.dashboard-order-id {
+  display: block;
+
+  max-width: 130px;
+
+  word-break: break-all;
+
+  color: #666;
+
+  font-size: 11px;
+}
+
+
+/* ==========================
+   CUSTOMER
+========================== */
+
+.dashboard-customer {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 4px;
+}
+
+.dashboard-customer strong {
+  color: #111827;
+
+  font-size: 13px;
+}
+
+.dashboard-customer span {
+  color: #777;
+
+  font-size: 11px;
+}
+
+
+/* ==========================
+   STATUS
+========================== */
+
+.dashboard-status {
+  font-size: 12px;
+
+  font-weight: 600;
+}
+
+
+/* ==========================
+   STATUS COLORS
+========================== */
+
+.status-pending {
+  color: #d97706;
+}
+
+.status-processing {
+  color: #2563eb;
+}
+
+.status-shipped {
+  color: #7c3aed;
+}
+
+.status-delivered {
+  color: #16a34a;
+}
+
+.status-cancelled {
+  color: #dc2626;
+}
+
+
+/* ==========================
+   NO ORDERS
+========================== */
+
+.no-dashboard-orders {
+  padding: 50px;
+
+  text-align: center;
+
+  color: #777;
+}
+
+
+/* ==========================
+   LOADING
+========================== */
+
+.dashboard-loading {
+  min-height: 250px;
 
   display: flex;
 
   align-items: center;
 
   justify-content: center;
+}
 
-  background: #f3f4f6;
+.dashboard-loading h2 {
+  color: #555;
 
-  border-radius: 10px;
-
-  font-size: 25px;
+  font-size: 18px;
 }
 
 
-/* =========================
-   STAT TEXT
-========================= */
-
-.admin-stat-card h2 {
-  margin: 0 0 5px;
-
-  font-size: 19px;
-
-  color: #111827;
-}
-
-
-.admin-stat-card p {
-  margin: 0;
-
-  font-size: 13px;
-
-  color: #6b7280;
-}
-
-
-/* =========================
-   QUICK ACTIONS
-========================= */
-
-.admin-quick-actions {
-  padding: 25px;
-
-  background: white;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 12px;
-}
-
-
-.admin-quick-actions > h2 {
-  margin: 0 0 20px;
-
-  font-size: 22px;
-
-  color: #111827;
-}
-
-
-/* =========================
-   ACTION GRID
-========================= */
-
-.admin-actions-grid {
-  display: grid;
-
-  grid-template-columns: repeat(4, 1fr);
-
-  gap: 15px;
-}
-
-
-/* =========================
-   ACTION BUTTON
-========================= */
-
-.admin-actions-grid button {
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: flex-start;
-
-  gap: 8px;
-
-  min-height: 150px;
-
-  padding: 20px;
-
-  border: 1px solid #e5e7eb;
-
-  border-radius: 10px;
-
-  background: white;
-
-  text-align: left;
-
-  cursor: pointer;
-
-  transition: 0.3s ease;
-
-  box-sizing: border-box;
-}
-
-
-.admin-actions-grid button:hover {
-  transform: translateY(-4px);
-
-  border-color: #111827;
-
-  box-shadow:
-    0 8px 20px rgba(0, 0, 0, 0.08);
-}
-
-
-/* ICON */
-
-.admin-actions-grid button span {
-  font-size: 28px;
-}
-
-
-/* TITLE */
-
-.admin-actions-grid button strong {
-  font-size: 16px;
-
-  color: #111827;
-}
-
-
-/* DESCRIPTION */
-
-.admin-actions-grid button small {
-  font-size: 13px;
-
-  color: #6b7280;
-}
-
-
-/* =========================
-   TABLET
-========================= */
-
-@media (max-width: 1000px) {
-
-  .admin-stats {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-
-  .admin-actions-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-}
-
-
-/* =========================
+/* ==========================
    MOBILE
-========================= */
+========================== */
 
-@media (max-width: 650px) {
+@media (max-width: 900px) {
+
+  .dashboard-stats {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 600px) {
 
   .admin-dashboard {
-    padding: 25px 15px;
+    margin: 20px auto;
+
+    padding: 15px;
   }
 
 
-  .admin-dashboard-header {
-    flex-direction: column;
-
-    align-items: flex-start;
-
-    gap: 20px;
-  }
-
-
-  .admin-dashboard-header h1 {
+  .dashboard-header h1 {
     font-size: 26px;
   }
 
 
-  .admin-logout-btn {
-    width: 100%;
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+
+    gap: 15px;
   }
 
 
-  .admin-stats {
-    grid-template-columns: 1fr;
+  .stat-card strong {
+    font-size: 24px;
   }
 
 
-  .admin-actions-grid {
-    grid-template-columns: 1fr;
+  .recent-orders-header {
+    align-items: flex-start;
+
+    flex-direction: column;
   }
 
 }
+

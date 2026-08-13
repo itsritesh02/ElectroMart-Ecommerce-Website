@@ -1,0 +1,479 @@
+
+/* ==========================
+   ADMIN ORDER DETAILS
+========================== */
+
+.admin-order-details {
+  width: 100%;
+  max-width: 1100px;
+
+  margin: 40px auto;
+
+  padding: 20px;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================
+   HEADER
+========================== */
+
+.order-details-header {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  margin-bottom: 25px;
+}
+
+.order-details-header h1 {
+  margin: 0 0 8px;
+
+  font-size: 30px;
+
+  color: #111827;
+}
+
+.order-details-header p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 13px;
+
+  word-break: break-all;
+}
+
+
+/* ==========================
+   BACK BUTTON
+========================== */
+
+.back-orders-btn {
+  display: inline-block;
+
+  padding: 10px 16px;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  border-radius: 7px;
+
+  font-size: 13px;
+
+  font-weight: 600;
+
+  transition: 0.2s;
+}
+
+.back-orders-btn:hover {
+  background: #374151;
+}
+
+
+/* ==========================
+   ORDER SUMMARY
+========================== */
+
+.order-summary-card {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, 1fr);
+
+  gap: 15px;
+
+  margin-bottom: 20px;
+}
+
+.order-summary-card > div {
+  padding: 18px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+}
+
+.order-summary-card span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #777;
+
+  font-size: 12px;
+}
+
+.order-summary-card strong {
+  color: #111827;
+
+  font-size: 14px;
+
+  text-transform: capitalize;
+}
+
+
+/* ==========================
+   DETAILS CARD
+========================== */
+
+.details-card {
+  margin-bottom: 20px;
+
+  padding: 22px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+}
+
+.details-card h2 {
+  margin: 0 0 20px;
+
+  font-size: 20px;
+
+  color: #111827;
+}
+
+
+/* ==========================
+   CUSTOMER DETAILS
+========================== */
+
+.customer-details {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2, 1fr);
+
+  gap: 20px;
+}
+
+.customer-details span {
+  display: block;
+
+  margin-bottom: 6px;
+
+  color: #777;
+
+  font-size: 12px;
+}
+
+.customer-details strong {
+  color: #111827;
+
+  font-size: 14px;
+
+  word-break: break-word;
+}
+
+
+/* ==========================
+   ORDER ITEMS
+========================== */
+
+.admin-order-items {
+  display: flex;
+
+  flex-direction: column;
+}
+
+
+/* ==========================
+   ORDER ITEM
+========================== */
+
+.admin-order-item {
+  display: flex;
+
+  align-items: center;
+
+  gap: 18px;
+
+  padding: 15px 0;
+
+  border-bottom: 1px solid #eeeeee;
+}
+
+.admin-order-item:last-child {
+  border-bottom: none;
+}
+
+
+/* ==========================
+   PRODUCT IMAGE
+========================== */
+
+.admin-order-item img {
+  width: 80px;
+
+  height: 80px;
+
+  object-fit: cover;
+
+  border-radius: 8px;
+
+  border: 1px solid #e5e7eb;
+}
+
+
+/* ==========================
+   ITEM INFO
+========================== */
+
+.admin-item-info {
+  flex: 1;
+}
+
+.admin-item-info h3 {
+  margin: 0 0 7px;
+
+  font-size: 15px;
+
+  color: #111827;
+}
+
+.admin-item-info p {
+  margin: 3px 0;
+
+  color: #777;
+
+  font-size: 12px;
+}
+
+
+/* ==========================
+   ITEM TOTAL
+========================== */
+
+.admin-order-item > strong {
+  font-size: 15px;
+
+  color: #111827;
+
+  white-space: nowrap;
+}
+
+
+/* ==========================
+   ORDER TOTAL
+========================== */
+
+.order-total {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: flex-end;
+
+  gap: 25px;
+
+  margin-top: 20px;
+
+  padding-top: 18px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+.order-total span {
+  color: #555;
+
+  font-size: 14px;
+}
+
+.order-total strong {
+  font-size: 22px;
+
+  color: #111827;
+}
+
+
+/* ==========================
+   SHIPPING DETAILS
+========================== */
+
+.shipping-details p {
+  margin: 7px 0;
+
+  color: #555;
+
+  font-size: 14px;
+}
+
+.shipping-details strong {
+  color: #111827;
+}
+
+
+/* ==========================
+   ORDER STATUS
+========================== */
+
+.status-pending {
+  color: #d97706 !important;
+}
+
+.status-processing {
+  color: #2563eb !important;
+}
+
+.status-shipped {
+  color: #7c3aed !important;
+}
+
+.status-delivered {
+  color: #16a34a !important;
+}
+
+.status-cancelled {
+  color: #dc2626 !important;
+}
+
+
+/* ==========================
+   PAYMENT STATUS
+========================== */
+
+.payment-pending {
+  color: #d97706 !important;
+}
+
+.payment-paid {
+  color: #16a34a !important;
+}
+
+.payment-failed {
+  color: #dc2626 !important;
+}
+
+
+/* ==========================
+   ORDER NOT FOUND
+========================== */
+
+.order-not-found {
+  min-height: 350px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+}
+
+.order-not-found h1 {
+  margin: 0 0 10px;
+
+  color: #111827;
+}
+
+.order-not-found p {
+  margin: 0 0 20px;
+
+  color: #777;
+}
+
+
+/* ==========================
+   LOADING
+========================== */
+
+.admin-order-details > h2 {
+  text-align: center;
+
+  margin-top: 80px;
+
+  color: #555;
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 800px) {
+
+  .admin-order-details {
+    margin: 20px auto;
+
+    padding: 15px;
+  }
+
+
+  .order-details-header {
+    flex-direction: column;
+
+    align-items: flex-start;
+  }
+
+
+  .order-details-header h1 {
+    font-size: 26px;
+  }
+
+
+  .order-summary-card {
+    grid-template-columns:
+      repeat(2, 1fr);
+  }
+
+}
+
+
+@media (max-width: 550px) {
+
+  .order-summary-card {
+    grid-template-columns: 1fr;
+  }
+
+
+  .customer-details {
+    grid-template-columns: 1fr;
+  }
+
+
+  .admin-order-item {
+    align-items: flex-start;
+  }
+
+
+  .admin-order-item img {
+    width: 65px;
+
+    height: 65px;
+  }
+
+
+  .admin-order-item > strong {
+    font-size: 13px;
+  }
+
+
+  .order-total {
+    justify-content: space-between;
+  }
+
+}
+

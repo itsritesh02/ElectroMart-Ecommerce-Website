@@ -28,11 +28,13 @@ import AddProduct from "../pages/admin/AddProduct";
 import EditProduct from "../pages/admin/EditProduct";
 import AdminOrders from "../pages/admin/AdminOrders";
 
+
 // Route Protection
 import ProtectedRoute from "./ProtectedRoute";
 import AdminRoute from "./AdminRoute";
 import Checkout from "../pages/user/Checkout";
 import MyOrders from "../pages/user/MyOrder";
+import AdminOrderDetails from "../pages/admin/AdminOrderDetails";
 
 const AppRoutes = () => {
 
@@ -172,6 +174,10 @@ const AppRoutes = () => {
           <Route
             path="/admin/orders"
             element={<AdminOrders />}
+          />
+          <Route
+            path="/admin/orders/:id"
+            element={<AdminOrderDetails/>}
           />
 
         </Route>
