@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -17,6 +18,15 @@ function Checkout() {
 
 
   // ==========================
+  // GET USER
+  // ==========================
+
+  const { user } = useSelector(
+    (state) => state.auth
+  );
+
+
+  // ==========================
   // GET CART
   // ==========================
 
@@ -26,33 +36,40 @@ function Checkout() {
 
 
   // ==========================
-  // GET USER
+  // TOTAL PRICE
   // ==========================
 
-  const user = useSelector(
-    (state) => state.auth.user
+  const totalAmount = cartItems.reduce(
+    (total, item) => {
+
+      return total +
+        item.price * item.quantity;
+
+    },
+    0
   );
 
 
   // ==========================
-  // FORM STATE
+  // SHIPPING ADDRESS
   // ==========================
 
-  const [formData, setFormData] = useState({
+  const [shippingAddress, setShippingAddress] =
+    useState({
 
-    fullName: user?.name || "",
+      fullName: user?.name || "",
 
-    email: user?.email || "",
+      email: user?.email || "",
 
-    phone: "",
+      phone: "",
 
-    address: "",
+      address: "",
 
-    city: "",
+      city: "",
 
-    pincode: "",
+      pincode: "",
 
-  });
+    });
 
 
   // ==========================
@@ -72,34 +89,14 @@ function Checkout() {
 
 
   // ==========================
-  // TOTAL PRICE
-  // ==========================
-
-  const totalPrice = cartItems.reduce(
-
-    (total, item) => {
-
-      return (
-        total +
-        item.price * item.quantity
-      );
-
-    },
-
-    0
-
-  );
-
-
-  // ==========================
-  // FORM CHANGE
+  // HANDLE INPUT
   // ==========================
 
   const handleChange = (e) => {
 
     const { name, value } = e.target;
 
-    setFormData((prev) => ({
+    setShippingAddress((prev) => ({
 
       ...prev,
 
@@ -120,14 +117,46 @@ function Checkout() {
 
 
     // ==========================
-    // EMPTY CART CHECK
+    // EMPTY CART
     // ==========================
 
     if (cartItems.length === 0) {
 
       alert("Your cart is empty");
 
-      navigate("/cart");
+      navigate("/products");
+
+      return;
+
+    }
+
+
+    // ==========================
+    // VALIDATION
+    // ==========================
+
+    const {
+      fullName,
+      email,
+      phone,
+      address,
+      city,
+      pincode,
+    } = shippingAddress;
+
+
+    if (
+      !fullName ||
+      !email ||
+      !phone ||
+      !address ||
+      !city ||
+      !pincode
+    ) {
+
+      alert(
+        "Please fill all shipping details"
+      );
 
       return;
 
@@ -140,14 +169,13 @@ function Checkout() {
 
 
       // ==========================
-      // ORDER DATA
+      // PREPARE ORDER ITEMS
       // ==========================
 
-      const orderData = {
+      const items = cartItems.map(
+        (item) => ({
 
-        items: cartItems.map((item) => ({
-
-          product: item.id,
+          product: item.product || item.id,
 
           name: item.name,
 
@@ -157,29 +185,8 @@ function Checkout() {
 
           quantity: item.quantity,
 
-        })),
-
-        shippingAddress: {
-
-          fullName: formData.fullName,
-
-          email: formData.email,
-
-          phone: formData.phone,
-
-          address: formData.address,
-
-          city: formData.city,
-
-          pincode: formData.pincode,
-
-        },
-
-        paymentMethod,
-
-        totalAmount: totalPrice,
-
-      };
+        })
+      );
 
 
       // ==========================
@@ -188,12 +195,22 @@ function Checkout() {
 
       const res = await api.post(
         "/orders",
-        orderData
+        {
+
+          items,
+
+          shippingAddress,
+
+          paymentMethod,
+
+          totalAmount,
+
+        }
       );
 
 
       console.log(
-        "ORDER RESPONSE:",
+        "ORDER CREATED:",
         res.data
       );
 
@@ -206,11 +223,11 @@ function Checkout() {
 
 
       // ==========================
-      // ORDER SUCCESS
+      // GO TO SUCCESS PAGE
       // ==========================
 
       navigate(
-        `/order-success/${res.data.order._id}`
+        `/ order - success / ${ res.data.order._id } `
       );
 
 
@@ -223,11 +240,8 @@ function Checkout() {
 
 
       alert(
-
         error.response?.data?.message ||
-
         "Failed to place order"
-
       );
 
 
@@ -248,19 +262,28 @@ function Checkout() {
 
     return (
 
-      <div className="checkout-empty">
+      <div className="checkout-page">
 
-        <h1>
-          Your Cart is Empty
-        </h1>
+        <div className="checkout-empty">
 
-        <button
-          onClick={() =>
-            navigate("/products")
-          }
-        >
-          Continue Shopping
-        </button>
+          <h1>
+            Your Cart is Empty
+          </h1>
+
+          <p>
+            Add products before checkout.
+          </p>
+
+          <button
+            type="button"
+            onClick={() =>
+              navigate("/products")
+            }
+          >
+            Continue Shopping
+          </button>
+
+        </div>
 
       </div>
 
@@ -275,25 +298,33 @@ function Checkout() {
 
 
       {/* ==========================
-          PAGE TITLE
+          PAGE HEADER
       ========================== */}
 
-      <h1>
-        Checkout
-      </h1>
+      <div className="checkout-header">
+
+        <h1>
+          Checkout
+        </h1>
+
+        <p>
+          Complete your order
+        </p>
+
+      </div>
 
 
       <div className="checkout-container">
 
 
         {/* ==========================
-            LEFT - FORM
+            LEFT SIDE
         ========================== */}
 
-        <div className="checkout-form-section">
+        <div className="checkout-form-card">
 
           <h2>
-            Delivery Details
+            Shipping Information
           </h2>
 
 
@@ -313,10 +344,9 @@ function Checkout() {
               <input
                 type="text"
                 name="fullName"
-                value={formData.fullName}
+                value={shippingAddress.fullName}
                 onChange={handleChange}
                 placeholder="Enter full name"
-                required
               />
 
             </div>
@@ -333,10 +363,9 @@ function Checkout() {
               <input
                 type="email"
                 name="email"
-                value={formData.email}
+                value={shippingAddress.email}
                 onChange={handleChange}
                 placeholder="Enter email"
-                required
               />
 
             </div>
@@ -353,10 +382,9 @@ function Checkout() {
               <input
                 type="tel"
                 name="phone"
-                value={formData.phone}
+                value={shippingAddress.phone}
                 onChange={handleChange}
                 placeholder="Enter phone number"
-                required
               />
 
             </div>
@@ -372,10 +400,10 @@ function Checkout() {
 
               <textarea
                 name="address"
-                value={formData.address}
+                value={shippingAddress.address}
                 onChange={handleChange}
-                placeholder="Enter delivery address"
-                required
+                placeholder="Enter complete address"
+                rows="4"
               />
 
             </div>
@@ -392,10 +420,9 @@ function Checkout() {
               <input
                 type="text"
                 name="city"
-                value={formData.city}
+                value={shippingAddress.city}
                 onChange={handleChange}
                 placeholder="Enter city"
-                required
               />
 
             </div>
@@ -412,10 +439,9 @@ function Checkout() {
               <input
                 type="text"
                 name="pincode"
-                value={formData.pincode}
+                value={shippingAddress.pincode}
                 onChange={handleChange}
                 placeholder="Enter pincode"
-                required
               />
 
             </div>
@@ -448,7 +474,9 @@ function Checkout() {
                   }
                 />
 
-                Cash On Delivery
+                <span>
+                  Cash on Delivery
+                </span>
 
               </label>
 
@@ -469,7 +497,9 @@ function Checkout() {
                   }
                 />
 
-                Razorpay
+                <span>
+                  Razorpay
+                </span>
 
               </label>
 
@@ -488,8 +518,7 @@ function Checkout() {
 
               {loading
                 ? "Placing Order..."
-                : "Place Order"
-              }
+                : "Place Order"}
 
             </button>
 
@@ -500,7 +529,7 @@ function Checkout() {
 
 
         {/* ==========================
-            RIGHT - ORDER SUMMARY
+            RIGHT SIDE
         ========================== */}
 
         <div className="checkout-summary">
@@ -510,41 +539,39 @@ function Checkout() {
           </h2>
 
 
-          {/* PRODUCTS */}
+          {/* ITEMS */}
 
-          {cartItems.map((item) => (
+          <div className="summary-items">
 
-            <div
-              className="checkout-item"
-              key={item.id}
-            >
+            {cartItems.map((item) => (
 
-              <img
-                src={item.image}
-                alt={item.name}
-              />
+              <div
+                className="summary-item"
+                key={item.id}
+              >
+
+                <div>
+
+                  <strong>
+                    {item.name}
+                  </strong>
+
+                  <span>
+                    Qty: {item.quantity}
+                  </span>
+
+                </div>
 
 
-              <div>
-
-                <h3>
-                  {item.name}
-                </h3>
-
-                <p>
-                  ₹{item.price} × {item.quantity}
-                </p>
+                <strong>
+                  ₹{item.price * item.quantity}
+                </strong>
 
               </div>
 
+            ))}
 
-              <strong>
-                ₹{item.price * item.quantity}
-              </strong>
-
-            </div>
-
-          ))}
+          </div>
 
 
           {/* TOTAL */}
@@ -556,14 +583,13 @@ function Checkout() {
             </span>
 
             <strong>
-              ₹{totalPrice}
+              ₹{totalAmount}
             </strong>
 
           </div>
 
 
         </div>
-
 
       </div>
 
@@ -575,3 +601,4 @@ function Checkout() {
 
 
 export default Checkout;
+

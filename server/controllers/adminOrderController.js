@@ -12,7 +12,6 @@ export const getAllOrders = async (req, res) => {
 
     res.status(200).json({
       message: "Orders fetched successfully",
-
       orders,
     });
   } catch (error) {
@@ -20,7 +19,6 @@ export const getAllOrders = async (req, res) => {
 
     res.status(500).json({
       message: "Server error",
-
       error: error.message,
     });
   }
@@ -44,7 +42,6 @@ export const getAdminOrder = async (req, res) => {
 
     res.status(200).json({
       message: "Order fetched successfully",
-
       order,
     });
   } catch (error) {
@@ -52,7 +49,6 @@ export const getAdminOrder = async (req, res) => {
 
     res.status(500).json({
       message: "Server error",
-
       error: error.message,
     });
   }
@@ -99,12 +95,28 @@ export const updateOrderStatus = async (req, res) => {
     }
 
     // ==========================
-    // UPDATE STATUS
+    // UPDATE ORDER STATUS
     // ==========================
 
     order.orderStatus = orderStatus;
 
+    // ==========================
+    // COD PAYMENT STATUS
+    // ==========================
+
+    if (order.paymentMethod === "cod" && orderStatus === "Delivered") {
+      order.paymentStatus = "Paid";
+    }
+
+    // ==========================
+    // SAVE ORDER
+    // ==========================
+
     await order.save();
+
+    // ==========================
+    // RESPONSE
+    // ==========================
 
     res.status(200).json({
       message: "Order status updated successfully",
