@@ -8,6 +8,7 @@ import authRoutes from "./routes/authRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import orderRoutes from "./routes/orderRoutes.js";
 import adminOrderRoutes from "./routes/adminOrderRoutes.js";
+import adminUserRoutes from "./routes/adminUserRoutes.js";
 
 const app = express();
 
@@ -50,6 +51,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/orders", orderRoutes);
 
 app.use("/api/admin/orders", adminOrderRoutes);
+app.use("/api/admin/users", adminUserRoutes);
 
 // ==========================
 // HOME
