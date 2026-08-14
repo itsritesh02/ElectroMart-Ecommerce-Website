@@ -1,94 +1,56 @@
 
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import api from "../../services/api";
 
-import "./AdminProducts.css"
-
+import "./AdminProducts.css";
 
 function AdminProducts() {
+  const navigate = useNavigate();
 
   const [products, setProducts] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
-
-  // ==========================
-  // GET PRODUCTS
-  // ==========================
+  const [deletingId, setDeletingId] = useState(null);
 
   useEffect(() => {
-
     const getProducts = async () => {
-
       try {
-
         const res = await api.get("/products");
 
-        console.log(
-          "PRODUCTS:",
-          res.data
-        );
-
-        setProducts(
-          res.data.products || []
-        );
-
+        setProducts(res.data.products || []);
       } catch (error) {
-
-        console.error(
-          "Get Products Error:",
-          error
-        );
+        console.error("Get Products Error:", error);
 
         alert(
           error.response?.data?.message ||
-          "Failed to load products"
+            "Failed to load products"
         );
-
       } finally {
-
         setLoading(false);
-
       }
-
     };
 
-
     getProducts();
-
   }, []);
 
-
-  // ==========================
-  // DELETE PRODUCT
-  // ==========================
-
   const handleDelete = async (productId) => {
-
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this product?"
     );
-
 
     if (!confirmDelete) {
       return;
     }
 
-
     try {
+      setDeletingId(productId);
 
-      const res = await api.delete(
+      await api.delete(
         `/ products / ${ productId } `
       );
-
-
-      console.log(
-        "DELETE PRODUCT:",
-        res.data
-      );
-
 
       setProducts((prevProducts) =>
         prevProducts.filter(
@@ -97,301 +59,153 @@ function AdminProducts() {
         )
       );
 
-
       alert(
         "Product deleted successfully"
       );
-
-
     } catch (error) {
-
       console.error(
         "Delete Product Error:",
         error
       );
 
-
       alert(
         error.response?.data?.message ||
-        "Failed to delete product"
+          "Failed to delete product"
       );
-
+    } finally {
+      setDeletingId(null);
     }
-
   };
 
-
-  // ==========================
-  // LOADING
-  // ==========================
-
   if (loading) {
-
     return (
-
       <div className="admin-products">
-
-        <h2>
-          Loading products...
-        </h2>
-
+        <h2>Loading products...</h2>
       </div>
-
     );
-
   }
 
-
-  // ==========================
-  // PAGE
-  // ==========================
-
   return (
-
     <div className="admin-products">
-
-
-      {/* ==========================
-          HEADER
-      ========================== */}
-
       <div className="admin-products-header">
-
         <div>
-
-          <h1>
-            Products
-          </h1>
+          <h1>Products</h1>
 
           <p>
-            Manage your store products
+            Manage your ElectroMart products
           </p>
-
         </div>
 
-
-        <Link
-          to="/admin/products/add"
+        <button
+          type="button"
           className="add-product-btn"
+          onClick={() =>
+            navigate(
+              "/admin/products/add"
+            )
+          }
         >
           + Add Product
-        </Link>
-
+        </button>
       </div>
 
-
-      {/* ==========================
-          COUNT
-      ========================== */}
-
-      <div className="product-count">
-
+      <div className="products-count">
         Total Products:
-
-        <strong>
-          {products.length}
-        </strong>
-
+        <strong>{products.length}</strong>
       </div>
-
-
-      {/* ==========================
-          NO PRODUCTS
-      ========================== */}
 
       {products.length === 0 ? (
-
         <div className="no-products">
-
-          <h2>
-            No Products Found
-          </h2>
+          <h2>No Products Found</h2>
 
           <p>
-            Add your first product.
+            Add your first product to get
+            started.
           </p>
 
-
-          <Link
-            to="/admin/products/add"
-            className="add-product-btn"
+          <button
+            type="button"
+            onClick={() =>
+              navigate(
+                "/admin/products/add"
+              )
+            }
           >
             Add Product
-          </Link>
-
+          </button>
         </div>
-
       ) : (
+        <div className="admin-products-grid">
+          {products.map((product) => (
+            <div
+              className="admin-product-card"
+              key={product._id}
+            >
+              <div className="admin-product-image">
+                <img
+                  src={
+                    product.image ||
+                    "/placeholder.png"
+                  }
+                  alt={product.name}
+                  onError={(e) => {
+                    e.currentTarget.src =
+                      "/placeholder.png";
+                  }}
+                />
+              </div>
 
+              <div className="admin-product-info">
+                <h2>{product.name}</h2>
 
-        /* ==========================
-           PRODUCTS TABLE
-        ========================== */
+                <p className="product-category">
+                  {product.category}
+                </p>
 
-        <div className="products-table-container">
+                <p className="product-description">
+                  {product.description}
+                </p>
 
-          <table className="products-table">
+                <strong className="product-price">
+                  ₹{product.price}
+                </strong>
+              </div>
 
-            <thead>
-
-              <tr>
-
-                <th>
-                  Image
-                </th>
-
-                <th>
-                  Product
-                </th>
-
-                <th>
-                  Category
-                </th>
-
-                <th>
-                  Price
-                </th>
-
-                <th>
-                  Date
-                </th>
-
-                <th>
-                  Actions
-                </th>
-
-              </tr>
-
-            </thead>
-
-
-            <tbody>
-
-              {products.map((product) => (
-
-                <tr
-                  key={product._id}
+              <div className="admin-product-actions">
+                <button
+                  type="button"
+                  className="edit-product-btn"
+                  onClick={() =>
+                    navigate(
+                      `/ admin / products / edit / ${ product._id } `
+                    )
+                  }
                 >
+                  Edit
+                </button>
 
-
-                  {/* IMAGE */}
-
-                  <td>
-
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="admin-product-image"
-                    />
-
-                  </td>
-
-
-                  {/* PRODUCT */}
-
-                  <td>
-
-                    <div className="admin-product-info">
-
-                      <strong>
-                        {product.name}
-                      </strong>
-
-                      <span>
-                        {product.description}
-                      </span>
-
-                    </div>
-
-                  </td>
-
-
-                  {/* CATEGORY */}
-
-                  <td>
-                    {product.category}
-                  </td>
-
-
-                  {/* PRICE */}
-
-                  <td>
-
-                    <strong>
-                      ₹{product.price}
-                    </strong>
-
-                  </td>
-
-
-                  {/* DATE */}
-
-                  <td>
-
-                    {product.createdAt
-                      ? new Date(
-                          product.createdAt
-                        ).toLocaleDateString()
-                      : "N/A"}
-
-                  </td>
-
-
-                  {/* ACTIONS */}
-
-                  <td>
-
-                    <div className="product-actions">
-
-
-                      {/* EDIT */}
-
-                      <Link
-                        to={`/ admin / products / edit / ${ product._id } `}
-                        className="edit-product-btn"
-                      >
-                        Edit
-                      </Link>
-
-
-                      {/* DELETE */}
-
-                      <button
-                        type="button"
-                        className="delete-product-btn"
-                        onClick={() =>
-                          handleDelete(
-                            product._id
-                          )
-                        }
-                      >
-                        Delete
-                      </button>
-
-
-                    </div>
-
-                  </td>
-
-
-                </tr>
-
-              ))}
-
-            </tbody>
-
-          </table>
-
+                <button
+                  type="button"
+                  className="delete-product-btn"
+                  onClick={() =>
+                    handleDelete(product._id)
+                  }
+                  disabled={
+                    deletingId === product._id
+                  }
+                >
+                  {deletingId === product._id
+                    ? "Deleting..."
+                    : "Delete"}
+                </button>
+              </div>
+            </div>
+          ))}
         </div>
-
       )}
-
     </div>
-
   );
-
 }
-
 
 export default AdminProducts;
 
