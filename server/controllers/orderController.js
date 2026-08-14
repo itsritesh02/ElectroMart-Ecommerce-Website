@@ -1,17 +1,16 @@
+
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 
-// ==========================
-// CREATE ORDER
-// ==========================
-
 export const createOrder = async (req, res) => {
   try {
-    const { items, shippingAddress, paymentMethod, totalAmount } = req.body;
-
-    // ==========================
-    // VALIDATION
-    // ==========================
+    const {
+      items,
+      shippingAddress,
+      paymentMethod,
+      totalAmount,
+      paymentId,
+    } = req.body;
 
     if (!items || items.length === 0) {
       return res.status(400).json({
@@ -31,9 +30,17 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    // ==========================
-    // CHECK PRODUCTS
-    // ==========================
+    if (totalAmount === undefined || totalAmount <= 0) {
+      return res.status(400).json({
+        message: "Valid total amount is required",
+      });
+    }
+
+    if (paymentMethod === "razorpay" && !paymentId) {
+      return res.status(400).json({
+        message: "Payment ID is required",
+      });
+    }
 
     for (const item of items) {
       const product = await Product.findById(item.product);
@@ -45,29 +52,22 @@ export const createOrder = async (req, res) => {
       }
     }
 
-    // ==========================
-    // CREATE ORDER
-    // ==========================
-
     const order = await Order.create({
       user: req.user._id,
-
       items,
-
       shippingAddress,
-
       paymentMethod,
-
+      paymentId: paymentId || null,
+      paymentStatus:
+        paymentMethod === "razorpay"
+          ? "Paid"
+          : "Pending",
       totalAmount,
+      orderStatus: "Pending",
     });
-
-    // ==========================
-    // RESPONSE
-    // ==========================
 
     res.status(201).json({
       message: "Order created successfully",
-
       order,
     });
   } catch (error) {
@@ -75,15 +75,10 @@ export const createOrder = async (req, res) => {
 
     res.status(500).json({
       message: "Server error",
-
       error: error.message,
     });
   }
 };
-
-// ==========================
-// GET MY ORDERS
-// ==========================
 
 export const getMyOrders = async (req, res) => {
   try {
@@ -95,7 +90,6 @@ export const getMyOrders = async (req, res) => {
 
     res.status(200).json({
       message: "Orders fetched successfully",
-
       orders,
     });
   } catch (error) {
@@ -103,15 +97,10 @@ export const getMyOrders = async (req, res) => {
 
     res.status(500).json({
       message: "Server error",
-
       error: error.message,
     });
   }
 };
-
-// ==========================
-// GET SINGLE ORDER
-// ==========================
 
 export const getSingleOrder = async (req, res) => {
   try {
@@ -119,7 +108,6 @@ export const getSingleOrder = async (req, res) => {
 
     const order = await Order.findOne({
       _id: id,
-
       user: req.user._id,
     });
 
@@ -131,7 +119,6 @@ export const getSingleOrder = async (req, res) => {
 
     res.status(200).json({
       message: "Order fetched successfully",
-
       order,
     });
   } catch (error) {
@@ -139,67 +126,37 @@ export const getSingleOrder = async (req, res) => {
 
     res.status(500).json({
       message: "Server error",
-
       error: error.message,
     });
   }
 };
-
-// ==========================
-// GET ALL ORDERS - ADMIN
-// ==========================
 
 export const getAllOrders = async (req, res) => {
   try {
-
     const orders = await Order.find()
       .populate("user", "name email")
-      .sort({ createdAt: -1 });
-
+      .sort({
+        createdAt: -1,
+      });
 
     res.status(200).json({
-
       message: "All orders fetched successfully",
-
       orders,
-
     });
-
   } catch (error) {
-
-    console.error(
-      "Get All Orders Error:",
-      error
-    );
-
+    console.error("Get All Orders Error:", error);
 
     res.status(500).json({
-
       message: "Server error",
-
       error: error.message,
-
     });
-
   }
 };
 
-
-// ==========================
-// UPDATE ORDER STATUS - ADMIN
-// ==========================
-
 export const updateOrderStatus = async (req, res) => {
   try {
-
     const { id } = req.params;
-
     const { orderStatus } = req.body;
-
-
-    // ==========================
-    // VALID STATUS
-    // ==========================
 
     const validStatuses = [
       "Pending",
@@ -209,83 +166,45 @@ export const updateOrderStatus = async (req, res) => {
       "Cancelled",
     ];
 
-
     if (!validStatuses.includes(orderStatus)) {
-
       return res.status(400).json({
-
         message: "Invalid order status",
-
       });
-
     }
-
-
-    // ==========================
-    // FIND ORDER
-    // ==========================
 
     const order = await Order.findById(id);
 
-
     if (!order) {
-
       return res.status(404).json({
-
         message: "Order not found",
-
       });
-
     }
 
-
-    // ==========================
-    // UPDATE STATUS
-    // ==========================
-
     order.orderStatus = orderStatus;
-
-
-    // ==========================
-    // PAYMENT STATUS
-    // ==========================
 
     if (
       order.paymentMethod === "cod" &&
       orderStatus === "Delivered"
     ) {
-
       order.paymentStatus = "Paid";
-
     }
-
 
     await order.save();
 
-
     res.status(200).json({
-
       message: "Order status updated successfully",
-
       order,
-
     });
-
   } catch (error) {
-
     console.error(
       "Update Order Status Error:",
       error
     );
 
-
     res.status(500).json({
-
       message: "Server error",
-
       error: error.message,
-
     });
-
   }
 };
+
