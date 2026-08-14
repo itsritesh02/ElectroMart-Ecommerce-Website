@@ -3,7 +3,6 @@ import express from "express";
 
 import {
   getAllUsers,
-  getSingleUser,
   updateUserRole,
   deleteUser,
 } from "../controllers/adminUserController.js";
@@ -26,19 +25,6 @@ router.get(
   protect,
   admin,
   getAllUsers
-);
-
-
-// ==========================
-// GET SINGLE USER
-// GET /api/admin/users/:id
-// ==========================
-
-router.get(
-  "/:id",
-  protect,
-  admin,
-  getSingleUser
 );
 
 
@@ -69,3 +55,4 @@ router.delete(
 
 
 export default router;
+
