@@ -25,7 +25,7 @@ import OrderSuccess from "../pages/user/OrderSuccess";
 import AdminDashboard from "../pages/admin/AdminDashboard";
 import AdminProducts from "../pages/admin/AdminProducts";
 import AddProduct from "../pages/admin/AddProduct";
-import EditProduct from "../pages/admin/EditProduct";
+import EditProduct from  "../pages/admin/EditProduct"
 import AdminOrders from "../pages/admin/AdminOrders";
 
 
@@ -170,7 +170,7 @@ const AppRoutes = () => {
 
           <Route
             path="/admin/products/edit/:id"
-            element={<EditProduct />}
+            element={<EditProduct/>}
           />
           <Route
             path="/admin/orders"
