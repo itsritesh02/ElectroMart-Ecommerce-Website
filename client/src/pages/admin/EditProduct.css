@@ -1,9 +1,9 @@
-
+```css
 /* ==========================
-   ADD PRODUCT PAGE
+   EDIT PRODUCT PAGE
 ========================== */
 
-.add-product-page {
+.edit-product-page {
   width: 100%;
   max-width: 900px;
 
@@ -19,12 +19,12 @@
    HEADER
 ========================== */
 
-.add-product-header {
+.edit-product-header {
   margin-bottom: 30px;
 }
 
 
-.add-product-header h1 {
+.edit-product-header h1 {
   margin: 0 0 8px;
 
   font-size: 32px;
@@ -33,7 +33,7 @@
 }
 
 
-.add-product-header p {
+.edit-product-header p {
   margin: 0;
 
   color: #777;
@@ -46,7 +46,7 @@
    FORM
 ========================== */
 
-.add-product-form {
+.edit-product-form {
   background: #ffffff;
 
   border: 1px solid #e5e7eb;
@@ -84,7 +84,7 @@
 
 
 /* ==========================
-   INPUT
+   INPUT / TEXTAREA
 ========================== */
 
 .form-group input,
@@ -230,10 +230,10 @@
 
 
 /* ==========================
-   ADD PRODUCT BUTTON
+   UPDATE BUTTON
 ========================== */
 
-.add-product-btn {
+.update-product-btn {
   padding: 11px 22px;
 
   border: none;
@@ -254,16 +254,29 @@
 }
 
 
-.add-product-btn:hover {
+.update-product-btn:hover {
   background: #2563eb;
 }
 
 
-.add-product-btn:disabled,
+.update-product-btn:disabled,
 .cancel-btn:disabled {
   opacity: 0.6;
 
   cursor: not-allowed;
+}
+
+
+/* ==========================
+   LOADING
+========================== */
+
+.edit-product-page > h2 {
+  text-align: center;
+
+  margin-top: 80px;
+
+  color: #555;
 }
 
 
@@ -273,19 +286,19 @@
 
 @media (max-width: 700px) {
 
-  .add-product-page {
+  .edit-product-page {
     margin: 20px auto;
 
     padding: 15px;
   }
 
 
-  .add-product-header h1 {
+  .edit-product-header h1 {
     font-size: 26px;
   }
 
 
-  .add-product-form {
+  .edit-product-form {
     padding: 20px;
   }
 
@@ -305,9 +318,9 @@
 
 
   .cancel-btn,
-  .add-product-btn {
+  .update-product-btn {
     width: 100%;
   }
 
 }
-
+```

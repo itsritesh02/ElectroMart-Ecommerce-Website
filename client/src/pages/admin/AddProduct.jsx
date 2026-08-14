@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -5,253 +6,462 @@ import api from "../../services/api";
 
 import "./AddProduct.css";
 
+
 function AddProduct() {
+
   const navigate = useNavigate();
 
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    category: "",
-    description: "",
-    image: "",
-  });
-
-  const [loading, setLoading] = useState(false);
 
   // ==========================
-  // INPUT CHANGE
+  // PRODUCT STATE
   // ==========================
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+  const [name, setName] = useState("");
+
+  const [price, setPrice] = useState("");
+
+  const [category, setCategory] =
+    useState("");
+
+  const [description, setDescription] =
+    useState("");
+
+
+  // ==========================
+  // IMAGE STATE
+  // ==========================
+
+  const [image, setImage] =
+    useState(null);
+
+  const [imagePreview, setImagePreview] =
+    useState("");
+
+
+  // ==========================
+  // LOADING
+  // ==========================
+
+  const [loading, setLoading] =
+    useState(false);
+
+
+  // ==========================
+  // IMAGE CHANGE
+  // ==========================
+
+  const handleImageChange = (e) => {
+
+    const file =
+      e.target.files[0];
+
+
+    if (!file) {
+
+      return;
+
+    }
+
+
+    // ==========================
+    // CHECK IMAGE TYPE
+    // ==========================
+
+    if (
+      !file.type.startsWith("image/")
+    ) {
+
+      alert(
+        "Please select an image file"
+      );
+
+      return;
+
+    }
+
+
+    // ==========================
+    // CHECK IMAGE SIZE
+    // ==========================
+
+    if (
+      file.size > 5 * 1024 * 1024
+    ) {
+
+      alert(
+        "Image size must be less than 5MB"
+      );
+
+      return;
+
+    }
+
+
+    setImage(file);
+
+
+    // ==========================
+    // IMAGE PREVIEW
+    // ==========================
+
+    setImagePreview(
+      URL.createObjectURL(file)
+    );
+
   };
 
+
   // ==========================
-  // ADD PRODUCT
+  // SUBMIT PRODUCT
   // ==========================
 
   const handleSubmit = async (e) => {
+
     e.preventDefault();
 
-    setLoading(true);
 
-    try {
-      const res = await api.post(
-        "/products",
-        {
-          name: formData.name,
-          price: Number(formData.price),
-          category: formData.category,
-          description: formData.description,
-          image: formData.image,
-        }
-      );
+    // ==========================
+    // VALIDATION
+    // ==========================
+
+    if (
+      !name ||
+      !price ||
+      !category ||
+      !description
+    ) {
 
       alert(
-        res.data.message ||
+        "Please fill all fields"
+      );
+
+      return;
+
+    }
+
+
+    if (!image) {
+
+      alert(
+        "Please select a product image"
+      );
+
+      return;
+
+    }
+
+
+    try {
+
+      setLoading(true);
+
+
+      // ==========================
+      // UPLOAD IMAGE
+      // ==========================
+
+      const formData =
+        new FormData();
+
+
+      formData.append(
+        "image",
+        image
+      );
+
+
+      const uploadRes =
+        await api.post(
+          "/upload/image",
+          formData
+        );
+
+
+      console.log(
+        "IMAGE UPLOAD:",
+        uploadRes.data
+      );
+
+
+      const imageUrl =
+        uploadRes.data.imageUrl;
+
+
+      // ==========================
+      // CREATE PRODUCT
+      // ==========================
+
+      const productData = {
+
+        name,
+
+        price: Number(price),
+
+        category,
+
+        description,
+
+        image: imageUrl,
+
+      };
+
+
+      const productRes =
+        await api.post(
+          "/products",
+          productData
+        );
+
+
+      console.log(
+        "PRODUCT CREATED:",
+        productRes.data
+      );
+
+
+      alert(
         "Product added successfully"
       );
 
-      navigate("/admin/products");
+
+      // ==========================
+      // REDIRECT
+      // ==========================
+
+      navigate(
+        "/admin/products"
+      );
+
 
     } catch (error) {
+
       console.error(
         "Add Product Error:",
         error
       );
+
 
       alert(
         error.response?.data?.message ||
         "Failed to add product"
       );
 
+
     } finally {
+
       setLoading(false);
+
     }
+
   };
 
+
   return (
+
     <div className="add-product-page">
 
-      <div className="add-product-card">
 
-        {/* ==========================
-            HEADER
-        ========================== */}
+      {/* ==========================
+          HEADER
+      ========================== */}
+
+      <div className="add-product-header">
 
         <h1>
           Add Product
         </h1>
 
         <p>
-          Add a new product to your store
+          Add a new product to ElectroMart
         </p>
-
-
-        <form onSubmit={handleSubmit}>
-
-          {/* PRODUCT NAME */}
-
-          <div className="form-group">
-
-            <label>
-              Product Name
-            </label>
-
-            <input
-              type="text"
-              name="name"
-              placeholder="Enter product name"
-              value={formData.name}
-              onChange={handleChange}
-              required
-            />
-
-          </div>
-
-
-          {/* PRICE */}
-
-          <div className="form-group">
-
-            <label>
-              Price
-            </label>
-
-            <input
-              type="number"
-              name="price"
-              placeholder="Enter product price"
-              value={formData.price}
-              onChange={handleChange}
-              min="0"
-              required
-            />
-
-          </div>
-
-
-          {/* CATEGORY */}
-
-          <div className="form-group">
-
-            <label>
-              Category
-            </label>
-
-            <select
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              required
-            >
-
-              <option value="">
-                Select Category
-              </option>
-
-              <option value="Mobile">
-                Mobile
-              </option>
-
-              <option value="Laptop">
-                Laptop
-              </option>
-
-              <option value="Headphones">
-                Headphones
-              </option>
-
-              <option value="Tablet">
-                Tablet
-              </option>
-
-              <option value="Accessories">
-                Accessories
-              </option>
-
-            </select>
-
-          </div>
-
-
-          {/* IMAGE */}
-
-          <div className="form-group">
-
-            <label>
-              Product Image URL
-            </label>
-
-            <input
-              type="url"
-              name="image"
-              placeholder="https://example.com/image.jpg"
-              value={formData.image}
-              onChange={handleChange}
-              required
-            />
-
-          </div>
-
-
-          {/* DESCRIPTION */}
-
-          <div className="form-group">
-
-            <label>
-              Description
-            </label>
-
-            <textarea
-              name="description"
-              placeholder="Enter product description"
-              value={formData.description}
-              onChange={handleChange}
-              rows="5"
-              required
-            />
-
-          </div>
-
-
-          {/* BUTTONS */}
-
-          <div className="form-buttons">
-
-            <button
-              type="button"
-              className="cancel-btn"
-              onClick={() =>
-                navigate("/admin/products")
-              }
-              disabled={loading}
-            >
-              Cancel
-            </button>
-
-
-            <button
-              type="submit"
-              className="save-btn"
-              disabled={loading}
-            >
-              {loading
-                ? "Adding..."
-                : "Add Product"}
-            </button>
-
-          </div>
-
-        </form>
 
       </div>
 
+
+      {/* ==========================
+          FORM
+      ========================== */}
+
+      <form
+        className="add-product-form"
+        onSubmit={handleSubmit}
+      >
+
+
+        {/* ==========================
+            PRODUCT NAME
+        ========================== */}
+
+        <div className="form-group">
+
+          <label>
+            Product Name
+          </label>
+
+          <input
+            type="text"
+            value={name}
+            onChange={(e) =>
+              setName(e.target.value)
+            }
+            placeholder="Enter product name"
+          />
+
+        </div>
+
+
+        {/* ==========================
+            PRICE
+        ========================== */}
+
+        <div className="form-group">
+
+          <label>
+            Price
+          </label>
+
+          <input
+            type="number"
+            value={price}
+            onChange={(e) =>
+              setPrice(e.target.value)
+            }
+            placeholder="Enter product price"
+            min="0"
+          />
+
+        </div>
+
+
+        {/* ==========================
+            CATEGORY
+        ========================== */}
+
+        <div className="form-group">
+
+          <label>
+            Category
+          </label>
+
+          <input
+            type="text"
+            value={category}
+            onChange={(e) =>
+              setCategory(e.target.value)
+            }
+            placeholder="Enter product category"
+          />
+
+        </div>
+
+
+        {/* ==========================
+            DESCRIPTION
+        ========================== */}
+
+        <div className="form-group">
+
+          <label>
+            Description
+          </label>
+
+          <textarea
+            value={description}
+            onChange={(e) =>
+              setDescription(
+                e.target.value
+              )
+            }
+            placeholder="Enter product description"
+            rows="5"
+          />
+
+        </div>
+
+
+        {/* ==========================
+            IMAGE
+        ========================== */}
+
+        <div className="form-group">
+
+          <label>
+            Product Image
+          </label>
+
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+          />
+
+        </div>
+
+
+        {/* ==========================
+            IMAGE PREVIEW
+        ========================== */}
+
+        {imagePreview && (
+
+          <div className="image-preview">
+
+            <p>
+              Image Preview
+            </p>
+
+            <img
+              src={imagePreview}
+              alt="Product Preview"
+            />
+
+          </div>
+
+        )}
+
+
+        {/* ==========================
+            BUTTONS
+        ========================== */}
+
+        <div className="form-actions">
+
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={() =>
+              navigate(
+                "/admin/products"
+              )
+            }
+            disabled={loading}
+          >
+            Cancel
+          </button>
+
+
+          <button
+            type="submit"
+            className="add-product-btn"
+            disabled={loading}
+          >
+
+            {loading
+              ? "Adding Product..."
+              : "Add Product"}
+
+          </button>
+
+        </div>
+
+
+      </form>
+
     </div>
+
   );
+
 }
+
 
 export default AddProduct;
