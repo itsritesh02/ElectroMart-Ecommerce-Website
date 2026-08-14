@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
 import api from "../../services/api";
-
 import { clearCart } from "../../redux/slice/cartSlice";
 
 import "./Checkout.css";
@@ -76,7 +75,9 @@ function Checkout() {
     return true;
   };
 
-  const createOrder = async (paymentId = null) => {
+  const createOrder = async (
+    paymentId = null
+  ) => {
     const res = await api.post("/orders", {
       items,
       totalAmount,
@@ -126,43 +127,91 @@ function Checkout() {
       const razorpayOrder =
         res.data.order;
 
+      if (!window.Razorpay) {
+        alert(
+          "Razorpay SDK not loaded"
+        );
+
+        setLoading(false);
+
+        return;
+      }
+
       const options = {
-        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        key: import.meta.env
+          .VITE_RAZORPAY_KEY_ID,
 
         amount: razorpayOrder.amount,
 
-        currency: razorpayOrder.currency,
+        currency:
+          razorpayOrder.currency,
 
         name: "ElectroMart",
 
-        description: "ElectroMart Order",
+        description:
+          "ElectroMart Order",
 
-        order_id: razorpayOrder.id,
+        order_id:
+          razorpayOrder.id,
 
         prefill: {
-          name: shippingAddress.fullName,
-          email: shippingAddress.email,
-          contact: shippingAddress.phone,
+          name:
+            shippingAddress.fullName,
+
+          email:
+            shippingAddress.email,
+
+          contact:
+            shippingAddress.phone,
         },
 
-        handler: async function (response) {
+        handler: async function (
+          response
+        ) {
           try {
             setLoading(true);
+
+            const verifyResponse =
+              await api.post(
+                "/payment/verify",
+                {
+                  razorpay_order_id:
+                    response.razorpay_order_id,
+
+                  razorpay_payment_id:
+                    response.razorpay_payment_id,
+
+                  razorpay_signature:
+                    response.razorpay_signature,
+                }
+              );
+
+            if (
+              !verifyResponse.data.verified
+            ) {
+              alert(
+                "Payment verification failed"
+              );
+
+              setLoading(false);
+
+              return;
+            }
 
             await createOrder(
               response.razorpay_payment_id
             );
           } catch (error) {
             console.error(
-              "Create Paid Order Error:",
+              "Payment Verification Error:",
               error
             );
 
             alert(
               error.response?.data?.message ||
-                "Payment successful but order creation failed"
+                "Payment verification failed"
             );
-          } finally {
+
             setLoading(false);
           }
         },
@@ -177,15 +226,6 @@ function Checkout() {
           color: "#111827",
         },
       };
-
-      if (!window.Razorpay) {
-        alert(
-          "Razorpay SDK not loaded"
-        );
-
-        setLoading(false);
-        return;
-      }
 
       const razorpay =
         new window.Razorpay(options);
@@ -228,7 +268,9 @@ function Checkout() {
 
     if (items.length === 0) {
       alert("Your cart is empty");
+
       navigate("/products");
+
       return;
     }
 
@@ -238,6 +280,7 @@ function Checkout() {
 
     if (paymentMethod === "cod") {
       await handleCashOnDelivery();
+
       return;
     }
 
@@ -247,7 +290,9 @@ function Checkout() {
   if (items.length === 0) {
     return (
       <div className="checkout-page">
+
         <div className="empty-checkout">
+
           <h2>
             Your cart is empty
           </h2>
@@ -260,7 +305,9 @@ function Checkout() {
           >
             Continue Shopping
           </button>
+
         </div>
+
       </div>
     );
   }
@@ -563,4 +610,3 @@ function Checkout() {
 }
 
 export default Checkout;
-
