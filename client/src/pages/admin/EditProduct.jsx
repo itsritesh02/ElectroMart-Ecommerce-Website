@@ -25,7 +25,7 @@ function EditProduct() {
     const getProduct = async () => {
       try {
         const res = await api.get(
-          `/ products / ${ id } `
+          `/products/${id}`
         );
 
         const product = res.data.product;
@@ -45,7 +45,7 @@ function EditProduct() {
 
         alert(
           error.response?.data?.message ||
-            "Failed to load product"
+          "Failed to load product"
         );
 
         navigate("/admin/products");
@@ -86,7 +86,7 @@ function EditProduct() {
       setSaving(true);
 
       const res = await api.put(
-        `/ products / ${ id } `,
+        `/products/${id}`,
         {
           name: formData.name,
           price: Number(formData.price),
@@ -114,7 +114,7 @@ function EditProduct() {
 
       alert(
         error.response?.data?.message ||
-          "Failed to update product"
+        "Failed to update product"
       );
     } finally {
       setSaving(false);

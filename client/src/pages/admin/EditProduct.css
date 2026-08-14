@@ -1,313 +1,326 @@
 
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+/* ==========================
+   EDIT PRODUCT PAGE
+========================== */
 
-import api from "../../services/api";
+.edit-product-page {
+  width: 100%;
+  max-width: 900px;
 
-import "./EditProduct.css";
+  margin: 40px auto;
 
-function EditProduct() {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  padding: 20px;
 
-  const [formData, setFormData] = useState({
-    name: "",
-    price: "",
-    category: "",
-    description: "",
-    image: "",
-  });
-
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-
-  useEffect(() => {
-    const getProduct = async () => {
-      try {
-        const res = await api.get(
-          `/products/${id}`
-        );
-
-        const product = res.data.product;
-
-        setFormData({
-          name: product.name || "",
-          price: product.price || "",
-          category: product.category || "",
-          description: product.description || "",
-          image: product.image || "",
-        });
-      } catch (error) {
-        console.error(
-          "Get Product Error:",
-          error
-        );
-
-        alert(
-          error.response?.data?.message ||
-            "Failed to load product"
-        );
-
-        navigate("/admin/products");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    if (id) {
-      getProduct();
-    }
-  }, [id, navigate]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (
-      !formData.name ||
-      !formData.price ||
-      !formData.category ||
-      !formData.description ||
-      !formData.image
-    ) {
-      alert("All fields are required");
-      return;
-    }
-
-    try {
-      setSaving(true);
-
-      const res = await api.put(
-        `/products/${id}`,
-        {
-          name: formData.name,
-          price: Number(formData.price),
-          category: formData.category,
-          description: formData.description,
-          image: formData.image,
-        }
-      );
-
-      console.log(
-        "PRODUCT UPDATED:",
-        res.data
-      );
-
-      alert(
-        "Product updated successfully"
-      );
-
-      navigate("/admin/products");
-    } catch (error) {
-      console.error(
-        "Update Product Error:",
-        error
-      );
-
-      alert(
-        error.response?.data?.message ||
-          "Failed to update product"
-      );
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (loading) {
-    return (
-      <div className="edit-product-page">
-        <h2>Loading product...</h2>
-      </div>
-    );
-  }
-
-  return (
-    <div className="edit-product-page">
-
-      <div className="edit-product-header">
-
-        <div>
-          <h1>
-            Edit Product
-          </h1>
-
-          <p>
-            Update your ElectroMart product
-          </p>
-        </div>
-
-        <button
-          type="button"
-          className="back-btn"
-          onClick={() =>
-            navigate("/admin/products")
-          }
-          disabled={saving}
-        >
-          Back
-        </button>
-
-      </div>
-
-
-      <form
-        className="edit-product-form"
-        onSubmit={handleSubmit}
-      >
-
-        <div className="form-group">
-
-          <label htmlFor="name">
-            Product Name
-          </label>
-
-          <input
-            id="name"
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            placeholder="Enter product name"
-          />
-
-        </div>
-
-
-        <div className="form-row">
-
-          <div className="form-group">
-
-            <label htmlFor="price">
-              Price
-            </label>
-
-            <input
-              id="price"
-              type="number"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              placeholder="Enter price"
-              min="0"
-            />
-
-          </div>
-
-
-          <div className="form-group">
-
-            <label htmlFor="category">
-              Category
-            </label>
-
-            <input
-              id="category"
-              type="text"
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              placeholder="Enter category"
-            />
-
-          </div>
-
-        </div>
-
-
-        <div className="form-group">
-
-          <label htmlFor="description">
-            Description
-          </label>
-
-          <textarea
-            id="description"
-            name="description"
-            value={formData.description}
-            onChange={handleChange}
-            placeholder="Enter product description"
-            rows="5"
-          />
-
-        </div>
-
-
-        <div className="form-group">
-
-          <label htmlFor="image">
-            Image URL
-          </label>
-
-          <input
-            id="image"
-            type="url"
-            name="image"
-            value={formData.image}
-            onChange={handleChange}
-            placeholder="https://example.com/image.jpg"
-          />
-
-        </div>
-
-
-        {formData.image && (
-          <div className="image-preview">
-
-            <p>
-              Image Preview
-            </p>
-
-            <img
-              src={formData.image}
-              alt="Product preview"
-              onError={(e) => {
-                e.currentTarget.style.display =
-                  "none";
-              }}
-            />
-
-          </div>
-        )}
-
-
-        <div className="form-actions">
-
-          <button
-            type="button"
-            className="cancel-btn"
-            onClick={() =>
-              navigate("/admin/products")
-            }
-            disabled={saving}
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            className="save-product-btn"
-            disabled={saving}
-          >
-            {saving
-              ? "Updating..."
-              : "Update Product"}
-          </button>
-
-        </div>
-
-      </form>
-
-    </div>
-  );
+  box-sizing: border-box;
 }
 
-export default EditProduct;
+
+/* ==========================
+   HEADER
+========================== */
+
+.edit-product-header {
+  margin-bottom: 30px;
+}
+
+
+.edit-product-header h1 {
+  margin: 0 0 8px;
+
+  font-size: 32px;
+
+  color: #111827;
+}
+
+
+.edit-product-header p {
+  margin: 0;
+
+  color: #777;
+
+  font-size: 15px;
+}
+
+
+/* ==========================
+   FORM
+========================== */
+
+.edit-product-form {
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 12px;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+}
+
+
+/* ==========================
+   FORM GROUP
+========================== */
+
+.form-group {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 8px;
+
+  margin-bottom: 22px;
+}
+
+
+.form-group label {
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #111827;
+}
+
+
+/* ==========================
+   INPUT / TEXTAREA
+========================== */
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+
+  padding: 12px 14px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 7px;
+
+  outline: none;
+
+  background: #ffffff;
+
+  color: #111827;
+
+  font-size: 14px;
+
+  font-family: inherit;
+
+  transition: border-color 0.2s ease;
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #2563eb;
+}
+
+
+.form-group textarea {
+  resize: vertical;
+
+  min-height: 120px;
+}
+
+
+/* ==========================
+   FILE INPUT
+========================== */
+
+.form-group input[type="file"] {
+  padding: 10px;
+
+  cursor: pointer;
+
+  background: #f9fafb;
+}
+
+
+/* ==========================
+   IMAGE PREVIEW
+========================== */
+
+.image-preview {
+  margin-bottom: 25px;
+
+  padding: 18px;
+
+  background: #f9fafb;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 10px;
+}
+
+
+.image-preview p {
+  margin: 0 0 12px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  color: #111827;
+}
+
+
+.image-preview img {
+  display: block;
+
+  width: 220px;
+
+  height: 220px;
+
+  object-fit: contain;
+
+  background: #ffffff;
+
+  border: 1px solid #e5e7eb;
+
+  border-radius: 8px;
+}
+
+
+/* ==========================
+   FORM ACTIONS
+========================== */
+
+.form-actions {
+  display: flex;
+
+  justify-content: flex-end;
+
+  gap: 12px;
+
+  margin-top: 10px;
+}
+
+
+/* ==========================
+   CANCEL BUTTON
+========================== */
+
+.cancel-btn {
+  padding: 11px 20px;
+
+  border: 1px solid #d1d5db;
+
+  border-radius: 7px;
+
+  background: #ffffff;
+
+  color: #374151;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+
+.cancel-btn:hover {
+  background: #f3f4f6;
+}
+
+
+/* ==========================
+   UPDATE BUTTON
+========================== */
+
+.update-product-btn {
+  padding: 11px 22px;
+
+  border: none;
+
+  border-radius: 7px;
+
+  background: #111827;
+
+  color: #ffffff;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.2s ease;
+}
+
+
+.update-product-btn:hover {
+  background: #2563eb;
+}
+
+
+.update-product-btn:disabled,
+.cancel-btn:disabled {
+  opacity: 0.6;
+
+  cursor: not-allowed;
+}
+
+
+/* ==========================
+   LOADING
+========================== */
+
+.edit-product-page > h2 {
+  text-align: center;
+
+  margin-top: 80px;
+
+  color: #555;
+}
+
+
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 700px) {
+
+  .edit-product-page {
+    margin: 20px auto;
+
+    padding: 15px;
+  }
+
+
+  .edit-product-header h1 {
+    font-size: 26px;
+  }
+
+
+  .edit-product-form {
+    padding: 20px;
+  }
+
+
+  .image-preview img {
+    width: 100%;
+
+    max-width: 220px;
+
+    height: 220px;
+  }
+
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+
+  .cancel-btn,
+  .update-product-btn {
+    width: 100%;
+  }
+
+}
 
