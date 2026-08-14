@@ -1,7 +1,7 @@
 
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 import api from "../../services/api";
 
@@ -9,270 +9,248 @@ import { clearCart } from "../../redux/slice/cartSlice";
 
 import "./Checkout.css";
 
-
 function Checkout() {
-
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
-
-
-  // ==========================
-  // GET USER
-  // ==========================
 
   const { user } = useSelector(
     (state) => state.auth
   );
 
-
-  // ==========================
-  // GET CART
-  // ==========================
-
-  const cartItems = useSelector(
-    (state) => state.cart.items
+  const { items } = useSelector(
+    (state) => state.cart
   );
 
-
-  // ==========================
-  // TOTAL PRICE
-  // ==========================
-
-  const totalAmount = cartItems.reduce(
-    (total, item) => {
-
-      return total +
-        item.price * item.quantity;
-
-    },
-    0
-  );
-
-
-  // ==========================
-  // SHIPPING ADDRESS
-  // ==========================
+  const [loading, setLoading] = useState(false);
 
   const [shippingAddress, setShippingAddress] =
     useState({
-
       fullName: user?.name || "",
-
-      email: user?.email || "",
-
-      phone: "",
-
       address: "",
-
       city: "",
-
       pincode: "",
-
+      phone: "",
+      email: user?.email || "",
     });
-
-
-  // ==========================
-  // PAYMENT METHOD
-  // ==========================
 
   const [paymentMethod, setPaymentMethod] =
     useState("cod");
 
-
-  // ==========================
-  // LOADING
-  // ==========================
-
-  const [loading, setLoading] =
-    useState(false);
-
-
-  // ==========================
-  // HANDLE INPUT
-  // ==========================
+  const totalAmount = items.reduce(
+    (total, item) =>
+      total + item.price * item.quantity,
+    0
+  );
 
   const handleChange = (e) => {
-
     const { name, value } = e.target;
 
     setShippingAddress((prev) => ({
-
       ...prev,
-
       [name]: value,
-
     }));
-
   };
 
-
-  // ==========================
-  // PLACE ORDER
-  // ==========================
-
-  const handlePlaceOrder = async (e) => {
-
-    e.preventDefault();
-
-
-    // ==========================
-    // EMPTY CART
-    // ==========================
-
-    if (cartItems.length === 0) {
-
-      alert("Your cart is empty");
-
-      navigate("/products");
-
-      return;
-
-    }
-
-
-    // ==========================
-    // VALIDATION
-    // ==========================
-
+  const validateAddress = () => {
     const {
       fullName,
-      email,
-      phone,
       address,
       city,
       pincode,
+      phone,
+      email,
     } = shippingAddress;
-
 
     if (
       !fullName ||
-      !email ||
-      !phone ||
       !address ||
       !city ||
-      !pincode
+      !pincode ||
+      !phone ||
+      !email
     ) {
-
-      alert(
-        "Please fill all shipping details"
-      );
-
-      return;
-
+      alert("Please fill all shipping details");
+      return false;
     }
 
+    return true;
+  };
 
+  const createOrder = async (paymentId = null) => {
+    const res = await api.post("/orders", {
+      items,
+      totalAmount,
+      paymentMethod,
+      shippingAddress,
+      paymentId,
+    });
+
+    dispatch(clearCart());
+
+    navigate(
+      `/ order - success / ${ res.data.order._id } `
+    );
+  };
+
+  const handleCashOnDelivery = async () => {
     try {
-
       setLoading(true);
 
-
-      // ==========================
-      // PREPARE ORDER ITEMS
-      // ==========================
-
-      const items = cartItems.map(
-        (item) => ({
-
-          product: item.product || item.id,
-
-          name: item.name,
-
-          price: item.price,
-
-          image: item.image,
-
-          quantity: item.quantity,
-
-        })
-      );
-
-
-      // ==========================
-      // CREATE ORDER
-      // ==========================
-
-      const res = await api.post(
-        "/orders",
-        {
-
-          items,
-
-          shippingAddress,
-
-          paymentMethod,
-
-          totalAmount,
-
-        }
-      );
-
-
-      console.log(
-        "ORDER CREATED:",
-        res.data
-      );
-
-
-      // ==========================
-      // CLEAR CART
-      // ==========================
-
-      dispatch(clearCart());
-
-
-      // ==========================
-      // GO TO SUCCESS PAGE
-      // ==========================
-
-      navigate(
-        `/ order - success / ${ res.data.order._id } `
-      );
-
-
+      await createOrder();
     } catch (error) {
-
       console.error(
-        "Place Order Error:",
+        "COD Order Error:",
         error
       );
 
+      alert(
+        error.response?.data?.message ||
+          "Failed to place order"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRazorpay = async () => {
+    try {
+      setLoading(true);
+
+      const res = await api.post(
+        "/payment/create-order",
+        {
+          amount: totalAmount,
+        }
+      );
+
+      const razorpayOrder =
+        res.data.order;
+
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+
+        amount: razorpayOrder.amount,
+
+        currency: razorpayOrder.currency,
+
+        name: "ElectroMart",
+
+        description: "ElectroMart Order",
+
+        order_id: razorpayOrder.id,
+
+        prefill: {
+          name: shippingAddress.fullName,
+          email: shippingAddress.email,
+          contact: shippingAddress.phone,
+        },
+
+        handler: async function (response) {
+          try {
+            setLoading(true);
+
+            await createOrder(
+              response.razorpay_payment_id
+            );
+          } catch (error) {
+            console.error(
+              "Create Paid Order Error:",
+              error
+            );
+
+            alert(
+              error.response?.data?.message ||
+                "Payment successful but order creation failed"
+            );
+          } finally {
+            setLoading(false);
+          }
+        },
+
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+          },
+        },
+
+        theme: {
+          color: "#111827",
+        },
+      };
+
+      if (!window.Razorpay) {
+        alert(
+          "Razorpay SDK not loaded"
+        );
+
+        setLoading(false);
+        return;
+      }
+
+      const razorpay =
+        new window.Razorpay(options);
+
+      razorpay.on(
+        "payment.failed",
+        function (response) {
+          console.error(
+            "Payment Failed:",
+            response.error
+          );
+
+          alert(
+            response.error?.description ||
+              "Payment failed"
+          );
+
+          setLoading(false);
+        }
+      );
+
+      razorpay.open();
+    } catch (error) {
+      console.error(
+        "Razorpay Error:",
+        error
+      );
 
       alert(
         error.response?.data?.message ||
-        "Failed to place order"
+          "Unable to start payment"
       );
 
-
-    } finally {
-
       setLoading(false);
-
     }
-
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  // ==========================
-  // EMPTY CART
-  // ==========================
+    if (items.length === 0) {
+      alert("Your cart is empty");
+      navigate("/products");
+      return;
+    }
 
-  if (cartItems.length === 0) {
+    if (!validateAddress()) {
+      return;
+    }
 
+    if (paymentMethod === "cod") {
+      await handleCashOnDelivery();
+      return;
+    }
+
+    await handleRazorpay();
+  };
+
+  if (items.length === 0) {
     return (
-
       <div className="checkout-page">
-
-        <div className="checkout-empty">
-
-          <h1>
-            Your Cart is Empty
-          </h1>
-
-          <p>
-            Add products before checkout.
-          </p>
+        <div className="empty-checkout">
+          <h2>
+            Your cart is empty
+          </h2>
 
           <button
             type="button"
@@ -282,24 +260,13 @@ function Checkout() {
           >
             Continue Shopping
           </button>
-
         </div>
-
       </div>
-
     );
-
   }
 
-
   return (
-
     <div className="checkout-page">
-
-
-      {/* ==========================
-          PAGE HEADER
-      ========================== */}
 
       <div className="checkout-header">
 
@@ -314,26 +281,19 @@ function Checkout() {
       </div>
 
 
-      <div className="checkout-container">
+      <form
+        className="checkout-content"
+        onSubmit={handleSubmit}
+      >
 
+        <div className="checkout-left">
 
-        {/* ==========================
-            LEFT SIDE
-        ========================== */}
+          <div className="checkout-card">
 
-        <div className="checkout-form-card">
+            <h2>
+              Shipping Address
+            </h2>
 
-          <h2>
-            Shipping Information
-          </h2>
-
-
-          <form
-            onSubmit={handlePlaceOrder}
-          >
-
-
-            {/* FULL NAME */}
 
             <div className="form-group">
 
@@ -344,53 +304,15 @@ function Checkout() {
               <input
                 type="text"
                 name="fullName"
-                value={shippingAddress.fullName}
+                value={
+                  shippingAddress.fullName
+                }
                 onChange={handleChange}
                 placeholder="Enter full name"
               />
 
             </div>
 
-
-            {/* EMAIL */}
-
-            <div className="form-group">
-
-              <label>
-                Email
-              </label>
-
-              <input
-                type="email"
-                name="email"
-                value={shippingAddress.email}
-                onChange={handleChange}
-                placeholder="Enter email"
-              />
-
-            </div>
-
-
-            {/* PHONE */}
-
-            <div className="form-group">
-
-              <label>
-                Phone
-              </label>
-
-              <input
-                type="tel"
-                name="phone"
-                value={shippingAddress.phone}
-                onChange={handleChange}
-                placeholder="Enter phone number"
-              />
-
-            </div>
-
-
-            {/* ADDRESS */}
 
             <div className="form-group">
 
@@ -400,7 +322,9 @@ function Checkout() {
 
               <textarea
                 name="address"
-                value={shippingAddress.address}
+                value={
+                  shippingAddress.address
+                }
                 onChange={handleChange}
                 placeholder="Enter complete address"
                 rows="4"
@@ -409,196 +333,234 @@ function Checkout() {
             </div>
 
 
-            {/* CITY */}
+            <div className="checkout-row">
 
-            <div className="form-group">
+              <div className="form-group">
 
-              <label>
-                City
-              </label>
-
-              <input
-                type="text"
-                name="city"
-                value={shippingAddress.city}
-                onChange={handleChange}
-                placeholder="Enter city"
-              />
-
-            </div>
-
-
-            {/* PINCODE */}
-
-            <div className="form-group">
-
-              <label>
-                Pincode
-              </label>
-
-              <input
-                type="text"
-                name="pincode"
-                value={shippingAddress.pincode}
-                onChange={handleChange}
-                placeholder="Enter pincode"
-              />
-
-            </div>
-
-
-            {/* ==========================
-                PAYMENT
-            ========================== */}
-
-            <div className="payment-section">
-
-              <h2>
-                Payment Method
-              </h2>
-
-
-              <label className="payment-option">
+                <label>
+                  City
+                </label>
 
                 <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="cod"
-                  checked={
-                    paymentMethod === "cod"
+                  type="text"
+                  name="city"
+                  value={
+                    shippingAddress.city
                   }
-                  onChange={(e) =>
-                    setPaymentMethod(
-                      e.target.value
-                    )
-                  }
+                  onChange={handleChange}
+                  placeholder="City"
                 />
 
-                <span>
-                  Cash on Delivery
-                </span>
-
-              </label>
+              </div>
 
 
-              <label className="payment-option">
+              <div className="form-group">
+
+                <label>
+                  Pincode
+                </label>
 
                 <input
-                  type="radio"
-                  name="paymentMethod"
-                  value="razorpay"
-                  checked={
-                    paymentMethod === "razorpay"
+                  type="text"
+                  name="pincode"
+                  value={
+                    shippingAddress.pincode
                   }
-                  onChange={(e) =>
-                    setPaymentMethod(
-                      e.target.value
-                    )
-                  }
+                  onChange={handleChange}
+                  placeholder="Pincode"
                 />
 
-                <span>
-                  Razorpay
-                </span>
-
-              </label>
+              </div>
 
             </div>
 
 
-            {/* ==========================
-                PLACE ORDER
-            ========================== */}
+            <div className="checkout-row">
+
+              <div className="form-group">
+
+                <label>
+                  Phone
+                </label>
+
+                <input
+                  type="tel"
+                  name="phone"
+                  value={
+                    shippingAddress.phone
+                  }
+                  onChange={handleChange}
+                  placeholder="Phone number"
+                />
+
+              </div>
+
+
+              <div className="form-group">
+
+                <label>
+                  Email
+                </label>
+
+                <input
+                  type="email"
+                  name="email"
+                  value={
+                    shippingAddress.email
+                  }
+                  onChange={handleChange}
+                  placeholder="Email"
+                />
+
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <div className="checkout-card">
+
+            <h2>
+              Payment Method
+            </h2>
+
+
+            <label className="payment-option">
+
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="cod"
+                checked={
+                  paymentMethod === "cod"
+                }
+                onChange={(e) =>
+                  setPaymentMethod(
+                    e.target.value
+                  )
+                }
+              />
+
+              <span>
+                Cash on Delivery
+              </span>
+
+            </label>
+
+
+            <label className="payment-option">
+
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="razorpay"
+                checked={
+                  paymentMethod ===
+                  "razorpay"
+                }
+                onChange={(e) =>
+                  setPaymentMethod(
+                    e.target.value
+                  )
+                }
+              />
+
+              <span>
+                Online Payment
+              </span>
+
+            </label>
+
+          </div>
+
+        </div>
+
+
+        <div className="checkout-right">
+
+          <div className="checkout-card order-summary">
+
+            <h2>
+              Order Summary
+            </h2>
+
+
+            <div className="checkout-items">
+
+              {items.map((item) => (
+
+                <div
+                  className="checkout-item"
+                  key={item._id}
+                >
+
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                  />
+
+                  <div>
+
+                    <h3>
+                      {item.name}
+                    </h3>
+
+                    <p>
+                      ₹{item.price} ×{" "}
+                      {item.quantity}
+                    </p>
+
+                  </div>
+
+                  <strong>
+                    ₹
+                    {item.price *
+                      item.quantity}
+                  </strong>
+
+                </div>
+
+              ))}
+
+            </div>
+
+
+            <div className="summary-total">
+
+              <span>
+                Total
+              </span>
+
+              <strong>
+                ₹{totalAmount}
+              </strong>
+
+            </div>
+
 
             <button
               type="submit"
               className="place-order-btn"
               disabled={loading}
             >
-
               {loading
-                ? "Placing Order..."
-                : "Place Order"}
-
+                ? "Processing..."
+                : paymentMethod ===
+                    "razorpay"
+                  ? "Pay Now"
+                  : "Place Order"}
             </button>
 
-
-          </form>
+          </div>
 
         </div>
 
-
-        {/* ==========================
-            RIGHT SIDE
-        ========================== */}
-
-        <div className="checkout-summary">
-
-          <h2>
-            Order Summary
-          </h2>
-
-
-          {/* ITEMS */}
-
-          <div className="summary-items">
-
-            {cartItems.map((item) => (
-
-              <div
-                className="summary-item"
-                key={item.id}
-              >
-
-                <div>
-
-                  <strong>
-                    {item.name}
-                  </strong>
-
-                  <span>
-                    Qty: {item.quantity}
-                  </span>
-
-                </div>
-
-
-                <strong>
-                  ₹{item.price * item.quantity}
-                </strong>
-
-              </div>
-
-            ))}
-
-          </div>
-
-
-          {/* TOTAL */}
-
-          <div className="checkout-total">
-
-            <span>
-              Total
-            </span>
-
-            <strong>
-              ₹{totalAmount}
-            </strong>
-
-          </div>
-
-
-        </div>
-
-      </div>
+      </form>
 
     </div>
-
   );
-
 }
-
 
 export default Checkout;
 
