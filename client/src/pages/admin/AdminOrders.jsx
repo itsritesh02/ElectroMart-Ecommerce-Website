@@ -48,7 +48,7 @@ function AdminOrders() {
   ) => {
     try {
       const res = await api.put(
-        `/ orders / admin / orders / ${ orderId }/status`,
+        `/orders/admin/orders/${orderId}/status`,
 {
   orderStatus: newStatus,
         }
