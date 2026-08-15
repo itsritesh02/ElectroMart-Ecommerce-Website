@@ -49,7 +49,7 @@ function AdminProducts() {
       setDeletingId(productId);
 
       await api.delete(
-        `/ products / ${ productId } `
+        `/products/${productId} `
       );
 
       setProducts((prevProducts) =>
@@ -177,7 +177,7 @@ function AdminProducts() {
                   className="edit-product-btn"
                   onClick={() =>
                     navigate(
-                      `/ admin / products / edit / ${ product._id } `
+                      `/admin/products/edit/${product._id} `
                     )
                   }
                 >
