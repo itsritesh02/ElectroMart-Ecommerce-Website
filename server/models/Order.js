@@ -91,41 +91,23 @@ const orderSchema = new mongoose.Schema(
 
     paymentMethod: {
       type: String,
-
       enum: ["cod", "razorpay"],
-
       required: true,
     },
 
     paymentId: {
       type: String,
-
       default: null,
-    },
-
-    paymentStatus: {
-      type: String,
-
-      enum: [
-        "Pending",
-        "Paid",
-        "Failed",
-      ],
-
-      default: "Pending",
     },
 
     totalAmount: {
       type: Number,
-
       required: true,
-
       min: 0,
     },
 
     orderStatus: {
       type: String,
-
       enum: [
         "Pending",
         "Processing",
@@ -133,7 +115,16 @@ const orderSchema = new mongoose.Schema(
         "Delivered",
         "Cancelled",
       ],
+      default: "Pending",
+    },
 
+    paymentStatus: {
+      type: String,
+      enum: [
+        "Pending",
+        "Paid",
+        "Failed",
+      ],
       default: "Pending",
     },
   },
@@ -149,4 +140,3 @@ const Order = mongoose.model(
 );
 
 export default Order;
-
