@@ -30,7 +30,7 @@ function AdminUsers() {
   const handleRoleChange = async (userId, newRole) => {
     try {
       const res = await api.put(
-        `/ admin / users / ${ userId }/role`,
+        `/admin/users/${userId}/role`,
 {
   role: newRole,
         }
