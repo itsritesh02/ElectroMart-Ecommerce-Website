@@ -7,14 +7,13 @@ import "./AdminOrders.css";
 
 function AdminOrders() {
   const [orders, setOrders] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getOrders = async () => {
       try {
         const res = await api.get(
-          "/admin/orders"
+          "/orders/admin/orders"
         );
 
         console.log(
@@ -49,7 +48,7 @@ function AdminOrders() {
   ) => {
     try {
       const res = await api.put(
-        `/ admin / orders / ${ orderId }/status`,
+        `/ orders / admin / orders / ${ orderId }/status`,
 {
   orderStatus: newStatus,
         }
@@ -137,45 +136,20 @@ return (
         <table className="orders-table">
           <thead>
             <tr>
-              <th>
-                Order ID
-              </th>
-
-              <th>
-                Customer
-              </th>
-
-              <th>
-                Items
-              </th>
-
-              <th>
-                Total
-              </th>
-
-              <th>
-                Payment
-              </th>
-
-              <th>
-                Payment Status
-              </th>
-
-              <th>
-                Order Status
-              </th>
-
-              <th>
-                Date
-              </th>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Payment</th>
+              <th>Payment Status</th>
+              <th>Order Status</th>
+              <th>Date</th>
             </tr>
           </thead>
 
           <tbody>
             {orders.map((order) => (
-              <tr
-                key={order._id}
-              >
+              <tr key={order._id}>
                 <td>
                   <span className="order-id">
                     {order._id}
@@ -197,8 +171,7 @@ return (
                 </td>
 
                 <td>
-                  {order.items?.length ||
-                    0}
+                  {order.items?.length || 0}
                 </td>
 
                 <td>
