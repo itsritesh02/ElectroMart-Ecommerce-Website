@@ -1,5 +1,5 @@
 
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { logout } from "../../redux/slice/authSlice.js";
@@ -15,7 +15,8 @@ function AdminDashboard() {
   );
 
   const wishlistItems = useSelector(
-    (state) => state.wishlist?.items || []
+    (state) =>
+      state.wishlist?.items || []
   );
 
   const handleLogout = () => {
@@ -28,21 +29,20 @@ function AdminDashboard() {
     <div className="admin-dashboard">
 
       <div className="admin-dashboard-header">
-
         <div>
-
           <p className="admin-welcome-text">
             Admin Panel
           </p>
 
           <h1>
-            Welcome, {user?.name || "Admin"} 👋
+            Welcome,{" "}
+            {user?.name || "Admin"} 👋
           </h1>
 
           <p className="admin-description">
-            Manage your ElectroMart store from here.
+            Manage your ElectroMart store
+            from here.
           </p>
-
         </div>
 
         <button
@@ -52,9 +52,7 @@ function AdminDashboard() {
         >
           Logout
         </button>
-
       </div>
-
 
       <div className="admin-stats">
 
@@ -64,23 +62,18 @@ function AdminDashboard() {
             navigate("/admin/products")
           }
         >
-
           <div className="admin-stat-icon">
             📦
           </div>
 
           <div>
-            <h2>
-              Products
-            </h2>
+            <h2>Products</h2>
 
             <p>
               Manage Products
             </p>
           </div>
-
         </div>
-
 
         <div
           className="admin-stat-card"
@@ -88,23 +81,18 @@ function AdminDashboard() {
             navigate("/admin/users")
           }
         >
-
           <div className="admin-stat-icon">
             👥
           </div>
 
           <div>
-            <h2>
-              Users
-            </h2>
+            <h2>Users</h2>
 
             <p>
               Manage Customers
             </p>
           </div>
-
         </div>
-
 
         <div
           className="admin-stat-card"
@@ -112,32 +100,25 @@ function AdminDashboard() {
             navigate("/admin/orders")
           }
         >
-
           <div className="admin-stat-icon">
             🛒
           </div>
 
           <div>
-            <h2>
-              Orders
-            </h2>
+            <h2>Orders</h2>
 
             <p>
               Manage Orders
             </p>
           </div>
-
         </div>
 
-
         <div className="admin-stat-card">
-
           <div className="admin-stat-icon">
             ❤️
           </div>
 
           <div>
-
             <h2>
               {wishlistItems.length}
             </h2>
@@ -145,20 +126,16 @@ function AdminDashboard() {
             <p>
               Wishlist Items
             </p>
-
           </div>
-
         </div>
 
       </div>
-
 
       <div className="admin-quick-actions">
 
         <h2>
           Quick Actions
         </h2>
-
 
         <div className="admin-actions-grid">
 
@@ -170,10 +147,7 @@ function AdminDashboard() {
               )
             }
           >
-
-            <span>
-              ➕
-            </span>
+            <span>➕</span>
 
             <strong>
               Add Product
@@ -182,9 +156,7 @@ function AdminDashboard() {
             <small>
               Add a new product
             </small>
-
           </button>
-
 
           <button
             type="button"
@@ -194,10 +166,7 @@ function AdminDashboard() {
               )
             }
           >
-
-            <span>
-              📦
-            </span>
+            <span>📦</span>
 
             <strong>
               Manage Products
@@ -206,9 +175,7 @@ function AdminDashboard() {
             <small>
               View and edit products
             </small>
-
           </button>
-
 
           <button
             type="button"
@@ -218,10 +185,7 @@ function AdminDashboard() {
               )
             }
           >
-
-            <span>
-              🛒
-            </span>
+            <span>🛒</span>
 
             <strong>
               Manage Orders
@@ -230,33 +194,7 @@ function AdminDashboard() {
             <small>
               View and update orders
             </small>
-
           </button>
-
-
-          <button
-            type="button"
-            onClick={() =>
-              navigate(
-                "/admin/users"
-              )
-            }
-          >
-
-            <span>
-              👥
-            </span>
-
-            <strong>
-              Manage Users
-            </strong>
-
-            <small>
-              View registered customers
-            </small>
-
-          </button>
-
 
           <button
             type="button"
@@ -264,10 +202,7 @@ function AdminDashboard() {
               navigate("/products")
             }
           >
-
-            <span>
-              🛍️
-            </span>
+            <span>🛍️</span>
 
             <strong>
               View Store
@@ -276,9 +211,7 @@ function AdminDashboard() {
             <small>
               Open customer store
             </small>
-
           </button>
-
 
           <button
             type="button"
@@ -286,10 +219,7 @@ function AdminDashboard() {
               navigate("/profile")
             }
           >
-
-            <span>
-              👤
-            </span>
+            <span>👤</span>
 
             <strong>
               My Profile
@@ -298,16 +228,12 @@ function AdminDashboard() {
             <small>
               View your profile
             </small>
-
           </button>
 
         </div>
-
       </div>
-
     </div>
   );
 }
 
 export default AdminDashboard;
-
