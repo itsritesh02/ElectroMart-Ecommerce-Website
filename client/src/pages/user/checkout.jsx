@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 
 import api from "../../services/api";
 import { clearCart } from "../../redux/slice/cartSlice";
@@ -25,11 +25,11 @@ function Checkout() {
   const [shippingAddress, setShippingAddress] =
     useState({
       fullName: user?.name || "",
+      email: user?.email || "",
+      phone: "",
       address: "",
       city: "",
       pincode: "",
-      phone: "",
-      email: user?.email || "",
     });
 
   const [paymentMethod, setPaymentMethod] =
@@ -50,39 +50,42 @@ function Checkout() {
     }));
   };
 
-  const validateAddress = () => {
+  const validateShippingAddress = () => {
     const {
       fullName,
+      email,
+      phone,
       address,
       city,
       pincode,
-      phone,
-      email,
     } = shippingAddress;
 
     if (
       !fullName ||
+      !email ||
+      !phone ||
       !address ||
       !city ||
-      !pincode ||
-      !phone ||
-      !email
+      !pincode
     ) {
-      alert("Please fill all shipping details");
+      alert(
+        "Please fill all shipping details"
+      );
+
       return false;
     }
 
     return true;
   };
 
-  const createOrder = async (
+  const createDatabaseOrder = async (
     paymentId = null
   ) => {
     const res = await api.post("/orders", {
       items,
-      totalAmount,
-      paymentMethod,
       shippingAddress,
+      paymentMethod,
+      totalAmount,
       paymentId,
     });
 
@@ -93,11 +96,11 @@ function Checkout() {
     );
   };
 
-  const handleCashOnDelivery = async () => {
+  const handleCOD = async () => {
     try {
       setLoading(true);
 
-      await createOrder();
+      await createDatabaseOrder();
     } catch (error) {
       console.error(
         "COD Order Error:",
@@ -117,19 +120,20 @@ function Checkout() {
     try {
       setLoading(true);
 
-      const res = await api.post(
-        "/payment/create-order",
-        {
-          amount: totalAmount,
-        }
-      );
+      const orderResponse =
+        await api.post(
+          "/payment/create-order",
+          {
+            amount: totalAmount,
+          }
+        );
 
       const razorpayOrder =
-        res.data.order;
+        orderResponse.data.order;
 
       if (!window.Razorpay) {
         alert(
-          "Razorpay SDK not loaded"
+          "Razorpay SDK is not loaded"
         );
 
         setLoading(false);
@@ -141,7 +145,8 @@ function Checkout() {
         key: import.meta.env
           .VITE_RAZORPAY_KEY_ID,
 
-        amount: razorpayOrder.amount,
+        amount:
+          razorpayOrder.amount,
 
         currency:
           razorpayOrder.currency,
@@ -165,12 +170,14 @@ function Checkout() {
             shippingAddress.phone,
         },
 
-        handler: async function (
-          response
-        ) {
-          try {
-            setLoading(true);
+        theme: {
+          color: "#111827",
+        },
 
+        handler: async (
+          response
+        ) => {
+          try {
             const verifyResponse =
               await api.post(
                 "/payment/verify",
@@ -187,7 +194,8 @@ function Checkout() {
               );
 
             if (
-              !verifyResponse.data.verified
+              verifyResponse.status !==
+              200
             ) {
               alert(
                 "Payment verification failed"
@@ -198,7 +206,7 @@ function Checkout() {
               return;
             }
 
-            await createOrder(
+            await createDatabaseOrder(
               response.razorpay_payment_id
             );
           } catch (error) {
@@ -217,13 +225,9 @@ function Checkout() {
         },
 
         modal: {
-          ondismiss: function () {
+          ondismiss: () => {
             setLoading(false);
           },
-        },
-
-        theme: {
-          color: "#111827",
         },
       };
 
@@ -232,7 +236,7 @@ function Checkout() {
 
       razorpay.on(
         "payment.failed",
-        function (response) {
+        (response) => {
           console.error(
             "Payment Failed:",
             response.error
@@ -256,7 +260,7 @@ function Checkout() {
 
       alert(
         error.response?.data?.message ||
-          "Unable to start payment"
+          "Unable to create payment order"
       );
 
       setLoading(false);
@@ -274,25 +278,21 @@ function Checkout() {
       return;
     }
 
-    if (!validateAddress()) {
+    if (!validateShippingAddress()) {
       return;
     }
 
     if (paymentMethod === "cod") {
-      await handleCashOnDelivery();
-
-      return;
+      await handleCOD();
+    } else {
+      await handleRazorpay();
     }
-
-    await handleRazorpay();
   };
 
   if (items.length === 0) {
     return (
       <div className="checkout-page">
-
         <div className="empty-checkout">
-
           <h2>
             Your cart is empty
           </h2>
@@ -305,45 +305,32 @@ function Checkout() {
           >
             Continue Shopping
           </button>
-
         </div>
-
       </div>
     );
   }
 
   return (
     <div className="checkout-page">
-
       <div className="checkout-header">
-
-        <h1>
-          Checkout
-        </h1>
+        <h1>Checkout</h1>
 
         <p>
           Complete your order
         </p>
-
       </div>
-
 
       <form
         className="checkout-content"
         onSubmit={handleSubmit}
       >
-
         <div className="checkout-left">
-
           <div className="checkout-card">
-
             <h2>
               Shipping Address
             </h2>
 
-
             <div className="form-group">
-
               <label>
                 Full Name
               </label>
@@ -357,12 +344,41 @@ function Checkout() {
                 onChange={handleChange}
                 placeholder="Enter full name"
               />
-
             </div>
 
+            <div className="form-group">
+              <label>
+                Email
+              </label>
+
+              <input
+                type="email"
+                name="email"
+                value={
+                  shippingAddress.email
+                }
+                onChange={handleChange}
+                placeholder="Enter email"
+              />
+            </div>
 
             <div className="form-group">
+              <label>
+                Phone
+              </label>
 
+              <input
+                type="tel"
+                name="phone"
+                value={
+                  shippingAddress.phone
+                }
+                onChange={handleChange}
+                placeholder="Enter phone number"
+              />
+            </div>
+
+            <div className="form-group">
               <label>
                 Address
               </label>
@@ -376,14 +392,10 @@ function Checkout() {
                 placeholder="Enter complete address"
                 rows="4"
               />
-
             </div>
 
-
             <div className="checkout-row">
-
               <div className="form-group">
-
                 <label>
                   City
                 </label>
@@ -397,12 +409,9 @@ function Checkout() {
                   onChange={handleChange}
                   placeholder="City"
                 />
-
               </div>
 
-
               <div className="form-group">
-
                 <label>
                   Pincode
                 </label>
@@ -416,65 +425,16 @@ function Checkout() {
                   onChange={handleChange}
                   placeholder="Pincode"
                 />
-
               </div>
-
             </div>
-
-
-            <div className="checkout-row">
-
-              <div className="form-group">
-
-                <label>
-                  Phone
-                </label>
-
-                <input
-                  type="tel"
-                  name="phone"
-                  value={
-                    shippingAddress.phone
-                  }
-                  onChange={handleChange}
-                  placeholder="Phone number"
-                />
-
-              </div>
-
-
-              <div className="form-group">
-
-                <label>
-                  Email
-                </label>
-
-                <input
-                  type="email"
-                  name="email"
-                  value={
-                    shippingAddress.email
-                  }
-                  onChange={handleChange}
-                  placeholder="Email"
-                />
-
-              </div>
-
-            </div>
-
           </div>
 
-
           <div className="checkout-card">
-
             <h2>
               Payment Method
             </h2>
 
-
             <label className="payment-option">
-
               <input
                 type="radio"
                 name="paymentMethod"
@@ -492,12 +452,9 @@ function Checkout() {
               <span>
                 Cash on Delivery
               </span>
-
             </label>
 
-
             <label className="payment-option">
-
               <input
                 type="radio"
                 name="paymentMethod"
@@ -516,39 +473,31 @@ function Checkout() {
               <span>
                 Online Payment
               </span>
-
             </label>
-
           </div>
-
         </div>
 
-
         <div className="checkout-right">
-
           <div className="checkout-card order-summary">
-
             <h2>
               Order Summary
             </h2>
 
-
             <div className="checkout-items">
-
               {items.map((item) => (
-
                 <div
                   className="checkout-item"
-                  key={item._id}
+                  key={
+                    item._id ||
+                    item.product
+                  }
                 >
-
                   <img
                     src={item.image}
                     alt={item.name}
                   />
 
                   <div>
-
                     <h3>
                       {item.name}
                     </h3>
@@ -557,7 +506,6 @@ function Checkout() {
                       ₹{item.price} ×{" "}
                       {item.quantity}
                     </p>
-
                   </div>
 
                   <strong>
@@ -565,26 +513,19 @@ function Checkout() {
                     {item.price *
                       item.quantity}
                   </strong>
-
                 </div>
-
               ))}
-
             </div>
 
-
             <div className="summary-total">
-
               <span>
-                Total
+                Total Amount
               </span>
 
               <strong>
                 ₹{totalAmount}
               </strong>
-
             </div>
-
 
             <button
               type="submit"
@@ -598,15 +539,12 @@ function Checkout() {
                   ? "Pay Now"
                   : "Place Order"}
             </button>
-
           </div>
-
         </div>
-
       </form>
-
     </div>
   );
 }
 
 export default Checkout;
+
