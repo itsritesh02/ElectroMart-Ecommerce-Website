@@ -6,234 +6,399 @@ import { logout } from "../../redux/slice/authSlice.js";
 
 import "./AdminDashBoard.css";
 
+
 function AdminDashboard() {
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
+
+  // ==========================
+  // GET USER
+  // ==========================
 
   const { user } = useSelector(
     (state) => state.auth
   );
+
+
+  // ==========================
+  // GET WISHLIST
+  // ==========================
 
   const wishlistItems = useSelector(
     (state) =>
       state.wishlist?.items || []
   );
 
+
+  // ==========================
+  // LOGOUT
+  // ==========================
+
   const handleLogout = () => {
+
     dispatch(logout());
 
     navigate("/login");
+
   };
 
+
   return (
+
     <div className="admin-dashboard">
 
-      <div className="admin-dashboard-header">
-        <div>
-          <p className="admin-welcome-text">
-            Admin Panel
-          </p>
+
+      {/* ==========================
+          HEADER
+      ========================== */}
+
+      <div className="admin-header">
+
+        <div className="admin-header-content">
+
+          <span className="admin-badge">
+            ADMIN DASHBOARD
+          </span>
 
           <h1>
-            Welcome,{" "}
-            {user?.name || "Admin"} 👋
+            Welcome back,{" "}
+            <span>
+              {user?.name || "Admin"}
+            </span>{" "}
+            👋
           </h1>
 
-          <p className="admin-description">
+          <p>
             Manage your ElectroMart store
-            from here.
+            from one place.
           </p>
+
         </div>
+
 
         <button
           type="button"
-          className="admin-logout-btn"
+          className="logout-btn"
           onClick={handleLogout}
         >
           Logout
         </button>
+
       </div>
 
-      <div className="admin-stats">
 
-        <div
-          className="admin-stat-card"
-          onClick={() =>
-            navigate("/admin/products")
-          }
-        >
-          <div className="admin-stat-icon">
-            📦
-          </div>
 
-          <div>
-            <h2>Products</h2>
+      {/* ==========================
+          QUICK ACTIONS ONLY
+      ========================== */}
 
-            <p>
-              Manage Products
-            </p>
-          </div>
-        </div>
+      <div className="quick-actions-section">
 
-        <div
-          className="admin-stat-card"
-          onClick={() =>
-            navigate("/admin/users")
-          }
-        >
-          <div className="admin-stat-icon">
-            👥
-          </div>
+
+        {/* ==========================
+            SECTION HEADER
+        ========================== */}
+
+        <div className="section-heading">
 
           <div>
-            <h2>Users</h2>
 
-            <p>
-              Manage Customers
-            </p>
-          </div>
-        </div>
+            <span>
+              QUICK ACTIONS
+            </span>
 
-        <div
-          className="admin-stat-card"
-          onClick={() =>
-            navigate("/admin/orders")
-          }
-        >
-          <div className="admin-stat-icon">
-            🛒
-          </div>
-
-          <div>
-            <h2>Orders</h2>
-
-            <p>
-              Manage Orders
-            </p>
-          </div>
-        </div>
-
-        <div className="admin-stat-card">
-          <div className="admin-stat-icon">
-            ❤️
-          </div>
-
-          <div>
             <h2>
-              {wishlistItems.length}
+              Store Management
             </h2>
 
-            <p>
-              Wishlist Items
-            </p>
           </div>
+
+          <p>
+            Quickly access important sections
+          </p>
+
         </div>
 
-      </div>
 
-      <div className="admin-quick-actions">
 
-        <h2>
-          Quick Actions
-        </h2>
+        {/* ==========================
+            QUICK ACTIONS
+        ========================== */}
 
-        <div className="admin-actions-grid">
+        <div className="quick-actions-grid">
+
+
+          {/* ==========================
+              ADD PRODUCT
+          ========================== */}
 
           <button
             type="button"
+            className="quick-action"
             onClick={() =>
               navigate(
                 "/admin/products/add"
               )
             }
           >
-            <span>➕</span>
 
-            <strong>
-              Add Product
-            </strong>
+            <div className="quick-icon">
+              ➕
+            </div>
 
-            <small>
-              Add a new product
-            </small>
+            <div>
+
+              <h3>
+                Add Product
+              </h3>
+
+              <p>
+                Add a new product to your store
+              </p>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
           </button>
+
+
+
+          {/* ==========================
+              MANAGE PRODUCTS
+          ========================== */}
 
           <button
             type="button"
+            className="quick-action"
             onClick={() =>
               navigate(
                 "/admin/products"
               )
             }
           >
-            <span>📦</span>
 
-            <strong>
-              Manage Products
-            </strong>
+            <div className="quick-icon">
+              📦
+            </div>
 
-            <small>
-              View and edit products
-            </small>
+            <div>
+
+              <h3>
+                Manage Products
+              </h3>
+
+              <p>
+                Edit or delete existing products
+              </p>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
           </button>
+
+
+
+          {/* ==========================
+              MANAGE USERS
+          ========================== */}
 
           <button
             type="button"
+            className="quick-action"
+            onClick={() =>
+              navigate(
+                "/admin/users"
+              )
+            }
+          >
+
+            <div className="quick-icon">
+              👥
+            </div>
+
+            <div>
+
+              <h3>
+                Manage Users
+              </h3>
+
+              <p>
+                View and manage customers
+              </p>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
+          </button>
+
+
+
+          {/* ==========================
+              MANAGE ORDERS
+          ========================== */}
+
+          <button
+            type="button"
+            className="quick-action"
             onClick={() =>
               navigate(
                 "/admin/orders"
               )
             }
           >
-            <span>🛒</span>
 
-            <strong>
-              Manage Orders
-            </strong>
+            <div className="quick-icon">
+              🛒
+            </div>
 
-            <small>
-              View and update orders
-            </small>
+            <div>
+
+              <h3>
+                Manage Orders
+              </h3>
+
+              <p>
+                Track and update customer orders
+              </p>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
           </button>
+
+
+
+          {/* ==========================
+              WISHLIST
+          ========================== */}
 
           <button
             type="button"
+            className="quick-action"
+            onClick={() =>
+              navigate("/wishlist")
+            }
+          >
+
+            <div className="quick-icon">
+              ❤️
+            </div>
+
+            <div>
+
+              <h3>
+                Wishlist
+              </h3>
+
+              <p>
+                {wishlistItems.length} wishlist items
+              </p>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
+          </button>
+
+
+
+          {/* ==========================
+              VIEW STORE
+          ========================== */}
+
+          <button
+            type="button"
+            className="quick-action"
             onClick={() =>
               navigate("/products")
             }
           >
-            <span>🛍️</span>
 
-            <strong>
-              View Store
-            </strong>
+            <div className="quick-icon">
+              🛍️
+            </div>
 
-            <small>
-              Open customer store
-            </small>
+            <div>
+
+              <h3>
+                View Store
+              </h3>
+
+              <p>
+                Open the customer store
+              </p>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
           </button>
+
+
+
+          {/* ==========================
+              MY PROFILE
+          ========================== */}
 
           <button
             type="button"
+            className="quick-action"
             onClick={() =>
               navigate("/profile")
             }
           >
-            <span>👤</span>
 
-            <strong>
-              My Profile
-            </strong>
+            <div className="quick-icon">
+              👤
+            </div>
 
-            <small>
-              View your profile
-            </small>
+            <div>
+
+              <h3>
+                My Profile
+              </h3>
+
+              <p>
+                View your account profile
+              </p>
+
+            </div>
+
+            <span>
+              →
+            </span>
+
           </button>
 
+
         </div>
+
       </div>
+
+
     </div>
+
   );
+
 }
+
 
 export default AdminDashboard;
