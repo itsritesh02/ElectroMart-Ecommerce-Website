@@ -30,20 +30,19 @@ export const createOrder = async (req, res) => {
       });
     }
 
-    if (totalAmount === undefined || totalAmount <= 0) {
+    if (
+      typeof totalAmount !== "number" ||
+      totalAmount <= 0
+    ) {
       return res.status(400).json({
         message: "Valid total amount is required",
       });
     }
 
-    if (paymentMethod === "razorpay" && !paymentId) {
-      return res.status(400).json({
-        message: "Payment ID is required",
-      });
-    }
-
     for (const item of items) {
-      const product = await Product.findById(item.product);
+      const product = await Product.findById(
+        item.product
+      );
 
       if (!product) {
         return res.status(404).json({
@@ -52,18 +51,22 @@ export const createOrder = async (req, res) => {
       }
     }
 
+    const paymentStatus =
+      paymentMethod === "razorpay"
+        ? "Paid"
+        : "Pending";
+
     const order = await Order.create({
       user: req.user._id,
       items,
       shippingAddress,
       paymentMethod,
-      paymentId: paymentId || null,
-      paymentStatus:
-        paymentMethod === "razorpay"
-          ? "Paid"
-          : "Pending",
       totalAmount,
-      orderStatus: "Pending",
+      paymentStatus,
+      paymentId:
+        paymentMethod === "razorpay"
+          ? paymentId
+          : undefined,
     });
 
     res.status(201).json({
@@ -71,7 +74,10 @@ export const createOrder = async (req, res) => {
       order,
     });
   } catch (error) {
-    console.error("Create Order Error:", error);
+    console.error(
+      "Create Order Error:",
+      error
+    );
 
     res.status(500).json({
       message: "Server error",
@@ -93,7 +99,10 @@ export const getMyOrders = async (req, res) => {
       orders,
     });
   } catch (error) {
-    console.error("Get My Orders Error:", error);
+    console.error(
+      "Get My Orders Error:",
+      error
+    );
 
     res.status(500).json({
       message: "Server error",
@@ -122,7 +131,16 @@ export const getSingleOrder = async (req, res) => {
       order,
     });
   } catch (error) {
-    console.error("Get Single Order Error:", error);
+    console.error(
+      "Get Single Order Error:",
+      error
+    );
+
+    if (error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid order ID",
+      });
+    }
 
     res.status(500).json({
       message: "Server error",
@@ -140,11 +158,15 @@ export const getAllOrders = async (req, res) => {
       });
 
     res.status(200).json({
-      message: "All orders fetched successfully",
+      message:
+        "All orders fetched successfully",
       orders,
     });
   } catch (error) {
-    console.error("Get All Orders Error:", error);
+    console.error(
+      "Get All Orders Error:",
+      error
+    );
 
     res.status(500).json({
       message: "Server error",
@@ -153,7 +175,10 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
-export const updateOrderStatus = async (req, res) => {
+export const updateOrderStatus = async (
+  req,
+  res
+) => {
   try {
     const { id } = req.params;
     const { orderStatus } = req.body;
@@ -166,13 +191,16 @@ export const updateOrderStatus = async (req, res) => {
       "Cancelled",
     ];
 
-    if (!validStatuses.includes(orderStatus)) {
+    if (
+      !validStatuses.includes(orderStatus)
+    ) {
       return res.status(400).json({
         message: "Invalid order status",
       });
     }
 
-    const order = await Order.findById(id);
+    const order =
+      await Order.findById(id);
 
     if (!order) {
       return res.status(404).json({
@@ -192,7 +220,8 @@ export const updateOrderStatus = async (req, res) => {
     await order.save();
 
     res.status(200).json({
-      message: "Order status updated successfully",
+      message:
+        "Order status updated successfully",
       order,
     });
   } catch (error) {
@@ -207,4 +236,3 @@ export const updateOrderStatus = async (req, res) => {
     });
   }
 };
-
