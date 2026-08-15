@@ -1,4 +1,3 @@
-
 import crypto from "crypto";
 import razorpay from "../utils/razorpay.js";
 
@@ -21,14 +20,11 @@ export const createRazorpayOrder = async (req, res) => {
     const order = await razorpay.orders.create(options);
 
     res.status(201).json({
-      message: "Razorpay order created",
+      message: "Razorpay order created successfully",
       order,
     });
   } catch (error) {
-    console.error(
-      "Create Razorpay Order Error:",
-      error
-    );
+    console.error("Create Razorpay Order Error:", error);
 
     res.status(500).json({
       message: "Unable to create payment order",
@@ -37,63 +33,38 @@ export const createRazorpayOrder = async (req, res) => {
   }
 };
 
-export const verifyRazorpayPayment = async (
-  req,
-  res
-) => {
+export const verifyRazorpayPayment = async (req, res) => {
   try {
-    const {
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-    } = req.body;
+    const { razorpay_order_id, razorpay_payment_id, razorpay_signature } =
+      req.body;
 
-    if (
-      !razorpay_order_id ||
-      !razorpay_payment_id ||
-      !razorpay_signature
-    ) {
+    if (!razorpay_order_id || !razorpay_payment_id || !razorpay_signature) {
       return res.status(400).json({
-        message: "Payment verification data is missing",
+        message: "Payment verification data is incomplete",
       });
     }
 
-    const body =
-      razorpay_order_id +
-      "|" +
-      razorpay_payment_id;
+    const generatedSignature = crypto
+      .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
+      .update(`${razorpay_order_id}|${razorpay_payment_id}`)
+      .digest("hex");
 
-    const expectedSignature =
-      crypto
-        .createHmac(
-          "sha256",
-          process.env.RAZORPAY_KEY_SECRET
-        )
-        .update(body)
-        .digest("hex");
-
-    const isValid =
-      expectedSignature ===
-      razorpay_signature;
-
-    if (!isValid) {
+    if (generatedSignature !== razorpay_signature) {
       return res.status(400).json({
-        message: "Invalid payment signature",
-        verified: false,
+        message: "Payment verification failed",
       });
     }
 
     res.status(200).json({
       message: "Payment verified successfully",
-      verified: true,
-      paymentId: razorpay_payment_id,
-      orderId: razorpay_order_id,
+      payment: {
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+      },
     });
   } catch (error) {
-    console.error(
-      "Verify Razorpay Payment Error:",
-      error
-    );
+    console.error("Verify Razorpay Payment Error:", error);
 
     res.status(500).json({
       message: "Payment verification failed",
@@ -101,4 +72,3 @@ export const verifyRazorpayPayment = async (
     });
   }
 };
-
