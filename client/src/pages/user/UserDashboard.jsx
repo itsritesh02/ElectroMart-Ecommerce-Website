@@ -65,26 +65,26 @@ function UserDashboard() {
 
   return (
 
-    <div className="user-dashboard">
+    <div className="account-dashboard">
 
 
       {/* ==========================
           WELCOME SECTION
       ========================== */}
 
-      <div className="dashboard-welcome">
+      <section className="account-header">
 
-        <div>
+        <div className="account-header-content">
 
-          <p className="welcome-text">
+          <p className="account-greeting">
             Welcome back,
           </p>
 
-          <h1>
+          <h1 className="account-title">
             {user?.name || "User"} 👋
           </h1>
 
-          <p className="welcome-description">
+          <p className="account-subtitle">
             Manage your account and
             shopping activity.
           </p>
@@ -94,125 +94,137 @@ function UserDashboard() {
 
         <button
           type="button"
-          className="dashboard-logout"
+          className="account-logout-btn"
           onClick={handleLogout}
         >
           Logout
         </button>
 
-      </div>
+      </section>
 
 
       {/* ==========================
           STAT CARDS
       ========================== */}
 
-      <div className="dashboard-stats">
+      <section className="account-stat-section">
+
+        <div className="account-stat-grid">
 
 
-        {/* CART */}
+          {/* CART */}
 
-        <div
-          className="dashboard-stat-card"
-          onClick={() => navigate("/cart")}
-        >
+          <div
+            className="account-stat-box"
+            onClick={() => navigate("/cart")}
+          >
 
-          <div className="stat-icon">
-            🛒
+            <div className="account-stat-icon">
+              🛒
+            </div>
+
+            <div className="account-stat-info">
+
+              <h2>
+                {cartCount}
+              </h2>
+
+              <p>
+                Cart Items
+              </p>
+
+            </div>
+
           </div>
 
-          <div>
 
-            <h2>
-              {cartCount}
-            </h2>
+          {/* WISHLIST */}
 
-            <p>
-              Cart Items
-            </p>
+          <div
+            className="account-stat-box"
+            onClick={() => navigate("/wishlist")}
+          >
+
+            <div className="account-stat-icon">
+              ❤️
+            </div>
+
+            <div className="account-stat-info">
+
+              <h2>
+                {wishlistItems.length}
+              </h2>
+
+              <p>
+                Wishlist Items
+              </p>
+
+            </div>
 
           </div>
+
+
+          {/* ACCOUNT */}
+
+          <div className="account-stat-box">
+
+            <div className="account-stat-icon">
+              👤
+            </div>
+
+            <div className="account-stat-info">
+
+              <h2>
+                {user?.role || "User"}
+              </h2>
+
+              <p>
+                Account Type
+              </p>
+
+            </div>
+
+          </div>
+
 
         </div>
 
-
-        {/* WISHLIST */}
-
-        <div
-          className="dashboard-stat-card"
-          onClick={() => navigate("/wishlist")}
-        >
-
-          <div className="stat-icon">
-            ❤️
-          </div>
-
-          <div>
-
-            <h2>
-              {wishlistItems.length}
-            </h2>
-
-            <p>
-              Wishlist Items
-            </p>
-
-          </div>
-
-        </div>
-
-
-        {/* ACCOUNT */}
-
-        <div className="dashboard-stat-card">
-
-          <div className="stat-icon">
-            👤
-          </div>
-
-          <div>
-
-            <h2>
-              {user?.role || "User"}
-            </h2>
-
-            <p>
-              Account Type
-            </p>
-
-          </div>
-
-        </div>
-
-
-      </div>
+      </section>
 
 
       {/* ==========================
           QUICK ACTIONS
       ========================== */}
 
-      <div className="quick-actions">
+      <section className="account-actions">
+
+        <div className="account-section-heading">
+
+          <h2>
+            Quick Actions
+          </h2>
+
+          <p>
+            Quickly access your shopping features
+          </p>
+
+        </div>
 
 
-        <h2>
-          Quick Actions
-        </h2>
-
-
-        <div className="quick-actions-grid">
+        <div className="account-action-grid">
 
 
           {/* PRODUCTS */}
 
           <button
             type="button"
+            className="account-action-card"
             onClick={() =>
               navigate("/products")
             }
           >
 
-            <span>
+            <span className="account-action-icon">
               🛍️
             </span>
 
@@ -231,12 +243,13 @@ function UserDashboard() {
 
           <button
             type="button"
+            className="account-action-card"
             onClick={() =>
               navigate("/cart")
             }
           >
 
-            <span>
+            <span className="account-action-icon">
               🛒
             </span>
 
@@ -255,12 +268,13 @@ function UserDashboard() {
 
           <button
             type="button"
+            className="account-action-card"
             onClick={() =>
               navigate("/wishlist")
             }
           >
 
-            <span>
+            <span className="account-action-icon">
               ❤️
             </span>
 
@@ -279,12 +293,13 @@ function UserDashboard() {
 
           <button
             type="button"
+            className="account-action-card"
             onClick={() =>
               navigate("/profile")
             }
           >
 
-            <span>
+            <span className="account-action-icon">
               👤
             </span>
 
@@ -301,7 +316,7 @@ function UserDashboard() {
 
         </div>
 
-      </div>
+      </section>
 
 
     </div>
