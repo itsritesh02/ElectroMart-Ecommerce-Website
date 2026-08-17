@@ -1,6 +1,6 @@
-
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import api from "../../services/api";
 
@@ -10,6 +10,10 @@ function EditProduct() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // ==========================
+  // FORM DATA
+  // ==========================
+
   const [formData, setFormData] = useState({
     name: "",
     price: "",
@@ -18,12 +22,22 @@ function EditProduct() {
     image: "",
   });
 
+  // ==========================
+  // LOADING
+  // ==========================
+
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  // ==========================
+  // GET PRODUCT
+  // ==========================
 
   useEffect(() => {
     const getProduct = async () => {
       try {
+        setLoading(true);
+
         const res = await api.get(
           `/products/${id}`
         );
@@ -43,10 +57,19 @@ function EditProduct() {
           error
         );
 
-        alert(
-          error.response?.data?.message ||
-          "Failed to load product"
-        );
+        // ==========================
+        // ERROR SWEET ALERT
+        // ==========================
+
+        await Swal.fire({
+          icon: "error",
+          title: "Product Not Found",
+          text:
+            error.response?.data?.message ||
+            "Failed to load product.",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#dc2626",
+        });
 
         navigate("/admin/products");
       } finally {
@@ -59,6 +82,10 @@ function EditProduct() {
     }
   }, [id, navigate]);
 
+  // ==========================
+  // HANDLE CHANGE
+  // ==========================
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -68,22 +95,41 @@ function EditProduct() {
     }));
   };
 
+  // ==========================
+  // UPDATE PRODUCT
+  // ==========================
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // ==========================
+    // VALIDATION
+    // ==========================
+
     if (
-      !formData.name ||
+      !formData.name.trim() ||
       !formData.price ||
-      !formData.category ||
-      !formData.description ||
-      !formData.image
+      !formData.category.trim() ||
+      !formData.description.trim() ||
+      !formData.image.trim()
     ) {
-      alert("All fields are required");
+      Swal.fire({
+        icon: "warning",
+        title: "Missing Fields",
+        text: "Please fill all fields.",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#f59e0b",
+      });
+
       return;
     }
 
     try {
       setSaving(true);
+
+      // ==========================
+      // UPDATE API
+      // ==========================
 
       const res = await api.put(
         `/products/${id}`,
@@ -101,9 +147,18 @@ function EditProduct() {
         res.data
       );
 
-      alert(
-        "Product updated successfully"
-      );
+      // ==========================
+      // SUCCESS SWEET ALERT
+      // ==========================
+
+      await Swal.fire({
+        icon: "success",
+        title: "Product Updated!",
+        text:
+          "Product updated successfully.",
+        confirmButtonText: "Continue",
+        confirmButtonColor: "#111827",
+      });
 
       navigate("/admin/products");
     } catch (error) {
@@ -112,29 +167,64 @@ function EditProduct() {
         error
       );
 
-      alert(
-        error.response?.data?.message ||
-        "Failed to update product"
-      );
+      // ==========================
+      // ERROR SWEET ALERT
+      // ==========================
+
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text:
+          error.response?.data?.message ||
+          "Failed to update product.",
+        confirmButtonText: "Try Again",
+        confirmButtonColor: "#dc2626",
+      });
     } finally {
       setSaving(false);
     }
   };
 
+  // ==========================
+  // LOADING SCREEN
+  // ==========================
+
   if (loading) {
     return (
       <div className="edit-product-page">
-        <h2>Loading product...</h2>
+
+        <div className="products-loading">
+
+          <h2>
+            Loading product...
+          </h2>
+
+          <p>
+            Please wait while we load
+            the product details.
+          </p>
+
+        </div>
+
       </div>
     );
   }
 
+  // ==========================
+  // PAGE
+  // ==========================
+
   return (
     <div className="edit-product-page">
+
+      {/* ==========================
+          HEADER
+      ========================== */}
 
       <div className="edit-product-header">
 
         <div>
+
           <h1>
             Edit Product
           </h1>
@@ -142,6 +232,7 @@ function EditProduct() {
           <p>
             Update your ElectroMart product
           </p>
+
         </div>
 
         <button
@@ -158,10 +249,18 @@ function EditProduct() {
       </div>
 
 
+      {/* ==========================
+          FORM
+      ========================== */}
+
       <form
         className="edit-product-form"
         onSubmit={handleSubmit}
       >
+
+        {/* ==========================
+            PRODUCT NAME
+        ========================== */}
 
         <div className="form-group">
 
@@ -176,12 +275,19 @@ function EditProduct() {
             value={formData.name}
             onChange={handleChange}
             placeholder="Enter product name"
+            disabled={saving}
           />
 
         </div>
 
 
+        {/* ==========================
+            PRICE + CATEGORY
+        ========================== */}
+
         <div className="form-row">
+
+          {/* PRICE */}
 
           <div className="form-group">
 
@@ -197,10 +303,13 @@ function EditProduct() {
               onChange={handleChange}
               placeholder="Enter price"
               min="0"
+              disabled={saving}
             />
 
           </div>
 
+
+          {/* CATEGORY */}
 
           <div className="form-group">
 
@@ -215,12 +324,17 @@ function EditProduct() {
               value={formData.category}
               onChange={handleChange}
               placeholder="Enter category"
+              disabled={saving}
             />
 
           </div>
 
         </div>
 
+
+        {/* ==========================
+            DESCRIPTION
+        ========================== */}
 
         <div className="form-group">
 
@@ -235,10 +349,15 @@ function EditProduct() {
             onChange={handleChange}
             placeholder="Enter product description"
             rows="5"
+            disabled={saving}
           />
 
         </div>
 
+
+        {/* ==========================
+            IMAGE URL
+        ========================== */}
 
         <div className="form-group">
 
@@ -253,12 +372,18 @@ function EditProduct() {
             value={formData.image}
             onChange={handleChange}
             placeholder="https://example.com/image.jpg"
+            disabled={saving}
           />
 
         </div>
 
 
+        {/* ==========================
+            IMAGE PREVIEW
+        ========================== */}
+
         {formData.image && (
+
           <div className="image-preview">
 
             <p>
@@ -275,10 +400,17 @@ function EditProduct() {
             />
 
           </div>
+
         )}
 
 
+        {/* ==========================
+            ACTIONS
+        ========================== */}
+
         <div className="form-actions">
+
+          {/* CANCEL */}
 
           <button
             type="button"
@@ -290,6 +422,9 @@ function EditProduct() {
           >
             Cancel
           </button>
+
+
+          {/* UPDATE */}
 
           <button
             type="submit"
@@ -310,4 +445,3 @@ function EditProduct() {
 }
 
 export default EditProduct;
-
