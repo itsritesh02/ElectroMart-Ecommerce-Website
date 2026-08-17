@@ -214,41 +214,7 @@ function Footer() {
 
       </div>
 
-
-      {/* ==========================
-          NEWSLETTER
-      ========================== */}
-
-      <div className="footer-newsletter">
-
-        <div>
-
-          <h3>
-            Stay Updated
-          </h3>
-
-          <p>
-            Subscribe for latest products,
-            offers and updates.
-          </p>
-
-        </div>
-
-
-        <div className="newsletter-form">
-
-          <input
-            type="email"
-            placeholder="Enter your email"
-          />
-
-          <button type="button">
-            Subscribe
-          </button>
-
-        </div>
-
-      </div>
+\
 
 
       {/* ==========================
