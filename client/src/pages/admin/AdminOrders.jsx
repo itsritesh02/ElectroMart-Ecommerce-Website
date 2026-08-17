@@ -158,7 +158,10 @@ function AdminOrders() {
       );
 
 
-      // Update modal also
+      // ==========================
+      // UPDATE MODAL
+      // ==========================
+
       setSelectedOrder((prev) => {
 
         if (
@@ -230,6 +233,131 @@ function AdminOrders() {
 
 
   // ==========================
+  // DELETE ORDER
+  // ==========================
+
+  const handleDeleteOrder = async (
+    order
+  ) => {
+
+    const result = await Swal.fire({
+
+      icon: "warning",
+
+      title: "Delete Order?",
+
+      html: `
+        <p>
+          Are you sure you want to permanently
+          delete this order?
+        </p>
+
+        <strong>
+          Order ID: ${order._id.slice(-10)}
+        </strong>
+      `,
+
+      showCancelButton: true,
+
+      confirmButtonText: "Yes, Delete",
+
+      cancelButtonText: "Cancel",
+
+      confirmButtonColor: "#dc2626",
+
+      cancelButtonColor: "#6b7280",
+
+      reverseButtons: true,
+
+    });
+
+
+    if (!result.isConfirmed) {
+
+      return;
+
+    }
+
+
+    try {
+
+      await api.delete(
+        `/orders/admin/orders/${order._id}`
+      );
+
+
+      // ==========================
+      // REMOVE FROM STATE
+      // ==========================
+
+      setOrders((prevOrders) =>
+
+        prevOrders.filter(
+          (item) =>
+            item._id !== order._id
+        )
+
+      );
+
+
+      // ==========================
+      // CLOSE MODAL
+      // ==========================
+
+      if (
+        selectedOrder &&
+        selectedOrder._id === order._id
+      ) {
+
+        setSelectedOrder(null);
+
+      }
+
+
+      Swal.fire({
+
+        icon: "success",
+
+        title: "Order Deleted",
+
+        text:
+          "Order has been deleted successfully.",
+
+        timer: 1500,
+
+        showConfirmButton: false,
+
+      });
+
+
+    } catch (error) {
+
+      console.error(
+        "Delete Order Error:",
+        error
+      );
+
+
+      Swal.fire({
+
+        icon: "error",
+
+        title: "Delete Failed",
+
+        text:
+          error.response?.data?.message ||
+          "Failed to delete order.",
+
+        confirmButtonText: "OK",
+
+      });
+
+    }
+
+  };
+
+
+  // ==========================
   // FORMAT DATE
   // ==========================
 
@@ -283,7 +411,9 @@ function AdminOrders() {
   // OPEN ORDER DETAILS
   // ==========================
 
-  const handleViewDetails = (order) => {
+  const handleViewDetails = (
+    order
+  ) => {
 
     setSelectedOrder(order);
 
@@ -424,7 +554,7 @@ function AdminOrders() {
                 </th>
 
                 <th>
-                  Details
+                  Actions
                 </th>
 
               </tr>
@@ -646,24 +776,43 @@ function AdminOrders() {
 
 
                   {/* ==========================
-                      VIEW DETAILS
+                      ACTIONS
                   ========================== */}
 
                   <td>
 
-                    <button
-                      type="button"
-                      className="view-details-btn"
-                      onClick={() =>
-                        handleViewDetails(
-                          order
-                        )
-                      }
-                    >
+                    <div className="order-action-buttons">
 
-                      View Details
+                      <button
+                        type="button"
+                        className="view-details-btn"
+                        onClick={() =>
+                          handleViewDetails(
+                            order
+                          )
+                        }
+                      >
 
-                    </button>
+                        View Details
+
+                      </button>
+
+
+                      <button
+                        type="button"
+                        className="delete-order-btn"
+                        onClick={() =>
+                          handleDeleteOrder(
+                            order
+                          )
+                        }
+                      >
+
+                        Delete
+
+                      </button>
+
+                    </div>
 
                   </td>
 
@@ -688,7 +837,9 @@ function AdminOrders() {
 
         <div
           className="order-modal-overlay"
-          onClick={handleCloseDetails}
+          onClick={
+            handleCloseDetails
+          }
         >
 
           <div
@@ -727,7 +878,9 @@ function AdminOrders() {
               <button
                 type="button"
                 className="modal-close-btn"
-                onClick={handleCloseDetails}
+                onClick={
+                  handleCloseDetails
+                }
               >
 
                 ×
@@ -1139,7 +1292,24 @@ function AdminOrders() {
 
               <button
                 type="button"
-                onClick={handleCloseDetails}
+                onClick={() =>
+                  handleDeleteOrder(
+                    selectedOrder
+                  )
+                }
+                className="modal-delete-btn"
+              >
+
+                Delete Order
+
+              </button>
+
+
+              <button
+                type="button"
+                onClick={
+                  handleCloseDetails
+                }
                 className="modal-close-bottom-btn"
               >
 
