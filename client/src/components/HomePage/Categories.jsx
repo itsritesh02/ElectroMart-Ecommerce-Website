@@ -1,5 +1,5 @@
-import "./Categories.css";
 import { Link } from "react-router-dom";
+
 import {
   FaLaptop,
   FaMobileAlt,
@@ -11,40 +11,109 @@ import {
   FaClock,
 } from "react-icons/fa";
 
+import "./Categories.css";
+
 function Categories() {
   const categories = [
-    { name: "Laptops", icon: <FaLaptop /> },
-    { name: "Mobiles", icon: <FaMobileAlt /> },
-    { name: "Headphones", icon: <FaHeadphones /> },
-    { name: "Cameras", icon: <FaCamera /> },
-    { name: "Gaming", icon: <FaGamepad /> },
-    { name: "Smart TV", icon: <FaTv /> },
-    { name: "Tablets", icon: <FaTabletAlt /> },
-    { name: "Smart Watch", icon: <FaClock /> },
+    {
+      name: "Laptop",
+      icon: <FaLaptop />,
+    },
+
+    {
+      name: "Mobile",
+      icon: <FaMobileAlt />,
+    },
+
+    {
+      name: "Headphones",
+      icon: <FaHeadphones />,
+    },
+
+    {
+      name: "Camera",
+      icon: <FaCamera />,
+    },
+
+    {
+      name: "Gaming",
+      icon: <FaGamepad />,
+    },
+
+    {
+      name: "Smart TV",
+      icon: <FaTv />,
+    },
+
+    {
+      name: "Tablet",
+      icon: <FaTabletAlt />,
+    },
+
+    {
+      name: "Smart Watch",
+      icon: <FaClock />,
+    },
   ];
 
   return (
     <section className="categories">
 
-      <h2>Shop By Category</h2>
+      {/* ==========================
+          HEADER
+      ========================== */}
+
+      <div className="categories-header">
+
+        <div>
+
+          <span className="categories-label">
+            EXPLORE
+          </span>
+
+          <h2>
+            Shop By Category
+          </h2>
+
+        </div>
+
+        <Link
+          to="/products"
+          className="view-all-categories"
+        >
+          View All →
+        </Link>
+
+      </div>
+
+
+      {/* ==========================
+          CATEGORY GRID
+      ========================== */}
 
       <div className="category-grid">
 
-        {categories.map((item, index) => (
+        {categories.map((item) => (
 
           <Link
-            to="/products"
-            key={index}
+            key={item.name}
+            to={`/products?category=${encodeURIComponent(
+              item.name
+            )}`}
             className="category-card"
           >
 
-            <div className="icon">
-
+            <div className="category-icon">
               {item.icon}
-
             </div>
 
-            <h3>{item.name}</h3>
+            <h3>
+              {item.name}
+            </h3>
+
+            <span className="category-arrow">
+              →
+            </span>
 
           </Link>
 
