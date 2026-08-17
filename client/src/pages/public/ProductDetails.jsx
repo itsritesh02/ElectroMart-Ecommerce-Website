@@ -1,23 +1,29 @@
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
 import api from "../../services/api";
 
-import { addToCart } from "../../redux/slice/cartSlice";
+import {
+  addToCart,
+  removeFromCart,
+} from "../../redux/slice/cartSlice";
 
 import QuantitySelector from "../../components/ProductPage/QuantitySelector";
 import SimilarProducts from "../../components/ProductPage/SimilarProducts";
 
 import "./ProductDetails.css";
 
+
 function ProductDetails() {
+
   const { id } = useParams();
 
   const dispatch = useDispatch();
 
   const navigate = useNavigate();
+
 
   // ==========================
   // PRODUCT
@@ -27,57 +33,151 @@ function ProductDetails() {
 
   const [loading, setLoading] = useState(true);
 
+
   // ==========================
   // QUANTITY
   // ==========================
 
   const [quantity, setQuantity] = useState(1);
 
+
+  // ==========================
+  // GET CART ITEMS
+  // ==========================
+
+  const cartItems = useSelector(
+    (state) => state.cart?.items || []
+  );
+
+
+  // ==========================
+  // CHECK PRODUCT IN CART
+  // ==========================
+
+  const isInCart = cartItems.some(
+    (item) => {
+
+      const cartId =
+        item.id || item._id;
+
+      return (
+        String(cartId) ===
+        String(product?._id)
+      );
+
+    }
+  );
+
+
   // ==========================
   // GET SINGLE PRODUCT
   // ==========================
 
   useEffect(() => {
+
     const getProduct = async () => {
+
       try {
+
+        setLoading(true);
+
         const res = await api.get(
           `/products/${id}`
         );
 
-        console.log("PRODUCT:", res.data);
+        console.log(
+          "PRODUCT:",
+          res.data
+        );
 
-        setProduct(res.data.product);
+        setProduct(
+          res.data.product
+        );
 
       } catch (error) {
+
         console.error(
           "Fetch Product Error:",
           error
         );
 
+        setProduct(null);
+
       } finally {
+
         setLoading(false);
+
       }
+
     };
 
-    getProduct();
+
+    if (id) {
+
+      getProduct();
+
+    }
+
   }, [id]);
 
+
   // ==========================
-  // ADD TO CART
+  // ADD / REMOVE FROM CART
   // ==========================
+
   const handleAddToCart = () => {
+
+    // ==========================
+    // PRODUCT NOT AVAILABLE
+    // ==========================
+
+    if (!product) {
+      return;
+    }
+
+
+    // ==========================
+    // IF ALREADY IN CART
+    // REMOVE PRODUCT
+    // ==========================
+
+    if (isInCart) {
+
+      dispatch(
+        removeFromCart(product._id)
+      );
+
+      return;
+
+    }
+
+
+    // ==========================
+    // ADD PRODUCT TO CART
+    // ==========================
 
     dispatch(
       addToCart({
-        ...product,
-        quantity,
+
+        id: product._id,
+
+        _id: product._id,
+
+        name: product.name,
+
+        price: Number(product.price),
+
+        image: product.image,
+
+        category: product.category,
+
+        quantity: Number(quantity),
+
       })
     );
 
-    alert(
-      `${quantity} product added to cart`
-    );
   };
+
 
   // ==========================
   // BUY NOW
@@ -85,21 +185,58 @@ function ProductDetails() {
 
   const handleBuyNow = () => {
 
-    dispatch(
-      addToCart({
-        ...product,
-        quantity,
-      })
-    );
+    if (!product) {
+      return;
+    }
+
+
+    // ==========================
+    // IF PRODUCT NOT IN CART
+    // ADD FIRST
+    // ==========================
+
+    if (!isInCart) {
+
+      dispatch(
+        addToCart({
+
+          id: product._id,
+
+          _id: product._id,
+
+          name: product.name,
+
+          price: Number(product.price),
+
+          image: product.image,
+
+          category: product.category,
+
+          quantity: Number(quantity),
+
+        })
+      );
+
+    }
+
+
+    // ==========================
+    // GO TO CART
+    // ==========================
 
     navigate("/cart");
+
   };
+
+
   // ==========================
   // LOADING
   // ==========================
 
   if (loading) {
+
     return (
+
       <div className="details-container">
 
         <h2>
@@ -107,15 +244,20 @@ function ProductDetails() {
         </h2>
 
       </div>
+
     );
+
   }
+
 
   // ==========================
   // PRODUCT NOT FOUND
   // ==========================
 
   if (!product) {
+
     return (
+
       <div className="details-container">
 
         <h2>
@@ -123,12 +265,18 @@ function ProductDetails() {
         </h2>
 
       </div>
+
     );
+
   }
 
+
   return (
+
     <>
+
       <div className="details-container">
+
 
         {/* ==========================
             PRODUCT IMAGE
@@ -150,46 +298,68 @@ function ProductDetails() {
 
         <div className="right">
 
+
           <h1>
             {product.name}
           </h1>
 
 
-          {/* CATEGORY */}
+          {/* ==========================
+              CATEGORY
+          ========================== */}
 
           <p className="product-category">
-            Category: {product.category}
+
+            Category:{" "}
+
+            {product.category}
+
           </p>
 
 
-          {/* RATING */}
+          {/* ==========================
+              RATING
+          ========================== */}
 
           <div className="rating">
 
             <FaStar />
 
             <span>
-              {product.rating || "No rating"}
+
+              {product.rating ||
+                "No rating"}
+
             </span>
 
           </div>
 
 
-          {/* PRICE */}
+          {/* ==========================
+              PRICE
+          ========================== */}
 
           <h2>
-            ₹{product.price}
+
+            ₹{Number(product.price)}
+
           </h2>
 
 
-          {/* DESCRIPTION */}
+          {/* ==========================
+              DESCRIPTION
+          ========================== */}
 
           <p>
+
             {product.description}
+
           </p>
 
 
-          {/* QUANTITY */}
+          {/* ==========================
+              QUANTITY
+          ========================== */}
 
           <QuantitySelector
             quantity={quantity}
@@ -197,26 +367,48 @@ function ProductDetails() {
           />
 
 
-          {/* BUTTONS */}
+          {/* ==========================
+              BUTTONS
+          ========================== */}
 
           <div className="details-buttons">
 
+
+            {/* ==========================
+                ADD / REMOVE CART
+            ========================== */}
+
             <button
               type="button"
-              className="cart-btn"
+              className={
+                isInCart
+                  ? "cart-btn added-cart-btn"
+                  : "cart-btn"
+              }
               onClick={handleAddToCart}
             >
-              Add To Cart
+
+              {isInCart
+                ? "Added to Cart"
+                : "Add To Cart"}
+
             </button>
 
+
+            {/* ==========================
+                BUY NOW
+            ========================== */}
 
             <button
               type="button"
               className="buy-btn"
               onClick={handleBuyNow}
             >
+
               Buy Now
+
             </button>
+
 
           </div>
 
@@ -235,7 +427,10 @@ function ProductDetails() {
       />
 
     </>
+
   );
+
 }
+
 
 export default ProductDetails;
