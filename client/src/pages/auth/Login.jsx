@@ -58,16 +58,8 @@ function Login() {
       );
 
 
-      // ==========================
-      // SAVE LOGIN DATA
-      // ==========================
-
       dispatch(loginSuccess(res.data));
 
-
-      // ==========================
-      // SUCCESS ALERT
-      // ==========================
 
       await Swal.fire({
         icon: "success",
@@ -82,7 +74,7 @@ function Login() {
 
 
       // ==========================
-      // ROLE BASED REDIRECT
+      // ROLE REDIRECT
       // ==========================
 
       if (
@@ -105,10 +97,6 @@ function Login() {
         err
       );
 
-
-      // ==========================
-      // ERROR ALERT
-      // ==========================
 
       Swal.fire({
         icon: "error",
@@ -143,9 +131,7 @@ function Login() {
         <form onSubmit={handleSubmit}>
 
 
-          {/* ==========================
-              EMAIL
-          ========================== */}
+          {/* EMAIL */}
 
           <div className="form-group">
 
@@ -166,9 +152,7 @@ function Login() {
           </div>
 
 
-          {/* ==========================
-              PASSWORD
-          ========================== */}
+          {/* PASSWORD */}
 
           <div className="form-group">
 
@@ -190,8 +174,23 @@ function Login() {
 
 
           {/* ==========================
-              LOGIN BUTTON
+              FORGOT PASSWORD
           ========================== */}
+
+          <div className="forgot-password">
+
+            <span
+              onClick={() =>
+                navigate("/forgot-password")
+              }
+            >
+              Forgot Password?
+            </span>
+
+          </div>
+
+
+          {/* LOGIN BUTTON */}
 
           <button
             type="submit"
@@ -200,13 +199,10 @@ function Login() {
             Login
           </button>
 
-
         </form>
 
 
-        {/* ==========================
-            REGISTER
-        ========================== */}
+        {/* REGISTER */}
 
         <p className="auth-bottom">
 
@@ -221,7 +217,6 @@ function Login() {
           </span>
 
         </p>
-
 
       </div>
 
