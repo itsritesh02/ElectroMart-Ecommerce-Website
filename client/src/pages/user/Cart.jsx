@@ -1,7 +1,5 @@
-
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-
 import Swal from "sweetalert2";
 
 import {
@@ -17,28 +15,15 @@ function Cart() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  // ==========================
-  // GET CART ITEMS
-  // ==========================
-
   const cartItems = useSelector(
     (state) => state.cart?.items || []
   );
 
-  // ==========================
-  // TOTAL PRICE
-  // ==========================
-
   const totalPrice = cartItems.reduce(
     (total, item) =>
-      total +
-      Number(item.price) * Number(item.quantity),
+      total + Number(item.price) * Number(item.quantity),
     0
   );
-
-  // ==========================
-  // TOTAL ITEMS
-  // ==========================
 
   const totalItems = cartItems.reduce(
     (total, item) =>
@@ -46,15 +31,11 @@ function Cart() {
     0
   );
 
-  // ==========================
-  // REMOVE ITEM
-  // ==========================
-
   const handleRemove = async (item) => {
     const result = await Swal.fire({
       icon: "warning",
       title: "Remove Product?",
-      text: `Are you sure you want to remove "${item.name}" from your cart ? `,
+      text: `Are you sure you want to remove "${item.name}" from your cart?`,
       showCancelButton: true,
       confirmButtonText: "Yes, Remove",
       cancelButtonText: "Cancel",
@@ -73,10 +54,6 @@ function Cart() {
       showConfirmButton: false,
     });
   };
-
-  // ==========================
-  // CLEAR CART
-  // ==========================
 
   const handleClearCart = async () => {
     const result = await Swal.fire({
@@ -102,25 +79,22 @@ function Cart() {
     });
   };
 
-  // ==========================
   // EMPTY CART
-  // ==========================
-
   if (cartItems.length === 0) {
     return (
-      <div className="empty-cart">
+      <div className="cart-empty">
 
-        <h1>
+        <h1 className="cart-empty-title">
           Your Cart is Empty
         </h1>
 
-        <p>
+        <p className="cart-empty-text">
           Add some products to your cart.
         </p>
 
         <button
           type="button"
-          className="continue-shopping-btn"
+          className="cart-continue-btn"
           onClick={() => navigate("/products")}
         >
           Continue Shopping
@@ -134,17 +108,13 @@ function Cart() {
     <div className="cart-page">
 
       {/* PAGE TITLE */}
-
-      <h1>
+      <h1 className="cart-page-title">
         Shopping Cart
       </h1>
 
       <div className="cart-container">
 
-        {/* ==========================
-            CART ITEMS
-        ========================== */}
-
+        {/* CART ITEMS */}
         <div className="cart-items">
 
           {cartItems.map((item) => (
@@ -157,29 +127,26 @@ function Cart() {
               <img
                 src={item.image}
                 alt={item.name}
-                className="cart-image"
+                className="cart-item-image"
               />
 
-              <div className="cart-details">
+              <div className="cart-item-details">
 
-                <h2>
+                <h2 className="cart-item-name">
                   {item.name}
                 </h2>
 
-                <p className="cart-price">
+                <p className="cart-item-price">
                   ₹{Number(item.price)}
                 </p>
 
                 {/* QUANTITY */}
-
-                <div className="quantity">
+                <div className="cart-quantity">
 
                   <button
                     type="button"
                     onClick={() =>
-                      dispatch(
-                        decreaseQuantity(item.id)
-                      )
+                      dispatch(decreaseQuantity(item.id))
                     }
                   >
                     -
@@ -192,9 +159,7 @@ function Cart() {
                   <button
                     type="button"
                     onClick={() =>
-                      dispatch(
-                        increaseQuantity(item.id)
-                      )
+                      dispatch(increaseQuantity(item.id))
                     }
                   >
                     +
@@ -203,21 +168,17 @@ function Cart() {
                 </div>
 
                 {/* ITEM TOTAL */}
-
-                <p className="item-total">
+                <p className="cart-item-total">
                   Item Total: ₹
                   {Number(item.price) *
                     Number(item.quantity)}
                 </p>
 
                 {/* REMOVE */}
-
                 <button
                   type="button"
-                  className="remove-btn"
-                  onClick={() =>
-                    handleRemove(item)
-                  }
+                  className="cart-remove-btn"
+                  onClick={() => handleRemove(item)}
                 >
                   Remove
                 </button>
@@ -230,17 +191,14 @@ function Cart() {
 
         </div>
 
-        {/* ==========================
-            CART SUMMARY
-        ========================== */}
-
+        {/* CART SUMMARY */}
         <div className="cart-summary">
 
-          <h2>
+          <h2 className="cart-summary-title">
             Cart Summary
           </h2>
 
-          <div className="summary-row">
+          <div className="cart-summary-row">
 
             <span>
               Total Items
@@ -252,7 +210,7 @@ function Cart() {
 
           </div>
 
-          <div className="summary-row">
+          <div className="cart-summary-row">
 
             <span>
               Total
@@ -265,22 +223,18 @@ function Cart() {
           </div>
 
           {/* CHECKOUT */}
-
           <button
             type="button"
-            className="proceed-checkout-btn"
-            onClick={() =>
-              navigate("/checkout")
-            }
+            className="cart-checkout-btn"
+            onClick={() => navigate("/checkout")}
           >
             Proceed To Checkout
           </button>
 
           {/* CLEAR CART */}
-
           <button
             type="button"
-            className="clear-cart-btn"
+            className="cart-clear-btn"
             onClick={handleClearCart}
           >
             Clear Cart
