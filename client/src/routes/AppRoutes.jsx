@@ -78,7 +78,7 @@ const AppRoutes = () => {
 
           <Route
             path="/profile"
-            element={<Profile />}
+            element={<Profile/>}
           />
 
           <Route
