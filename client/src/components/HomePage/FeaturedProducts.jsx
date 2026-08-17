@@ -1,57 +1,160 @@
+import { useEffect, useState } from "react";
+
+import api from "../../services/api";
+
 import ProductCard from "../ProductCard/ProductCard";
+
 import "./FeaturedProducts.css";
 
 
 function FeaturedProducts() {
 
-  const products = [
+  // ==========================
+  // PRODUCTS
+  // ==========================
 
-    {
-      id: 1,
-      name: "MacBook Air M4",
-      price: 99999,
-      rating: 4.8,
-      image: "https://picsum.photos/300/250?random=1"
-    },
+  const [products, setProducts] = useState([]);
 
-    {
-      id: 2,
-      name: "iPhone 16",
-      price: 79999,
-      rating: 4.9,
-      image: "https://picsum.photos/300/250?random=2"
-    },
+  const [loading, setLoading] = useState(true);
 
-    {
-      id: 3,
-      name: "Samsung S26",
-      price: 69999,
-      rating: 4.7,
-      image: "https://picsum.photos/300/250?random=3"
-    },
 
-    {
-      id: 4,
-      name: "Sony Headphones",
-      price: 14999,
-      rating: 4.6,
-      image: "https://picsum.photos/300/250?random=4"
-    }
+  // ==========================
+  // GET PRODUCTS
+  // ==========================
 
-  ];
+  useEffect(() => {
+
+    const getProducts = async () => {
+
+      try {
+
+        const res = await api.get("/products");
+
+        console.log(
+          "FEATURED PRODUCTS:",
+          res.data
+        );
+
+        const allProducts =
+          res.data.products || [];
+
+
+        // ==========================
+        // LATEST 4 PRODUCTS
+        // ==========================
+
+        setProducts(
+          allProducts.slice(0, 4)
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Featured Products Error:",
+          error
+        );
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+
+    getProducts();
+
+  }, []);
+
+
+  // ==========================
+  // LOADING
+  // ==========================
+
+  if (loading) {
+
+    return (
+
+      <section className="featured">
+
+        <h2>
+          Featured Products
+        </h2>
+
+        <p>
+          Loading products...
+        </p>
+
+      </section>
+
+    );
+
+  }
+
+
+  // ==========================
+  // NO PRODUCTS
+  // ==========================
+
+  if (products.length === 0) {
+
+    return (
+
+      <section className="featured">
+
+        <h2>
+          Featured Products
+        </h2>
+
+        <p>
+          No products available.
+        </p>
+
+      </section>
+
+    );
+
+  }
+
+
+  // ==========================
+  // UI
+  // ==========================
 
   return (
 
     <section className="featured">
 
-      <h2>Featured Products</h2>
+      <div className="featured-header">
+
+        <div>
+
+          <span className="featured-label">
+            OUR PRODUCTS
+          </span>
+
+          <h2>
+            Featured Products
+          </h2>
+
+          <p>
+            Discover some of our latest
+            products.
+          </p>
+
+        </div>
+
+      </div>
+
 
       <div className="product-grid">
 
         {products.map((product) => (
 
           <ProductCard
-            key={product.id}
+            key={product._id}
             product={product}
           />
 
@@ -62,6 +165,8 @@ function FeaturedProducts() {
     </section>
 
   );
+
 }
+
 
 export default FeaturedProducts;

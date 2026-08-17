@@ -1,24 +1,133 @@
-.featured{
+/* ==========================
+   FEATURED PRODUCTS
+========================== */
 
-    width:90%;
-
-    margin:70px auto;
+.featured {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 70px 20px;
+  box-sizing: border-box;
 }
 
-.featured h2{
 
-    text-align:center;
+/* ==========================
+   HEADER
+========================== */
 
-    margin-bottom:40px;
-
-    font-size:35px;
+.featured-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 35px;
 }
 
-.product-grid{
 
-    display:grid;
+.featured-label {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+}
 
-    grid-template-columns:repeat(4,1fr);
 
-    gap:25px;
+.featured-header h2 {
+  margin: 0;
+  color: #111827;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+
+.featured-header p {
+  margin: 8px 0 0;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+
+/* ==========================
+   PRODUCT GRID
+========================== */
+
+.featured .product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 22px;
+}
+
+
+/* ==========================
+   LOADING / EMPTY
+========================== */
+
+.featured > p {
+  margin-top: 20px;
+  color: #6b7280;
+  font-size: 15px;
+}
+
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
+@media (max-width: 1000px) {
+
+  .featured .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+}
+
+
+@media (max-width: 750px) {
+
+  .featured {
+    padding: 50px 16px;
+  }
+
+
+  .featured-header h2 {
+    font-size: 27px;
+  }
+
+
+  .featured .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+}
+
+
+@media (max-width: 500px) {
+
+  .featured {
+    padding: 40px 14px;
+  }
+
+
+  .featured-header {
+    align-items: flex-start;
+  }
+
+
+  .featured-header h2 {
+    font-size: 24px;
+  }
+
+
+  .featured-header p {
+    font-size: 14px;
+  }
+
+
+  .featured .product-grid {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
 }
