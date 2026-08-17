@@ -33,6 +33,24 @@ const UserSchema = new mongoose.Schema(
       default: "user",
     },
 
+    // ==========================
+    // PASSWORD RESET
+    // ==========================
+
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+
+    resetPasswordExpire: {
+      type: Date,
+      default: null,
+    },
+
+    // ==========================
+    // PROFILE
+    // ==========================
+
     profileImage: {
       type: String,
       default: "",
@@ -47,5 +65,7 @@ const UserSchema = new mongoose.Schema(
     timestamps: true,
   },
 );
- const User = mongoose.model("User",UserSchema);
- export default User
+
+const User = mongoose.model("User", UserSchema);
+
+export default User;
