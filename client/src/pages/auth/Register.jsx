@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Swal from "sweetalert2";
+
 import api from "../../services/api";
 
 import "./Register.css";
@@ -19,6 +21,10 @@ const Register = () => {
   });
 
 
+  // ==========================
+  // HANDLE INPUT
+  // ==========================
+
   const handleChange = (e) => {
 
     setFormData({
@@ -29,9 +35,14 @@ const Register = () => {
   };
 
 
+  // ==========================
+  // REGISTER
+  // ==========================
+
   const handleSubmit = async (e) => {
 
     e.preventDefault();
+
 
     try {
 
@@ -41,16 +52,49 @@ const Register = () => {
       );
 
 
-      alert(res.data.message);
+      // ==========================
+      // SUCCESS ALERT
+      // ==========================
+
+      await Swal.fire({
+        icon: "success",
+        title: "Registration Successful!",
+        text:
+          res.data.message ||
+          "Your ElectroMart account has been created successfully.",
+        confirmButtonText: "Go to Login",
+        confirmButtonColor: "#111827",
+      });
+
+
+      // ==========================
+      // GO TO LOGIN
+      // ==========================
 
       navigate("/login");
 
+
     } catch (error) {
 
-      alert(
-        error.response?.data?.message ||
-        "Registration Failed"
+      console.error(
+        "Registration Error:",
+        error
       );
+
+
+      // ==========================
+      // ERROR ALERT
+      // ==========================
+
+      Swal.fire({
+        icon: "error",
+        title: "Registration Failed",
+        text:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+        confirmButtonText: "Try Again",
+        confirmButtonColor: "#dc2626",
+      });
 
     }
 
@@ -63,7 +107,9 @@ const Register = () => {
 
       <div className="auth-card">
 
-        <h1>Register</h1>
+        <h1>
+          Register
+        </h1>
 
         <p className="auth-subtitle">
           Create your ElectroMart account
@@ -73,13 +119,18 @@ const Register = () => {
         <form onSubmit={handleSubmit}>
 
 
-          {/* Name */}
+          {/* ==========================
+              NAME
+          ========================== */}
 
           <div className="form-group">
 
-            <label>Name</label>
+            <label htmlFor="name">
+              Name
+            </label>
 
             <input
+              id="name"
               type="text"
               name="name"
               placeholder="Enter your name"
@@ -91,13 +142,18 @@ const Register = () => {
           </div>
 
 
-          {/* Email */}
+          {/* ==========================
+              EMAIL
+          ========================== */}
 
           <div className="form-group">
 
-            <label>Email</label>
+            <label htmlFor="email">
+              Email
+            </label>
 
             <input
+              id="email"
               type="email"
               name="email"
               placeholder="Enter your email"
@@ -109,13 +165,18 @@ const Register = () => {
           </div>
 
 
-          {/* Password */}
+          {/* ==========================
+              PASSWORD
+          ========================== */}
 
           <div className="form-group">
 
-            <label>Password</label>
+            <label htmlFor="password">
+              Password
+            </label>
 
             <input
+              id="password"
               type="password"
               name="password"
               placeholder="Create a password"
@@ -127,13 +188,18 @@ const Register = () => {
           </div>
 
 
-          {/* Phone */}
+          {/* ==========================
+              PHONE
+          ========================== */}
 
           <div className="form-group">
 
-            <label>Phone</label>
+            <label htmlFor="phone">
+              Phone
+            </label>
 
             <input
+              id="phone"
               type="tel"
               name="phone"
               placeholder="Enter your phone number"
@@ -144,6 +210,10 @@ const Register = () => {
 
           </div>
 
+
+          {/* ==========================
+              REGISTER BUTTON
+          ========================== */}
 
           <button
             type="submit"
@@ -156,11 +226,19 @@ const Register = () => {
         </form>
 
 
+        {/* ==========================
+            LOGIN
+        ========================== */}
+
         <p className="auth-bottom">
 
           Already have an account?
 
-          <span onClick={() => navigate("/login")}>
+          <span
+            onClick={() =>
+              navigate("/login")
+            }
+          >
             Login
           </span>
 
@@ -172,6 +250,7 @@ const Register = () => {
     </div>
 
   );
+
 };
 
 
