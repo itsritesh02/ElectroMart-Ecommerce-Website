@@ -11,41 +11,84 @@ function WhyChooseUs() {
   const features = [
     {
       icon: <FaShippingFast />,
-      title: "Free Shipping",
-      description: "Free delivery on all orders above ₹999.",
+      title: "Fast & Free Shipping",
+      description:
+        "Enjoy fast and reliable delivery on eligible orders above ₹999.",
     },
+
     {
       icon: <FaShieldAlt />,
-      title: "Secure Payment",
-      description: "100% secure online payment with trusted gateways.",
+      title: "Secure Payments",
+      description:
+        "Your payments are protected with secure and trusted payment gateways.",
     },
+
     {
       icon: <FaUndo />,
       title: "Easy Returns",
-      description: "7 Days easy return & replacement policy.",
+      description:
+        "Shop with confidence with our simple return and replacement policy.",
     },
+
     {
       icon: <FaHeadset />,
-      title: "24/7 Support",
-      description: "Our support team is always ready to help you.",
+      title: "Customer Support",
+      description:
+        "Our support team is available to help you with your shopping experience.",
     },
   ];
 
   return (
     <section className="why-choose">
-      <h2>Why Choose ElectroMart?</h2>
+
+      <div className="why-header">
+
+        <span>
+          WHY ELECTROMART
+        </span>
+
+        <h2>
+          Why Choose ElectroMart?
+        </h2>
+
+        <p>
+          Everything you need for a simple and reliable
+          online shopping experience.
+        </p>
+
+      </div>
 
       <div className="why-grid">
-        {features.map((feature, index) => (
-          <div className="why-card" key={index}>
-            <div className="why-icon">{feature.icon}</div>
 
-            <h3>{feature.title}</h3>
+        {features.map((feature) => (
 
-            <p>{feature.description}</p>
+          <div
+            className="why-card"
+            key={feature.title}
+          >
+
+            <div className="why-icon">
+              {feature.icon}
+            </div>
+
+            <div className="why-card-content">
+
+              <h3>
+                {feature.title}
+              </h3>
+
+              <p>
+                {feature.description}
+              </p>
+
+            </div>
+
           </div>
+
         ))}
+
       </div>
+
     </section>
   );
 }
