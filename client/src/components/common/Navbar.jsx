@@ -5,11 +5,19 @@ import {
   FaUser,
 } from "react-icons/fa";
 
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
-import { useSelector, useDispatch } from "react-redux";
+import {
+  useSelector,
+  useDispatch,
+} from "react-redux";
 
-import { logout } from "../../redux/slice/authSlice";
+import {
+  logout,
+} from "../../redux/slice/authSlice";
 
 import "./Navbar.css";
 
@@ -20,7 +28,10 @@ function Navbar() {
   // AUTH DATA
   // =========================
 
-  const { user, isAuthenticated } = useSelector(
+  const {
+    user,
+    isAuthenticated,
+  } = useSelector(
     (state) => state.auth
   );
 
@@ -30,7 +41,8 @@ function Navbar() {
   // =========================
 
   const cartItems = useSelector(
-    (state) => state.cart.items
+    (state) =>
+      state.cart?.items || []
   );
 
 
@@ -39,7 +51,8 @@ function Navbar() {
   // =========================
 
   const wishlistItems = useSelector(
-    (state) => state.wishlist.items
+    (state) =>
+      state.wishlist?.items || []
   );
 
 
@@ -61,19 +74,23 @@ function Navbar() {
   // CART COUNT
   // =========================
 
-  const cartCount = cartItems.reduce(
-    (total, item) => {
+  const cartCount =
+    cartItems.reduce(
+      (total, item) => {
 
-      return total + item.quantity;
+        return (
+          total +
+          (item.quantity || 1)
+        );
 
-    },
-    0
-  );
+      },
+      0
+    );
 
 
   // =========================
   // WISHLIST COUNT
-  // ==========================
+  // =========================
 
   const wishlistCount =
     wishlistItems.length;
@@ -88,6 +105,36 @@ function Navbar() {
     dispatch(logout());
 
     navigate("/login");
+
+  };
+
+
+  // =========================
+  // SEARCH
+  // =========================
+
+  const handleSearch = (e) => {
+
+    e.preventDefault();
+
+    const searchInput =
+      e.currentTarget
+        .querySelector("input");
+
+    const searchValue =
+      searchInput.value.trim();
+
+
+    if (!searchValue) {
+      return;
+    }
+
+
+    navigate(
+      `/products?search=${encodeURIComponent(
+        searchValue
+      )}`
+    );
 
   };
 
@@ -113,18 +160,21 @@ function Navbar() {
           SEARCH
       ========================== */}
 
-      <div className="search-box">
+      <form
+        className="search-box"
+        onSubmit={handleSearch}
+      >
 
         <input
           type="text"
           placeholder="Search products..."
         />
 
-        <button type="button">
+        <button type="submit">
           <FaSearch />
         </button>
 
-      </div>
+      </form>
 
 
       {/* =========================
@@ -225,7 +275,7 @@ function Navbar() {
 
 
             {/* =========================
-                ADMIN DASHBOARD
+                ADMIN
             ========================== */}
 
             {user?.role === "admin" && (
@@ -275,7 +325,6 @@ function Navbar() {
         ) : (
 
           <>
-
 
             {/* LOGIN */}
 

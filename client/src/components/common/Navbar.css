@@ -1,231 +1,422 @@
+
+/* ==========================
+   NAVBAR
+========================== */
+
 .navbar {
   width: 100%;
-
   min-height: 70px;
 
-  padding: 0 5%;
+  padding: 0 40px;
 
   display: flex;
-
   align-items: center;
 
-  gap: 25px;
-
-  background: white;
-
-  box-shadow:
-    0 2px 8px
-    rgba(0, 0, 0, 0.08);
+  gap: 28px;
 
   box-sizing: border-box;
+
+  background: #ffffff;
+
+  border-bottom: 1px solid #e5e7eb;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
 
-/* =========================
+/* ==========================
    LOGO
-========================= */
+========================== */
 
 .navbar-logo {
-  font-size: 24px;
+  flex-shrink: 0;
 
-  font-weight: bold;
+  color: #111827;
+
+  font-size: 24px;
+  font-weight: 800;
 
   text-decoration: none;
 
-  color: #111;
+  letter-spacing: -0.5px;
+}
 
-  white-space: nowrap;
+.navbar-logo::first-letter {
+  color: #f59e0b;
 }
 
 
-/* =========================
-   SEARCH
-========================= */
+/* ==========================
+   SEARCH BOX
+========================== */
 
 .search-box {
-  flex: 1;
+  width: 100%;
+  max-width: 430px;
 
-  max-width: 500px;
+  height: 42px;
 
   display: flex;
+  align-items: center;
 
-  border: 1px solid #ddd;
+  margin-right: auto;
 
-  border-radius: 5px;
+  border: 1px solid #d1d5db;
+
+  border-radius: 8px;
 
   overflow: hidden;
+
+  background: #ffffff;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
+.search-box:focus-within {
+  border-color: #f59e0b;
+
+  box-shadow:
+    0 0 0 3px rgba(245, 158, 11, 0.12);
+}
+
+
+/* SEARCH INPUT */
 
 .search-box input {
-  flex: 1;
+  width: 100%;
+  height: 100%;
 
-  padding: 11px 14px;
+  padding: 0 14px;
 
   border: none;
-
   outline: none;
 
-  font-size: 15px;
+  background: transparent;
+
+  color: #111827;
+
+  font-size: 13px;
+}
+
+.search-box input::placeholder {
+  color: #9ca3af;
 }
 
 
+/* SEARCH BUTTON */
+
 .search-box button {
-  width: 45px;
+  width: 48px;
+  height: 100%;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   border: none;
 
-  background: #ff9900;
+  background: #f59e0b;
 
-  color: white;
+  color: #ffffff;
 
   cursor: pointer;
-}
 
+  font-size: 14px;
+
+  transition:
+    background 0.2s ease;
+}
 
 .search-box button:hover {
-  background: #e68a00;
+  background: #d97706;
 }
 
 
-/* =========================
+/* ==========================
    NAV LINKS
-========================= */
+========================== */
 
 .navbar-links {
   display: flex;
-
   align-items: center;
 
   gap: 20px;
 
-  margin-left: auto;
-}
-
-
-.navbar-links a {
-  position: relative;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 5px;
-
-  text-decoration: none;
-
-  color: #222;
-
-  font-weight: 500;
-
   white-space: nowrap;
 }
 
 
-.navbar-links a:hover {
-  color: #ff9900;
+/* ==========================
+   NORMAL LINKS
+========================== */
+
+.navbar-links > a {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: #374151;
+
+  font-size: 13px;
+  font-weight: 500;
+
+  text-decoration: none;
+
+  transition:
+    color 0.2s ease;
+}
+
+.navbar-links > a:hover {
+  color: #f59e0b;
 }
 
 
-/* =========================
+/* ==========================
+   UNDERLINE EFFECT
+========================== */
+
+.navbar-links > a::after {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  bottom: -7px;
+
+  width: 0;
+  height: 2px;
+
+  background: #f59e0b;
+
+  transition:
+    width 0.2s ease;
+}
+
+.navbar-links > a:hover::after {
+  width: 100%;
+}
+
+
+/* ==========================
    ICON LINKS
-========================= */
+========================== */
 
 .nav-icon-link {
   position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+}
+
+.nav-icon-link svg {
+  font-size: 14px;
 }
 
 
-/* =========================
-   COUNT
-========================= */
+/* ==========================
+   WISHLIST
+========================== */
+
+.nav-icon-link:first-of-type svg {
+  color: #ef4444;
+}
+
+
+/* ==========================
+   CART
+========================== */
+
+.nav-icon-link:nth-of-type(2) svg {
+  color: #111827;
+}
+
+
+/* ==========================
+   COUNT BADGE
+========================== */
 
 .nav-count {
-  min-width: 18px;
+  position: absolute;
 
-  height: 18px;
+  top: -12px;
+  right: -12px;
+
+  min-width: 17px;
+  height: 17px;
 
   padding: 0 4px;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  position: absolute;
-
-  top: -12px;
-
-  right: -15px;
-
-  background: #e53935;
-
-  color: white;
+  box-sizing: border-box;
 
   border-radius: 50%;
 
-  font-size: 11px;
+  background: #ef4444;
 
-  font-weight: bold;
+  color: #ffffff;
+
+  font-size: 9px;
+  font-weight: 700;
+
+  line-height: 1;
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* ==========================
+   ADMIN LINK
+========================== */
 
-@media (max-width: 900px) {
+.admin-link {
+  font-weight: 600 !important;
+
+  color: #111827 !important;
+}
+
+.admin-link:hover {
+  color: #f59e0b !important;
+}
+
+
+/* ==========================
+   PROFILE
+========================== */
+
+.profile-link svg {
+  color: #374151;
+}
+
+
+/* ==========================
+   LOGOUT
+========================== */
+
+.logout-btn {
+  padding: 7px 12px;
+
+  border: 1px solid #ef4444;
+
+  border-radius: 5px;
+
+  background: transparent;
+
+  color: #dc2626;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.logout-btn:hover {
+  background: #ef4444;
+
+  color: #ffffff;
+}
+
+
+/* ==========================
+   TABLET
+========================== */
+
+@media (max-width: 1100px) {
 
   .navbar {
-    gap: 15px;
+    padding: 0 25px;
+
+    gap: 20px;
+  }
+
+  .search-box {
+    max-width: 320px;
   }
 
   .navbar-links {
-    gap: 12px;
+    gap: 14px;
   }
 
-  .navbar-links a span:not(.nav-count) {
-    display: none;
+  .navbar-links > a {
+    font-size: 12px;
   }
 
 }
 
 
-@media (max-width: 650px) {
+/* ==========================
+   SMALL TABLET
+========================== */
+
+@media (max-width: 850px) {
 
   .navbar {
+    min-height: auto;
+
+    padding: 15px 20px;
+
     flex-wrap: wrap;
 
-    padding: 12px 20px;
+    gap: 15px;
+  }
+
+
+  .navbar-logo {
+    font-size: 22px;
   }
 
 
   .search-box {
     order: 3;
 
-    flex-basis: 100%;
-
+    width: 100%;
     max-width: none;
+
+    margin: 0;
   }
 
 
   .navbar-links {
     margin-left: auto;
+
+    gap: 12px;
   }
 
 }
 
 
-@media (max-width: 450px) {
+/* ==========================
+   MOBILE
+========================== */
+
+@media (max-width: 600px) {
 
   .navbar {
-    gap: 10px;
+    padding: 14px 15px;
+
+    gap: 12px;
   }
 
 
   .navbar-logo {
-    font-size: 20px;
+    font-size: 21px;
   }
 
 
@@ -233,4 +424,119 @@
     gap: 10px;
   }
 
+
+  .navbar-links > a {
+    font-size: 0;
+  }
+
+
+  .navbar-links > a svg {
+    font-size: 16px;
+  }
+
+
+  /* HOME */
+
+  .navbar-links > a[href="/"] {
+    font-size: 0;
+  }
+
+
+  /* PRODUCTS */
+
+  .navbar-links > a[href="/products"] {
+    font-size: 0;
+  }
+
+
+  /* MY ORDERS */
+
+  .navbar-links > a[href="/my-orders"] {
+    font-size: 0;
+  }
+
+
+  /* WISHLIST */
+
+  .nav-icon-link span:not(.nav-count) {
+    display: none;
+  }
+
+
+  /* CART */
+
+  .nav-icon-link span:not(.nav-count) {
+    display: none;
+  }
+
+
+  /* ADMIN */
+
+  .admin-link {
+    font-size: 0 !important;
+  }
+
+
+  /* PROFILE */
+
+  .profile-link span {
+    display: none;
+  }
+
+
+  .profile-link svg {
+    font-size: 16px;
+  }
+
+
+  /* LOGOUT */
+
+  .logout-btn {
+    padding: 6px 9px;
+
+    font-size: 11px;
+  }
+
+
+  .nav-count {
+    top: -9px;
+    right: -8px;
+
+    min-width: 16px;
+    height: 16px;
+
+    font-size: 8px;
+  }
+
 }
+
+
+/* ==========================
+   VERY SMALL MOBILE
+========================== */
+
+@media (max-width: 400px) {
+
+  .navbar {
+    padding: 12px;
+  }
+
+
+  .navbar-logo {
+    font-size: 19px;
+  }
+
+
+  .navbar-links {
+    gap: 8px;
+  }
+
+
+  .logout-btn {
+    padding: 5px 7px;
+
+    font-size: 10px;
+  }
+
+}
+
