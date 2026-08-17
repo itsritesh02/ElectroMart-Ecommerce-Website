@@ -1,17 +1,15 @@
 
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
 
 import { logout } from "../../redux/slice/authSlice.js";
 
 import "./AdminDashBoard.css";
 
-
 function AdminDashboard() {
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   // ==========================
   // GET USER
@@ -20,7 +18,6 @@ function AdminDashboard() {
   const { user } = useSelector(
     (state) => state.auth
   );
-
 
   // ==========================
   // GET WISHLIST
@@ -31,24 +28,39 @@ function AdminDashboard() {
       state.wishlist?.items || []
   );
 
-
   // ==========================
   // LOGOUT
   // ==========================
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    const result = await Swal.fire({
+      title: "Logout?",
+      text: "Are you sure you want to logout?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Logout",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#dc2626",
+      cancelButtonColor: "#6b7280",
+    });
 
-    dispatch(logout());
+    if (result.isConfirmed) {
+      dispatch(logout());
 
-    navigate("/login");
+      await Swal.fire({
+        title: "Logged Out",
+        text: "You have been logged out successfully.",
+        icon: "success",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#111827",
+      });
 
+      navigate("/login");
+    }
   };
 
-
   return (
-
     <div className="admin-dashboard">
-
 
       {/* ==========================
           HEADER
@@ -77,7 +89,6 @@ function AdminDashboard() {
 
         </div>
 
-
         <button
           type="button"
           className="logout-btn"
@@ -89,17 +100,13 @@ function AdminDashboard() {
       </div>
 
 
-
       {/* ==========================
-          QUICK ACTIONS ONLY
+          QUICK ACTIONS
       ========================== */}
 
       <div className="quick-actions-section">
 
-
-        {/* ==========================
-            SECTION HEADER
-        ========================== */}
+        {/* SECTION HEADER */}
 
         <div className="section-heading">
 
@@ -122,25 +129,20 @@ function AdminDashboard() {
         </div>
 
 
-
         {/* ==========================
-            QUICK ACTIONS
+            QUICK ACTIONS GRID
         ========================== */}
 
         <div className="quick-actions-grid">
 
 
-          {/* ==========================
-              ADD PRODUCT
-          ========================== */}
+          {/* ADD PRODUCT */}
 
           <button
             type="button"
             className="quick-action"
             onClick={() =>
-              navigate(
-                "/admin/products/add"
-              )
+              navigate("/admin/products/add")
             }
           >
 
@@ -167,18 +169,13 @@ function AdminDashboard() {
           </button>
 
 
-
-          {/* ==========================
-              MANAGE PRODUCTS
-          ========================== */}
+          {/* MANAGE PRODUCTS */}
 
           <button
             type="button"
             className="quick-action"
             onClick={() =>
-              navigate(
-                "/admin/products"
-              )
+              navigate("/admin/products")
             }
           >
 
@@ -205,18 +202,13 @@ function AdminDashboard() {
           </button>
 
 
-
-          {/* ==========================
-              MANAGE USERS
-          ========================== */}
+          {/* MANAGE USERS */}
 
           <button
             type="button"
             className="quick-action"
             onClick={() =>
-              navigate(
-                "/admin/users"
-              )
+              navigate("/admin/users")
             }
           >
 
@@ -243,18 +235,13 @@ function AdminDashboard() {
           </button>
 
 
-
-          {/* ==========================
-              MANAGE ORDERS
-          ========================== */}
+          {/* MANAGE ORDERS */}
 
           <button
             type="button"
             className="quick-action"
             onClick={() =>
-              navigate(
-                "/admin/orders"
-              )
+              navigate("/admin/orders")
             }
           >
 
@@ -281,10 +268,7 @@ function AdminDashboard() {
           </button>
 
 
-
-          {/* ==========================
-              WISHLIST
-          ========================== */}
+          {/* WISHLIST */}
 
           <button
             type="button"
@@ -305,7 +289,10 @@ function AdminDashboard() {
               </h3>
 
               <p>
-                {wishlistItems.length} wishlist items
+                {wishlistItems.length} wishlist{" "}
+                {wishlistItems.length === 1
+                  ? "item"
+                  : "items"}
               </p>
 
             </div>
@@ -317,10 +304,7 @@ function AdminDashboard() {
           </button>
 
 
-
-          {/* ==========================
-              VIEW STORE
-          ========================== */}
+          {/* VIEW STORE */}
 
           <button
             type="button"
@@ -353,10 +337,7 @@ function AdminDashboard() {
           </button>
 
 
-
-          {/* ==========================
-              MY PROFILE
-          ========================== */}
+          {/* MY PROFILE */}
 
           <button
             type="button"
@@ -393,12 +374,8 @@ function AdminDashboard() {
 
       </div>
 
-
     </div>
-
   );
-
 }
-
 
 export default AdminDashboard;
