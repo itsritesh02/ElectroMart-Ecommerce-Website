@@ -1,5 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+
+import Swal from "sweetalert2";
+
 import {
   increaseQuantity,
   decreaseQuantity,
@@ -9,22 +12,17 @@ import {
 
 import "./Cart.css";
 
-
 function Cart() {
-
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
-
   // ==========================
-  // GET CART ITEMS FROM REDUX
+  // GET CART ITEMS
   // ==========================
 
   const cartItems = useSelector(
-    (state) => state.cart.items
+    (state) => state.cart?.items || []
   );
-
 
   // ==========================
   // TOTAL PRICE
@@ -32,13 +30,14 @@ function Cart() {
 
   const totalPrice = cartItems.reduce(
     (total, item) => {
-
-      return total + item.price * item.quantity;
-
+      return (
+        total +
+        Number(item.price) *
+        Number(item.quantity)
+      );
     },
     0
   );
-
 
   // ==========================
   // TOTAL ITEMS
@@ -46,22 +45,80 @@ function Cart() {
 
   const totalItems = cartItems.reduce(
     (total, item) => {
-
-      return total + item.quantity;
-
+      return (
+        total +
+        Number(item.quantity || 1)
+      );
     },
     0
   );
 
+  // ==========================
+  // REMOVE ITEM
+  // ==========================
+
+  const handleRemove = async (item) => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Remove Product?",
+      text: `Are you sure you want to remove "${item.name}" from your cart?`,
+      showCancelButton: true,
+      confirmButtonText: "Yes, Remove",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    dispatch(removeFromCart(item.id));
+
+    Swal.fire({
+      icon: "success",
+      title: "Removed",
+      text: "Product removed from cart.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  };
+
+  // ==========================
+  // CLEAR CART
+  // ==========================
+
+  const handleClearCart = async () => {
+    const result = await Swal.fire({
+      icon: "warning",
+      title: "Clear Cart?",
+      text: "All products will be removed from your cart.",
+      showCancelButton: true,
+      confirmButtonText: "Yes, Clear Cart",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    });
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+    dispatch(clearCart());
+
+    Swal.fire({
+      icon: "success",
+      title: "Cart Cleared",
+      text: "All products have been removed.",
+      timer: 1500,
+      showConfirmButton: false,
+    });
+  };
 
   // ==========================
   // EMPTY CART
   // ==========================
 
   if (cartItems.length === 0) {
-
     return (
-
       <div className="empty-cart">
 
         <h1>
@@ -72,18 +129,22 @@ function Cart() {
           Add some products to your cart.
         </p>
 
+        <button
+          type="button"
+          className="checkout-btn"
+          onClick={() =>
+            navigate("/products")
+          }
+        >
+          Continue Shopping
+        </button>
+
       </div>
-
     );
-
   }
 
-  
-
   return (
-
     <div className="cart-page">
-
 
       {/* ==========================
           PAGE TITLE
@@ -93,9 +154,7 @@ function Cart() {
         Shopping Cart
       </h1>
 
-
       <div className="cart-container">
-
 
         {/* ==========================
             LEFT SIDE
@@ -103,14 +162,12 @@ function Cart() {
 
         <div className="cart-items">
 
-
           {cartItems.map((item) => (
 
             <div
               className="cart-item"
               key={item.id}
             >
-
 
               {/* ==========================
                   PRODUCT IMAGE
@@ -122,25 +179,21 @@ function Cart() {
                 className="cart-image"
               />
 
-
               {/* ==========================
                   PRODUCT DETAILS
               ========================== */}
 
               <div className="cart-details">
 
-
                 <h2>
                   {item.name}
                 </h2>
 
-
                 {/* PRICE */}
 
                 <p className="cart-price">
-                  ₹{item.price}
+                  ₹{Number(item.price)}
                 </p>
-
 
                 {/* ==========================
                     QUANTITY
@@ -152,24 +205,26 @@ function Cart() {
                     type="button"
                     onClick={() =>
                       dispatch(
-                        decreaseQuantity(item.id)
+                        decreaseQuantity(
+                          item.id
+                        )
                       )
                     }
                   >
                     -
                   </button>
 
-
                   <span>
                     {item.quantity}
                   </span>
-
 
                   <button
                     type="button"
                     onClick={() =>
                       dispatch(
-                        increaseQuantity(item.id)
+                        increaseQuantity(
+                          item.id
+                        )
                       )
                     }
                   >
@@ -178,18 +233,15 @@ function Cart() {
 
                 </div>
 
-
                 {/* ==========================
                     ITEM TOTAL
                 ========================== */}
 
                 <p className="item-total">
-
                   Item Total: ₹
-                  {item.price * item.quantity}
-
+                  {Number(item.price) *
+                    Number(item.quantity)}
                 </p>
-
 
                 {/* ==========================
                     REMOVE
@@ -199,14 +251,11 @@ function Cart() {
                   type="button"
                   className="remove-btn"
                   onClick={() =>
-                    dispatch(
-                      removeFromCart(item.id)
-                    )
+                    handleRemove(item)
                   }
                 >
                   Remove
                 </button>
-
 
               </div>
 
@@ -214,9 +263,7 @@ function Cart() {
 
           ))}
 
-
         </div>
-
 
         {/* ==========================
             RIGHT SIDE
@@ -224,11 +271,9 @@ function Cart() {
 
         <div className="cart-summary">
 
-
           <h2>
             Cart Summary
           </h2>
-
 
           {/* TOTAL ITEMS */}
 
@@ -244,7 +289,6 @@ function Cart() {
 
           </div>
 
-
           {/* TOTAL PRICE */}
 
           <div className="summary-row">
@@ -259,7 +303,6 @@ function Cart() {
 
           </div>
 
-
           {/* ==========================
               CHECKOUT
           ========================== */}
@@ -267,7 +310,9 @@ function Cart() {
           <button
             type="button"
             className="checkout-btn"
-            onClick={() => navigate("/checkout")}
+            onClick={() =>
+              navigate("/checkout")
+            }
           >
             Proceed To Checkout
           </button>
@@ -279,23 +324,17 @@ function Cart() {
           <button
             type="button"
             className="clear-btn"
-            onClick={() =>
-              dispatch(clearCart())
-            }
+            onClick={handleClearCart}
           >
             Clear Cart
           </button>
-
 
         </div>
 
       </div>
 
     </div>
-
   );
-
 }
-
 
 export default Cart;
