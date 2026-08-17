@@ -1,207 +1,514 @@
-
 import { useEffect, useState } from "react";
+
+import Swal from "sweetalert2";
+
 import api from "../../services/api";
+
 import "./AdminUsers.css";
 
+
 function AdminUsers() {
+
+  // ==========================
+  // USERS
+  // ==========================
+
   const [users, setUsers] = useState([]);
+
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const getUsers = async () => {
-      try {
-        const res = await api.get("/admin/users");
-        setUsers(res.data.users || []);
-      } catch (error) {
-        console.error("Get Users Error:", error);
 
-        alert(
-          error.response?.data?.message ||
-            "Failed to load users"
+  // ==========================
+  // GET USERS
+  // ==========================
+
+  useEffect(() => {
+
+    const getUsers = async () => {
+
+      try {
+
+        const res = await api.get(
+          "/admin/users"
         );
+
+        setUsers(
+          res.data.users || []
+        );
+
+      } catch (error) {
+
+        console.error(
+          "Get Users Error:",
+          error
+        );
+
+        Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text:
+            error.response?.data?.message ||
+            "Failed to load users",
+          confirmButtonColor: "#111827",
+        });
+
       } finally {
+
         setLoading(false);
+
       }
+
     };
 
     getUsers();
+
   }, []);
 
-  const handleRoleChange = async (userId, newRole) => {
+
+  // ==========================
+  // CHANGE USER ROLE
+  // ==========================
+
+  const handleRoleChange = async (
+    userId,
+    newRole
+  ) => {
+
     try {
+
       const res = await api.put(
         `/admin/users/${userId}/role`,
-{
-  role: newRole,
+        {
+          role: newRole,
         }
       );
 
-setUsers((prevUsers) =>
-  prevUsers.map((user) =>
-    user._id === userId
-      ? {
-        ...user,
-        role: res.data.user.role,
-      }
-      : user
-  )
-);
 
-alert("User role updated successfully");
+      // UPDATE USER IN UI
+
+      setUsers((prevUsers) =>
+        prevUsers.map((user) =>
+          user._id === userId
+            ? {
+              ...user,
+              role:
+                res.data.user.role,
+            }
+            : user
+        )
+      );
+
+
+      // SUCCESS ALERT
+
+      Swal.fire({
+        icon: "success",
+        title: "Role Updated",
+        text:
+          "User role updated successfully.",
+        confirmButtonColor: "#111827",
+        timer: 1800,
+        showConfirmButton: false,
+      });
+
     } catch (error) {
-  console.error("Update Role Error:", error);
 
-  alert(
-    error.response?.data?.message ||
-    "Failed to update user role"
-  );
-}
+      console.error(
+        "Update Role Error:",
+        error
+      );
+
+
+      Swal.fire({
+        icon: "error",
+        title: "Update Failed",
+        text:
+          error.response?.data?.message ||
+          "Failed to update user role",
+        confirmButtonColor: "#111827",
+      });
+
+    }
+
   };
 
-const handleDelete = async (userId) => {
-  const confirmDelete = window.confirm(
-    "Are you sure you want to delete this user?"
-  );
 
-  if (!confirmDelete) {
-    return;
-  }
+  // ==========================
+  // DELETE USER
+  // ==========================
 
-  try {
-    await api.delete(`/admin/users/${userId}`);
+  const handleDelete = async (
+    userId
+  ) => {
 
-    setUsers((prevUsers) =>
-      prevUsers.filter(
-        (user) => user._id !== userId
-      )
+    // SWEET ALERT CONFIRMATION
+
+    const result = await Swal.fire({
+
+      title: "Delete User?",
+
+      text:
+        "This user will be permanently deleted.",
+
+      icon: "warning",
+
+      showCancelButton: true,
+
+      confirmButtonText:
+        "Yes, Delete",
+
+      cancelButtonText:
+        "Cancel",
+
+      confirmButtonColor:
+        "#dc2626",
+
+      cancelButtonColor:
+        "#6b7280",
+
+      reverseButtons: true,
+
+    });
+
+
+    // USER CANCELLED
+
+    if (!result.isConfirmed) {
+      return;
+    }
+
+
+    try {
+
+      await api.delete(
+        `/admin/users/${userId}`
+      );
+
+
+      // REMOVE USER FROM UI
+
+      setUsers((prevUsers) =>
+        prevUsers.filter(
+          (user) =>
+            user._id !== userId
+        )
+      );
+
+
+      // SUCCESS ALERT
+
+      Swal.fire({
+
+        icon: "success",
+
+        title: "Deleted!",
+
+        text:
+          "User deleted successfully.",
+
+        confirmButtonColor:
+          "#111827",
+
+        timer: 1800,
+
+        showConfirmButton: false,
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Delete User Error:",
+        error
+      );
+
+
+      Swal.fire({
+
+        icon: "error",
+
+        title: "Delete Failed",
+
+        text:
+          error.response?.data?.message ||
+          "Failed to delete user",
+
+        confirmButtonColor:
+          "#111827",
+
+      });
+
+    }
+
+  };
+
+
+  // ==========================
+  // LOADING
+  // ==========================
+
+  if (loading) {
+
+    return (
+
+      <div className="admin-users">
+
+        <div className="users-loading">
+
+          <h2>
+            Loading users...
+          </h2>
+
+          <p>
+            Please wait while we fetch
+            registered users.
+          </p>
+
+        </div>
+
+      </div>
+
     );
 
-    alert("User deleted successfully");
-  } catch (error) {
-    console.error("Delete User Error:", error);
-
-    alert(
-      error.response?.data?.message ||
-      "Failed to delete user"
-    );
   }
-};
 
-if (loading) {
+
+  // ==========================
+  // PAGE
+  // ==========================
+
   return (
+
     <div className="admin-users">
-      <h2>Loading users...</h2>
-    </div>
-  );
-}
 
-return (
-  <div className="admin-users">
-    <div className="admin-users-header">
-      <div>
-        <h1>Users</h1>
 
-        <p>
-          Manage registered customers
-        </p>
+      {/* ==========================
+          HEADER
+      ========================== */}
+
+      <div className="admin-users-header">
+
+        <div>
+
+          <h1>
+            Users
+          </h1>
+
+          <p>
+            Manage registered customers
+          </p>
+
+        </div>
+
+
+        {/* USERS COUNT */}
+
+        <div className="users-count">
+
+          Total Users:
+
+          <strong>
+            {users.length}
+          </strong>
+
+        </div>
+
       </div>
 
-      <div className="users-count">
-        Total Users:
-        <strong>{users.length}</strong>
-      </div>
-    </div>
 
-    {users.length === 0 ? (
-      <div className="no-users">
-        <h2>No Users Found</h2>
+      {/* ==========================
+          NO USERS
+      ========================== */}
 
-        <p>
-          There are no registered users.
-        </p>
-      </div>
-    ) : (
-      <div className="users-table-container">
-        <table className="users-table">
-          <thead>
-            <tr>
-              <th>Name</th>
+      {users.length === 0 ? (
 
-              <th>Email</th>
+        <div className="no-users">
 
-              <th>Role</th>
+          <div className="no-users-icon">
+            👥
+          </div>
 
-              <th>Joined</th>
+          <h2>
+            No Users Found
+          </h2>
 
-              <th>Action</th>
-            </tr>
-          </thead>
+          <p>
+            There are no registered users.
+          </p>
 
-          <tbody>
-            {users.map((user) => (
-              <tr key={user._id}>
-                <td>
-                  <strong className="user-name">
-                    {user.name}
-                  </strong>
-                </td>
+        </div>
 
-                <td>
-                  <span className="user-email">
-                    {user.email}
-                  </span>
-                </td>
+      ) : (
 
-                <td>
-                  <select
-                    value={user.role || "user"}
-                    onChange={(e) =>
-                      handleRoleChange(
-                        user._id,
-                        e.target.value
-                      )
-                    }
-                    className={`user-role role-${user.role || "user"
-                      }`}
-                  >
-                    <option value="user">
-                      User
-                    </option>
+        /* ==========================
+           USERS TABLE
+        ========================== */
 
-                    <option value="admin">
-                      Admin
-                    </option>
-                  </select>
-                </td>
+        <div className="users-table-container">
 
-                <td>
-                  {user.createdAt
-                    ? new Date(
-                      user.createdAt
-                    ).toLocaleDateString()
-                    : "N/A"}
-                </td>
+          <table className="users-table">
 
-                <td>
-                  <button
-                    type="button"
-                    className="delete-user-btn"
-                    onClick={() =>
-                      handleDelete(user._id)
-                    }
-                  >
-                    Delete
-                  </button>
-                </td>
+
+            {/* TABLE HEADER */}
+
+            <thead>
+
+              <tr>
+
+                <th>
+                  Name
+                </th>
+
+                <th>
+                  Email
+                </th>
+
+                <th>
+                  Role
+                </th>
+
+                <th>
+                  Joined
+                </th>
+
+                <th>
+                  Action
+                </th>
+
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    )}
-  </div>
-);
+
+            </thead>
+
+
+            {/* TABLE BODY */}
+
+            <tbody>
+
+              {users.map((user) => (
+
+                <tr
+                  key={user._id}
+                >
+
+
+                  {/* NAME */}
+
+                  <td>
+
+                    <strong className="user-name">
+
+                      {user.name}
+
+                    </strong>
+
+                  </td>
+
+
+                  {/* EMAIL */}
+
+                  <td>
+
+                    <span className="user-email">
+
+                      {user.email}
+
+                    </span>
+
+                  </td>
+
+
+                  {/* ROLE */}
+
+                  <td>
+
+                    <select
+
+                      value={
+                        user.role ||
+                        "user"
+                      }
+
+                      onChange={(e) =>
+                        handleRoleChange(
+                          user._id,
+                          e.target.value
+                        )
+                      }
+
+                      className={`user-role role-${user.role ||
+                        "user"
+                        }`}
+
+                    >
+
+                      <option value="user">
+                        User
+                      </option>
+
+                      <option value="admin">
+                        Admin
+                      </option>
+
+                    </select>
+
+                  </td>
+
+
+                  {/* JOINED */}
+
+                  <td>
+
+                    {user.createdAt
+                      ? new Date(
+                        user.createdAt
+                      ).toLocaleDateString()
+                      : "N/A"}
+
+                  </td>
+
+
+                  {/* DELETE */}
+
+                  <td>
+
+                    <button
+
+                      type="button"
+
+                      className="delete-user-btn"
+
+                      onClick={() =>
+                        handleDelete(
+                          user._id
+                        )
+                      }
+
+                    >
+
+                      Delete
+
+                    </button>
+
+                  </td>
+
+
+                </tr>
+
+              ))}
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      )}
+
+    </div>
+
+  );
+
 }
+
 
 export default AdminUsers;
-
