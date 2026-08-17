@@ -19,6 +19,8 @@ import {
   logout,
 } from "../../redux/slice/authSlice";
 
+import logo from "../../assets/E-Mart.png";
+
 import "./Navbar.css";
 
 
@@ -148,12 +150,22 @@ function Navbar() {
           LOGO
       ========================== */}
 
-      <Link
+      {/* <Link
         to="/"
         className="navbar-logo"
       >
         ElectroMart
-      </Link>
+      </Link> */}
+
+
+      <Link
+      to="/"
+      className="navbar-logo"
+      >
+
+    <img src={logo} alt="Electro Mart" />
+    </Link>
+
 
 
       {/* =========================
