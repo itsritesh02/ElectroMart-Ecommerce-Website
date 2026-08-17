@@ -1,33 +1,27 @@
-
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+
+import Swal from "sweetalert2";
 
 import api from "../../services/api";
 
 import "./AdminOrderDetails.css";
 
-
 function AdminOrderDetails() {
-
   const { id } = useParams();
 
   const [order, setOrder] = useState(null);
-
   const [loading, setLoading] = useState(true);
-
 
   // ==========================
   // GET ORDER
   // ==========================
 
   useEffect(() => {
-
     const getOrder = async () => {
-
       try {
-
         const res = await api.get(
-          `/ admin / orders / ${ id } `
+          `/admin/orders/${id}`
         );
 
         console.log(
@@ -36,68 +30,52 @@ function AdminOrderDetails() {
         );
 
         setOrder(res.data.order);
-
       } catch (error) {
-
         console.error(
           "Get Admin Order Error:",
           error
         );
 
-        alert(
-          error.response?.data?.message ||
-          "Failed to load order"
-        );
-
+        await Swal.fire({
+          icon: "error",
+          title: "Failed",
+          text:
+            error.response?.data?.message ||
+            "Failed to load order",
+          confirmButtonText: "OK",
+        });
       } finally {
-
         setLoading(false);
-
       }
-
     };
-
 
     if (id) {
       getOrder();
     }
-
   }, [id]);
-
 
   // ==========================
   // LOADING
   // ==========================
 
   if (loading) {
-
     return (
-
       <div className="admin-order-details">
-
         <h2>
           Loading order...
         </h2>
-
       </div>
-
     );
-
   }
-
 
   // ==========================
   // ORDER NOT FOUND
   // ==========================
 
   if (!order) {
-
     return (
-
       <div className="admin-order-details">
-
         <div className="order-not-found">
-
           <h1>
             Order Not Found
           </h1>
@@ -112,20 +90,13 @@ function AdminOrderDetails() {
           >
             Back to Orders
           </Link>
-
         </div>
-
       </div>
-
     );
-
   }
 
-
   return (
-
     <div className="admin-order-details">
-
 
       {/* ==========================
           HEADER
@@ -134,7 +105,6 @@ function AdminOrderDetails() {
       <div className="order-details-header">
 
         <div>
-
           <h1>
             Order Details
           </h1>
@@ -142,9 +112,7 @@ function AdminOrderDetails() {
           <p>
             Order ID: {order._id}
           </p>
-
         </div>
-
 
         <Link
           to="/admin/orders"
@@ -155,7 +123,6 @@ function AdminOrderDetails() {
 
       </div>
 
-
       {/* ==========================
           ORDER SUMMARY
       ========================== */}
@@ -163,69 +130,62 @@ function AdminOrderDetails() {
       <div className="order-summary-card">
 
         <div>
-
           <span>
             Order Date
           </span>
 
           <strong>
-            {new Date(
-              order.createdAt
-            ).toLocaleDateString()}
+            {order.createdAt
+              ? new Date(
+                order.createdAt
+              ).toLocaleDateString()
+              : "N/A"}
           </strong>
-
         </div>
 
-
         <div>
-
           <span>
             Order Status
           </span>
 
           <strong
-            className={`status - ${ order.orderStatus.toLowerCase() } `}
+            className={`status-${(
+              order.orderStatus ||
+              "Pending"
+            ).toLowerCase()}`}
           >
-            {order.orderStatus}
+            {order.orderStatus || "Pending"}
           </strong>
-
         </div>
 
-
         <div>
-
           <span>
             Payment Method
           </span>
 
           <strong>
-            {order.paymentMethod}
+            {order.paymentMethod ||
+              "N/A"}
           </strong>
-
         </div>
 
-
         <div>
-
           <span>
             Payment Status
           </span>
 
           <strong
-            className={`payment - ${
-  (
-    order.paymentStatus ||
-    "Pending"
-  ).toLowerCase()
-} `}
+            className={`payment-${(
+              order.paymentStatus ||
+              "Pending"
+            ).toLowerCase()}`}
           >
-            {order.paymentStatus || "Pending"}
+            {order.paymentStatus ||
+              "Pending"}
           </strong>
-
         </div>
 
       </div>
-
 
       {/* ==========================
           CUSTOMER
@@ -237,11 +197,9 @@ function AdminOrderDetails() {
           Customer Information
         </h2>
 
-
         <div className="customer-details">
 
           <div>
-
             <span>
               Name
             </span>
@@ -250,12 +208,9 @@ function AdminOrderDetails() {
               {order.user?.name ||
                 "Unknown User"}
             </strong>
-
           </div>
 
-
           <div>
-
             <span>
               Email
             </span>
@@ -264,13 +219,11 @@ function AdminOrderDetails() {
               {order.user?.email ||
                 "No email"}
             </strong>
-
           </div>
 
         </div>
 
       </div>
-
 
       {/* ==========================
           ORDER ITEMS
@@ -282,12 +235,10 @@ function AdminOrderDetails() {
           Order Items
         </h2>
 
-
         <div className="admin-order-items">
 
           {order.items?.map(
             (item, index) => (
-
               <div
                 className="admin-order-item"
                 key={index}
@@ -297,7 +248,6 @@ function AdminOrderDetails() {
                   src={item.image}
                   alt={item.name}
                 />
-
 
                 <div className="admin-item-info">
 
@@ -315,22 +265,17 @@ function AdminOrderDetails() {
 
                 </div>
 
-
                 <strong>
-
                   ₹
-                  {item.price *
-                    item.quantity}
-
+                  {Number(item.price) *
+                    Number(item.quantity)}
                 </strong>
 
               </div>
-
             )
           )}
 
         </div>
-
 
         {/* TOTAL */}
 
@@ -348,7 +293,6 @@ function AdminOrderDetails() {
 
       </div>
 
-
       {/* ==========================
           SHIPPING ADDRESS
       ========================== */}
@@ -359,62 +303,54 @@ function AdminOrderDetails() {
           Shipping Address
         </h2>
 
-
         <div className="shipping-details">
 
           <p>
-
             <strong>
-              {order.shippingAddress?.fullName}
+              {order.shippingAddress
+                ?.fullName ||
+                "N/A"}
             </strong>
-
           </p>
 
-
           <p>
-            {order.shippingAddress?.address}
+            {order.shippingAddress
+              ?.address ||
+              "N/A"}
           </p>
 
-
           <p>
-
-            {order.shippingAddress?.city}
+            {order.shippingAddress
+              ?.city ||
+              "N/A"}
 
             {" - "}
 
-            {order.shippingAddress?.pincode}
-
+            {order.shippingAddress
+              ?.pincode ||
+              "N/A"}
           </p>
 
-
           <p>
-
             Phone:{" "}
-
-            {order.shippingAddress?.phone}
-
+            {order.shippingAddress
+              ?.phone ||
+              "N/A"}
           </p>
 
-
           <p>
-
             Email:{" "}
-
-            {order.shippingAddress?.email}
-
+            {order.shippingAddress
+              ?.email ||
+              "N/A"}
           </p>
 
         </div>
 
       </div>
 
-
     </div>
-
   );
-
 }
 
-
 export default AdminOrderDetails;
-
