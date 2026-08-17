@@ -1,8 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// ==========================
+// GET CART FROM LOCAL STORAGE
+// ==========================
+
 const initialState = {
-  items: [],
+  items: JSON.parse(localStorage.getItem("cartItems")) || [],
 };
+
+// ==========================
+// CART SLICE
+// ==========================
 
 const cartSlice = createSlice({
   name: "cart",
@@ -17,15 +25,24 @@ const cartSlice = createSlice({
     addToCart: (state, action) => {
       const product = action.payload;
 
-      const existingProduct = state.items.find(
-        (item) => item.id === product._id,
+      const existingItem = state.items.find(
+        (item) => item.id === product.id || item.id === product._id,
       );
 
-      if (existingProduct) {
-        existingProduct.quantity += product.quantity || 1;
-      } else {
+      // ==========================
+      // ALREADY EXISTS
+      // ==========================
+
+      if (existingItem) {
+        existingItem.quantity += product.quantity || 1;
+      }
+
+      // ==========================
+      // NEW PRODUCT
+      // ==========================
+      else {
         state.items.push({
-          id: product._id,
+          id: product.id || product._id,
 
           name: product.name,
 
@@ -38,6 +55,12 @@ const cartSlice = createSlice({
           quantity: product.quantity || 1,
         });
       }
+
+      // ==========================
+      // SAVE TO LOCAL STORAGE
+      // ==========================
+
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     },
 
     // ==========================
@@ -47,9 +70,17 @@ const cartSlice = createSlice({
     increaseQuantity: (state, action) => {
       const item = state.items.find((item) => item.id === action.payload);
 
-      if (item) {
-        item.quantity += 1;
+      if (!item) {
+        return;
       }
+
+      item.quantity += 1;
+
+      // ==========================
+      // SAVE
+      // ==========================
+
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     },
 
     // ==========================
@@ -63,11 +94,19 @@ const cartSlice = createSlice({
         return;
       }
 
+      // ==========================
+      // MINIMUM QUANTITY = 1
+      // ==========================
+
       if (item.quantity > 1) {
         item.quantity -= 1;
-      } else {
-        state.items = state.items.filter((item) => item.id !== action.payload);
       }
+
+      // ==========================
+      // SAVE
+      // ==========================
+
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     },
 
     // ==========================
@@ -76,6 +115,12 @@ const cartSlice = createSlice({
 
     removeFromCart: (state, action) => {
       state.items = state.items.filter((item) => item.id !== action.payload);
+
+      // ==========================
+      // SAVE
+      // ==========================
+
+      localStorage.setItem("cartItems", JSON.stringify(state.items));
     },
 
     // ==========================
@@ -84,12 +129,18 @@ const cartSlice = createSlice({
 
     clearCart: (state) => {
       state.items = [];
+
+      // ==========================
+      // REMOVE LOCAL STORAGE
+      // ==========================
+
+      localStorage.removeItem("cartItems");
     },
   },
 });
 
 // ==========================
-// ACTIONS
+// EXPORT ACTIONS
 // ==========================
 
 export const {
@@ -101,7 +152,7 @@ export const {
 } = cartSlice.actions;
 
 // ==========================
-// REDUCER
+// EXPORT REDUCER
 // ==========================
 
 export default cartSlice.reducer;
