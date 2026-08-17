@@ -1,7 +1,6 @@
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
 
-
 // ======================================================
 // CREATE ORDER
 // ======================================================
@@ -216,10 +215,9 @@ export const cancelMyOrder = async (req, res) => {
     // ==========================================
     // RAZORPAY
     // ==========================================
-    // Abhi automatic refund nahi kar rahe.
-    // Payment status Paid hi rahega.
-    // Refund ke liye separate Razorpay
-    // refund API lagani hogi.
+    // Automatic refund abhi nahi kar rahe.
+    // Razorpay refund ke liye separate refund API
+    // implement karni hogi.
 
     await order.save();
 
@@ -283,21 +281,25 @@ export const updateOrderStatus = async (req, res) => {
 
     const validStatuses = [
       "Pending",
-
       "Processing",
-
       "Shipped",
-
       "Delivered",
-
       "Cancelled",
     ];
+
+    // ==========================================
+    // CHECK STATUS
+    // ==========================================
 
     if (!validStatuses.includes(orderStatus)) {
       return res.status(400).json({
         message: "Invalid order status",
       });
     }
+
+    // ==========================================
+    // FIND ORDER
+    // ==========================================
 
     const order = await Order.findById(id);
 
@@ -306,6 +308,10 @@ export const updateOrderStatus = async (req, res) => {
         message: "Order not found",
       });
     }
+
+    // ==========================================
+    // UPDATE STATUS
+    // ==========================================
 
     order.orderStatus = orderStatus;
 
@@ -327,9 +333,87 @@ export const updateOrderStatus = async (req, res) => {
   } catch (error) {
     console.error("Update Order Status Error:", error);
 
+    if (error.name === "CastError") {
+      return res.status(400).json({
+        message: "Invalid order ID",
+      });
+    }
+
     res.status(500).json({
       message: "Server error",
 
+      error: error.message,
+    });
+  }
+};
+
+// ======================================================
+// DELETE ORDER - ADMIN
+// ======================================================
+
+export const deleteOrder = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    // ==========================================
+    // CHECK ORDER ID
+    // ==========================================
+
+    if (!orderId) {
+      return res.status(400).json({
+        success: false,
+        message: "Order ID is required",
+      });
+    }
+
+    // ==========================================
+    // FIND ORDER
+    // ==========================================
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: "Order not found",
+      });
+    }
+
+    // ==========================================
+    // DELETE ORDER
+    // ==========================================
+
+    await Order.findByIdAndDelete(orderId);
+
+    // ==========================================
+    // SUCCESS RESPONSE
+    // ==========================================
+
+    return res.status(200).json({
+      success: true,
+      message: "Order deleted successfully",
+    });
+  } catch (error) {
+    console.error("Delete Order Error:", error);
+
+    // ==========================================
+    // INVALID MONGODB ID
+    // ==========================================
+
+    if (error.name === "CastError") {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid order ID",
+      });
+    }
+
+    // ==========================================
+    // SERVER ERROR
+    // ==========================================
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error",
       error: error.message,
     });
   }
