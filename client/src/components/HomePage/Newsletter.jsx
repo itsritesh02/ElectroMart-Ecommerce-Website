@@ -1,22 +1,57 @@
+import { useState } from "react";
+
 import "./Newsletter.css";
 
 function Newsletter() {
+  const [email, setEmail] = useState("");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!email.trim()) {
+      alert("Please enter your email");
+      return;
+    }
+
+    alert("Thank you for subscribing!");
+
+    setEmail("");
+  };
+
   return (
     <section className="newsletter">
 
       <div className="newsletter-content">
 
-        <h2>Stay Updated</h2>
+        <div className="newsletter-text">
 
-        <p>
-          Subscribe to get the latest offers, discounts and new product updates.
-        </p>
+          <span>
+            NEWSLETTER
+          </span>
 
-        <form className="newsletter-form">
+          <h2>
+            Stay Updated
+          </h2>
+
+          <p>
+            Subscribe to receive the latest products,
+            exclusive offers and ElectroMart updates.
+          </p>
+
+        </div>
+
+        <form
+          className="newsletter-form"
+          onSubmit={handleSubmit}
+        >
 
           <input
             type="email"
-            placeholder="Enter your email"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+            placeholder="Enter your email address"
           />
 
           <button type="submit">
