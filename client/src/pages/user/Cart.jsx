@@ -1,3 +1,4 @@
+
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
@@ -29,13 +30,9 @@ function Cart() {
   // ==========================
 
   const totalPrice = cartItems.reduce(
-    (total, item) => {
-      return (
-        total +
-        Number(item.price) *
-        Number(item.quantity)
-      );
-    },
+    (total, item) =>
+      total +
+      Number(item.price) * Number(item.quantity),
     0
   );
 
@@ -44,12 +41,8 @@ function Cart() {
   // ==========================
 
   const totalItems = cartItems.reduce(
-    (total, item) => {
-      return (
-        total +
-        Number(item.quantity || 1)
-      );
-    },
+    (total, item) =>
+      total + Number(item.quantity || 1),
     0
   );
 
@@ -61,16 +54,14 @@ function Cart() {
     const result = await Swal.fire({
       icon: "warning",
       title: "Remove Product?",
-      text: `Are you sure you want to remove "${item.name}" from your cart?`,
+      text: `Are you sure you want to remove "${item.name}" from your cart ? `,
       showCancelButton: true,
       confirmButtonText: "Yes, Remove",
       cancelButtonText: "Cancel",
       reverseButtons: true,
     });
 
-    if (!result.isConfirmed) {
-      return;
-    }
+    if (!result.isConfirmed) return;
 
     dispatch(removeFromCart(item.id));
 
@@ -98,9 +89,7 @@ function Cart() {
       reverseButtons: true,
     });
 
-    if (!result.isConfirmed) {
-      return;
-    }
+    if (!result.isConfirmed) return;
 
     dispatch(clearCart());
 
@@ -131,10 +120,8 @@ function Cart() {
 
         <button
           type="button"
-          className="checkout-btn"
-          onClick={() =>
-            navigate("/products")
-          }
+          className="continue-shopping-btn"
+          onClick={() => navigate("/products")}
         >
           Continue Shopping
         </button>
@@ -146,9 +133,7 @@ function Cart() {
   return (
     <div className="cart-page">
 
-      {/* ==========================
-          PAGE TITLE
-      ========================== */}
+      {/* PAGE TITLE */}
 
       <h1>
         Shopping Cart
@@ -157,7 +142,7 @@ function Cart() {
       <div className="cart-container">
 
         {/* ==========================
-            LEFT SIDE
+            CART ITEMS
         ========================== */}
 
         <div className="cart-items">
@@ -169,19 +154,11 @@ function Cart() {
               key={item.id}
             >
 
-              {/* ==========================
-                  PRODUCT IMAGE
-              ========================== */}
-
               <img
                 src={item.image}
                 alt={item.name}
                 className="cart-image"
               />
-
-              {/* ==========================
-                  PRODUCT DETAILS
-              ========================== */}
 
               <div className="cart-details">
 
@@ -189,15 +166,11 @@ function Cart() {
                   {item.name}
                 </h2>
 
-                {/* PRICE */}
-
                 <p className="cart-price">
                   ₹{Number(item.price)}
                 </p>
 
-                {/* ==========================
-                    QUANTITY
-                ========================== */}
+                {/* QUANTITY */}
 
                 <div className="quantity">
 
@@ -205,9 +178,7 @@ function Cart() {
                     type="button"
                     onClick={() =>
                       dispatch(
-                        decreaseQuantity(
-                          item.id
-                        )
+                        decreaseQuantity(item.id)
                       )
                     }
                   >
@@ -222,9 +193,7 @@ function Cart() {
                     type="button"
                     onClick={() =>
                       dispatch(
-                        increaseQuantity(
-                          item.id
-                        )
+                        increaseQuantity(item.id)
                       )
                     }
                   >
@@ -233,9 +202,7 @@ function Cart() {
 
                 </div>
 
-                {/* ==========================
-                    ITEM TOTAL
-                ========================== */}
+                {/* ITEM TOTAL */}
 
                 <p className="item-total">
                   Item Total: ₹
@@ -243,9 +210,7 @@ function Cart() {
                     Number(item.quantity)}
                 </p>
 
-                {/* ==========================
-                    REMOVE
-                ========================== */}
+                {/* REMOVE */}
 
                 <button
                   type="button"
@@ -266,7 +231,7 @@ function Cart() {
         </div>
 
         {/* ==========================
-            RIGHT SIDE
+            CART SUMMARY
         ========================== */}
 
         <div className="cart-summary">
@@ -274,8 +239,6 @@ function Cart() {
           <h2>
             Cart Summary
           </h2>
-
-          {/* TOTAL ITEMS */}
 
           <div className="summary-row">
 
@@ -289,8 +252,6 @@ function Cart() {
 
           </div>
 
-          {/* TOTAL PRICE */}
-
           <div className="summary-row">
 
             <span>
@@ -303,13 +264,11 @@ function Cart() {
 
           </div>
 
-          {/* ==========================
-              CHECKOUT
-          ========================== */}
+          {/* CHECKOUT */}
 
           <button
             type="button"
-            className="checkout-btn"
+            className="proceed-checkout-btn"
             onClick={() =>
               navigate("/checkout")
             }
@@ -317,13 +276,11 @@ function Cart() {
             Proceed To Checkout
           </button>
 
-          {/* ==========================
-              CLEAR CART
-          ========================== */}
+          {/* CLEAR CART */}
 
           <button
             type="button"
-            className="clear-btn"
+            className="clear-cart-btn"
             onClick={handleClearCart}
           >
             Clear Cart
