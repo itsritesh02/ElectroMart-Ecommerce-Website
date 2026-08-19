@@ -7,7 +7,7 @@ import Swal from "sweetalert2";
 import api from "../../services/api";
 import { clearCart } from "../../redux/slice/cartSlice";
 
-import "./Checkout.css";
+import "./CheckOutPage.css";
 
 function Checkout() {
   const navigate = useNavigate();

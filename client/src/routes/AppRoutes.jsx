@@ -18,7 +18,7 @@ import Cart from "../pages/user/Cart";
 import Wishlist from "../pages/user/Wishlist";
 import Profile from "../pages/user/Profile";
 import OrderSuccess from "../pages/user/OrderSuccess";
-import Checkout from "../pages/user/Checkout";
+import CheckOutPage from "../pages/user/CheckOutPage";
 import MyOrders from "../pages/user/MyOrder";
 
 import AdminDashboard from "../pages/admin/AdminDashboard";
@@ -85,7 +85,7 @@ const AppRoutes = () => {
 
           <Route
             path="/checkout"
-            element={<Checkout />}
+            element={<CheckOutPage/>}
           />
 
           <Route
