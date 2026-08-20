@@ -77,7 +77,7 @@ function Login() {
         title: "Login Successful!",
 
         text: `Welcome back, ${res.data.user?.name || "User"
-          } 👋`,
+          } `,
 
         confirmButtonText: "Continue",
 
