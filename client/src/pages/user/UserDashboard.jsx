@@ -81,7 +81,7 @@ function UserDashboard() {
           </p>
 
           <h1 className="account-title">
-            {user?.name || "User"} 👋
+            {user?.name || "User"} 
           </h1>
 
           <p className="account-subtitle">

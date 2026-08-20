@@ -1,8 +1,12 @@
+import { useEffect, useState } from "react";
+
 import {
   FaShoppingCart,
   FaHeart,
   FaSearch,
   FaUser,
+  FaBars,
+  FaTimes,
 } from "react-icons/fa";
 
 import {
@@ -15,9 +19,12 @@ import {
   useDispatch,
 } from "react-redux";
 
+import { logout } from "../../redux/slice/authSlice";
+
 import {
-  logout,
-} from "../../redux/slice/authSlice";
+  loadCart,
+  resetCart,
+} from "../../redux/slice/cartSlice";
 
 import logo from "../../assets/E-Mart.png";
 
@@ -26,9 +33,7 @@ import "./Navbar.css";
 
 function Navbar() {
 
-  // =========================
-  // AUTH DATA
-  // =========================
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const {
     user,
@@ -37,107 +42,101 @@ function Navbar() {
     (state) => state.auth
   );
 
-
-  // =========================
-  // CART DATA
-  // =========================
-
   const cartItems = useSelector(
-    (state) =>
-      state.cart?.items || []
+    (state) => state.cart?.items || []
   );
-
-
-  // =========================
-  // WISHLIST DATA
-  // =========================
 
   const wishlistItems = useSelector(
-    (state) =>
-      state.wishlist?.items || []
+    (state) => state.wishlist?.items || []
   );
 
-
-  // =========================
-  // DISPATCH
-  // =========================
-
   const dispatch = useDispatch();
-
-
-  // =========================
-  // NAVIGATE
-  // =========================
-
   const navigate = useNavigate();
 
 
-  // =========================
-  // CART COUNT
-  // =========================
+  /* =========================
+     LOAD CART
+  ========================= */
 
-  const cartCount =
-    cartItems.reduce(
-      (total, item) => {
+  useEffect(() => {
 
-        return (
-          total +
-          (item.quantity || 1)
-        );
+    if (isAuthenticated && user?.id) {
 
-      },
-      0
-    );
+      dispatch(loadCart(user.id));
+
+    } else {
+
+      dispatch(resetCart());
+
+    }
+
+  }, [
+    isAuthenticated,
+    user?.id,
+    dispatch,
+  ]);
 
 
-  // =========================
-  // WISHLIST COUNT
-  // =========================
+  /* =========================
+     COUNTS
+  ========================= */
+
+  const cartCount = cartItems.reduce(
+    (total, item) =>
+      total + Number(item.quantity || 1),
+    0
+  );
 
   const wishlistCount =
     wishlistItems.length;
 
 
-  // =========================
-  // LOGOUT
-  // =========================
+  /* =========================
+     CLOSE MENU
+  ========================= */
+
+  const closeMenu = () => {
+    setMenuOpen(false);
+  };
+
+
+  /* =========================
+     LOGOUT
+  ========================= */
 
   const handleLogout = () => {
 
     dispatch(logout());
 
-    navigate("/login");
+    dispatch(resetCart());
 
+    setMenuOpen(false);
+
+    navigate("/login");
   };
 
 
-  // =========================
-  // SEARCH
-  // =========================
+  /* =========================
+     SEARCH
+  ========================= */
 
   const handleSearch = (e) => {
 
     e.preventDefault();
 
-    const searchInput =
+    const value =
       e.currentTarget
-        .querySelector("input");
+        .querySelector("input")
+        .value
+        .trim();
 
-    const searchValue =
-      searchInput.value.trim();
+    if (!value) return;
 
-
-    if (!searchValue) {
-      return;
-    }
-
+    closeMenu();
 
     navigate(
-      `/products?search=${encodeURIComponent(
-        searchValue
-      )}`
+      `/products?search=${encodeURIComponent(value)}`
     );
-
   };
 
 
@@ -145,170 +144,324 @@ function Navbar() {
 
     <nav className="navbar">
 
-
-      {/* =========================
-          LOGO
-      ========================== */}
-
-      {/* <Link
-        to="/"
-        className="navbar-logo"
-      >
-        ElectroMart
-      </Link> */}
+      <div className="navbar-main">
 
 
-      <Link
-      to="/"
-      className="navbar-logo"
-      >
+        {/* =========================
+            LOGO
+        ========================= */}
 
-    <img src={logo} alt="Electro Mart" />
-    </Link>
+        <Link
+          to="/"
+          className="navbar-logo"
+          onClick={closeMenu}
+        >
 
+          <img
+            src={logo}
+            alt="ElectroMart"
+          />
 
-
-      {/* =========================
-          SEARCH
-      ========================== */}
-
-      <form
-        className="search-box"
-        onSubmit={handleSearch}
-      >
-
-        <input
-          type="text"
-          placeholder="Search products..."
-        />
-
-        <button type="submit">
-          <FaSearch />
-        </button>
-
-      </form>
-
-
-      {/* =========================
-          NAV LINKS
-      ========================== */}
-
-      <div className="navbar-links">
-
-
-        {/* HOME */}
-
-        <Link to="/">
-          Home
-        </Link>
-
-
-        {/* PRODUCTS */}
-
-        <Link to="/products">
-          Products
         </Link>
 
 
         {/* =========================
-            MY ORDERS
-        ========================== */}
+            SEARCH
+        ========================= */}
+
+        <form
+          className="search-box"
+          onSubmit={handleSearch}
+        >
+
+          <input
+            type="text"
+            placeholder="Search products..."
+            aria-label="Search products"
+          />
+
+          <button
+            type="submit"
+            aria-label="Search"
+          >
+            <FaSearch />
+          </button>
+
+        </form>
+
+
+        {/* =========================
+            DESKTOP NAVIGATION
+        ========================= */}
+
+        <div className="desktop-links">
+
+          <Link to="/" onClick={closeMenu}>
+            Home
+          </Link>
+
+          <Link
+            to="/products"
+            onClick={closeMenu}
+          >
+            Products
+          </Link>
+
+          {isAuthenticated && (
+            <Link
+              to="/my-orders"
+              onClick={closeMenu}
+            >
+              My Orders
+            </Link>
+          )}
+
+        </div>
+
+
+        {/* =========================
+            ACTIONS
+        ========================= */}
+
+        <div className="navbar-actions">
+
+
+          {/* WISHLIST */}
+
+          <Link
+            to="/wishlist"
+            className="nav-action"
+            onClick={closeMenu}
+          >
+
+            <span className="nav-action-icon">
+
+              <FaHeart />
+
+              {wishlistCount > 0 && (
+                <span className="nav-count">
+                  {wishlistCount}
+                </span>
+              )}
+
+            </span>
+
+            <span className="nav-action-text">
+              Wishlist
+            </span>
+
+          </Link>
+
+
+          {/* CART */}
+
+          <Link
+            to="/cart"
+            className="nav-action"
+            onClick={closeMenu}
+          >
+
+            <span className="nav-action-icon">
+
+              <FaShoppingCart />
+
+              {cartCount > 0 && (
+                <span className="nav-count">
+                  {cartCount}
+                </span>
+              )}
+
+            </span>
+
+            <span className="nav-action-text">
+              Cart
+            </span>
+
+          </Link>
+
+
+          {/* PROFILE */}
+
+          {isAuthenticated && (
+
+            <Link
+              to="/profile"
+              className="profile-action"
+              onClick={closeMenu}
+            >
+
+              <FaUser />
+
+              <span>
+                {user?.name || "Profile"}
+              </span>
+
+            </Link>
+
+          )}
+
+
+          {/* DESKTOP LOGOUT */}
+
+          {isAuthenticated && (
+
+            <button
+              type="button"
+              className="desktop-logout"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
+
+          )}
+
+
+          {/* LOGIN */}
+
+          {!isAuthenticated && (
+
+            <Link
+              to="/login"
+              className="login-action"
+              onClick={closeMenu}
+            >
+              Login
+            </Link>
+
+          )}
+
+
+          {/* REGISTER */}
+
+          {!isAuthenticated && (
+
+            <Link
+              to="/register"
+              className="register-action"
+              onClick={closeMenu}
+            >
+              Register
+            </Link>
+
+          )}
+
+
+          {/* MOBILE MENU */}
+
+          <button
+            type="button"
+            className="menu-btn"
+            onClick={() =>
+              setMenuOpen((prev) => !prev)
+            }
+            aria-label="Toggle menu"
+          >
+
+            {menuOpen
+              ? <FaTimes />
+              : <FaBars />
+            }
+
+          </button>
+
+        </div>
+
+      </div>
+
+
+      {/* =========================
+          MOBILE MENU
+      ========================= */}
+
+      <div
+        className={`mobile-menu ${menuOpen ? "mobile-open" : ""
+          }`}
+      >
+
+        <Link
+          to="/"
+          onClick={closeMenu}
+        >
+          Home
+        </Link>
+
+
+        <Link
+          to="/products"
+          onClick={closeMenu}
+        >
+          Products
+        </Link>
+
 
         {isAuthenticated && (
 
-          <Link to="/my-orders">
+          <Link
+            to="/my-orders"
+            onClick={closeMenu}
+          >
             My Orders
           </Link>
 
         )}
 
 
-        {/* =========================
-            WISHLIST
-        ========================== */}
-
         <Link
           to="/wishlist"
-          className="nav-icon-link"
+          onClick={closeMenu}
         >
 
           <FaHeart />
 
-          <span>
-            Wishlist
-          </span>
-
+          <span>Wishlist</span>
 
           {wishlistCount > 0 && (
-
-            <span className="nav-count">
+            <span className="mobile-count">
               {wishlistCount}
             </span>
-
           )}
 
         </Link>
 
 
-        {/* =========================
-            CART
-        ========================== */}
-
         <Link
           to="/cart"
-          className="nav-icon-link"
+          onClick={closeMenu}
         >
 
           <FaShoppingCart />
 
-          <span>
-            Cart
-          </span>
-
+          <span>Cart</span>
 
           {cartCount > 0 && (
-
-            <span className="nav-count">
+            <span className="mobile-count">
               {cartCount}
             </span>
-
           )}
 
         </Link>
 
 
-        {/* =========================
-            AUTH
-        ========================== */}
-
-        {isAuthenticated ? (
+        {isAuthenticated && (
 
           <>
-
-
-            {/* =========================
-                ADMIN
-            ========================== */}
 
             {user?.role === "admin" && (
 
               <Link
                 to="/admin/dashboard"
-                className="admin-link"
+                className="admin-mobile-link"
+                onClick={closeMenu}
               >
-                Admin
+                Admin Dashboard
               </Link>
 
             )}
 
 
-            {/* =========================
-                PROFILE
-            ========================== */}
-
             <Link
               to="/profile"
-              className="profile-link"
+              onClick={closeMenu}
             >
 
               <FaUser />
@@ -320,13 +473,9 @@ function Navbar() {
             </Link>
 
 
-            {/* =========================
-                LOGOUT
-            ========================== */}
-
             <button
               type="button"
-              className="logout-btn"
+              className="mobile-logout"
               onClick={handleLogout}
             >
               Logout
@@ -334,20 +483,24 @@ function Navbar() {
 
           </>
 
-        ) : (
+        )}
+
+
+        {!isAuthenticated && (
 
           <>
 
-            {/* LOGIN */}
-
-            <Link to="/login">
+            <Link
+              to="/login"
+              onClick={closeMenu}
+            >
               Login
             </Link>
 
-
-            {/* REGISTER */}
-
-            <Link to="/register">
+            <Link
+              to="/register"
+              onClick={closeMenu}
+            >
               Register
             </Link>
 
@@ -360,7 +513,6 @@ function Navbar() {
     </nav>
 
   );
-
 }
 
 

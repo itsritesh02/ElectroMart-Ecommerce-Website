@@ -7,7 +7,10 @@ import {
   clearWishlist,
 } from "../../redux/slice/wishlistSlice";
 
-import { addToCart } from "../../redux/slice/cartSlice";
+import {
+  addToCart,
+  removeFromCart,
+} from "../../redux/slice/cartSlice";
 
 import "./Wishlist.css";
 
@@ -22,7 +25,8 @@ function Wishlist() {
   // ==========================
 
   const wishlistItems = useSelector(
-    (state) => state.wishlist?.items || []
+    (state) =>
+      state.wishlist?.items || []
   );
 
 
@@ -31,7 +35,8 @@ function Wishlist() {
   // ==========================
 
   const cartItems = useSelector(
-    (state) => state.cart?.items || []
+    (state) =>
+      state.cart?.items || []
   );
 
 
@@ -50,34 +55,52 @@ function Wishlist() {
   };
 
 
-  // ==========================
-  // ADD TO CART
-  // ==========================
+  // =====================================================
+  // ADD / REMOVE FROM CART
+  // =====================================================
 
-  const handleAddToCart = (item) => {
+  const handleCartToggle = (item) => {
 
-    // Already in cart
-    if (isInCart(item.id)) {
+    const productId = item.id;
+
+
+    // ==========================
+    // ALREADY IN CART
+    // ==========================
+
+    if (isInCart(productId)) {
+
+      dispatch(
+        removeFromCart(productId)
+      );
+
 
       Swal.fire({
-        icon: "info",
-        title: "Already in Cart",
-        text: `${item.name} is already in your cart.`,
-        confirmButtonText: "OK",
-        confirmButtonColor: "#111827",
+        icon: "success",
+
+        title: "Removed from Cart",
+
+        text: `${item.name} has been removed from your cart.`,
+
+        timer: 1500,
+
+        showConfirmButton: false,
       });
+
 
       return;
     }
 
 
     // ==========================
-    // ADD PRODUCT
+    // ADD TO CART
     // ==========================
 
     dispatch(
       addToCart({
+
         _id: item.id,
+
         id: item.id,
 
         name: item.name,
@@ -89,6 +112,7 @@ function Wishlist() {
         category: item.category,
 
         quantity: 1,
+
       })
     );
 
@@ -98,11 +122,17 @@ function Wishlist() {
     // ==========================
 
     Swal.fire({
+
       icon: "success",
+
       title: "Added to Cart!",
+
       text: `${item.name} has been added to your cart.`,
-      confirmButtonText: "Continue",
-      confirmButtonColor: "#2563eb",
+
+      timer: 1500,
+
+      showConfirmButton: false,
+
     });
 
   };
@@ -115,16 +145,21 @@ function Wishlist() {
   const handleRemove = (item) => {
 
     Swal.fire({
+
       title: "Remove Product?",
+
       text: `Remove ${item.name} from your wishlist?`,
+
       icon: "warning",
 
       showCancelButton: true,
 
       confirmButtonText: "Yes, Remove",
+
       cancelButtonText: "Cancel",
 
       confirmButtonColor: "#dc2626",
+
       cancelButtonColor: "#6b7280",
 
     }).then((result) => {
@@ -137,10 +172,17 @@ function Wishlist() {
 
 
         Swal.fire({
+
           icon: "success",
+
           title: "Removed!",
+
           text: "Product removed from wishlist.",
-          confirmButtonColor: "#2563eb",
+
+          timer: 1500,
+
+          showConfirmButton: false,
+
         });
 
       }
@@ -157,30 +199,44 @@ function Wishlist() {
   const handleClearWishlist = () => {
 
     Swal.fire({
+
       title: "Clear Wishlist?",
+
       text: "All wishlist products will be removed.",
+
       icon: "warning",
 
       showCancelButton: true,
 
       confirmButtonText: "Yes, Clear",
+
       cancelButtonText: "Cancel",
 
       confirmButtonColor: "#dc2626",
+
       cancelButtonColor: "#6b7280",
 
     }).then((result) => {
 
       if (result.isConfirmed) {
 
-        dispatch(clearWishlist());
+        dispatch(
+          clearWishlist()
+        );
 
 
         Swal.fire({
+
           icon: "success",
+
           title: "Wishlist Cleared!",
+
           text: "All products have been removed.",
-          confirmButtonColor: "#2563eb",
+
+          timer: 1500,
+
+          showConfirmButton: false,
+
         });
 
       }
@@ -204,9 +260,11 @@ function Wishlist() {
           Your Wishlist is Empty
         </h1>
 
+
         <p>
           Save products you like here.
         </p>
+
 
         <Link
           to="/products"
@@ -221,6 +279,10 @@ function Wishlist() {
 
   }
 
+
+  // ==========================
+  // UI
+  // ==========================
 
   return (
 
@@ -239,12 +301,15 @@ function Wishlist() {
             My Wishlist
           </h1>
 
+
           <p>
+
             {wishlistItems.length} product
             {wishlistItems.length > 1
               ? "s"
               : ""}{" "}
             saved
+
           </p>
 
         </div>
@@ -331,7 +396,9 @@ function Wishlist() {
                 <div className="wishlist-buttons">
 
 
-                  {/* VIEW PRODUCT */}
+                  {/* ==========================
+                      VIEW PRODUCT
+                  ========================== */}
 
                   <Link
                     to={`/product/${item.id}`}
@@ -342,44 +409,47 @@ function Wishlist() {
 
 
                   {/* ==========================
-                      ADD TO CART
+                      ADD / REMOVE CART
                   ========================== */}
 
                   <button
                     type="button"
+
                     className={`wishlist-cart-btn ${productInCart
                         ? "added-to-cart"
                         : ""
                       }`}
+
                     onClick={() =>
-                      handleAddToCart(item)
+                      handleCartToggle(item)
                     }
                   >
 
                     {productInCart
-                      ? "Added to Cart"
+                      ? "✓ Remove From Cart"
                       : "Add To Cart"}
 
                   </button>
 
 
                   {/* ==========================
-                      REMOVE
+                      REMOVE FROM WISHLIST
                   ========================== */}
 
                   <button
                     type="button"
+
                     className="wishlist-remove-btn"
+
                     onClick={() =>
                       handleRemove(item)
                     }
                   >
-                    Remove
+                    Remove From Wishlist
                   </button>
 
 
                 </div>
-
 
               </div>
 

@@ -9,9 +9,6 @@ import ProductCard from "../../components/ProductCard/ProductCard";
 import "./Product.css";
 
 function Product() {
-  // ==========================
-  // URL SEARCH PARAMS
-  // ==========================
 
   const [searchParams] = useSearchParams();
 
@@ -20,7 +17,6 @@ function Product() {
   // ==========================
 
   const [products, setProducts] = useState([]);
-
   const [loading, setLoading] = useState(true);
 
   // ==========================
@@ -38,16 +34,24 @@ function Product() {
   const [sort, setSort] = useState("");
 
   // ==========================
+  // CATEGORY OPTION
+  // ==========================
+
+  const [showCategory, setShowCategory] = useState(false);
+
+  // ==========================
   // UPDATE CATEGORY FROM URL
   // ==========================
 
   useEffect(() => {
+
     const categoryFromURL =
       searchParams.get("category");
 
     setCategory(
       categoryFromURL || "All"
     );
+
   }, [searchParams]);
 
   // ==========================
@@ -55,30 +59,38 @@ function Product() {
   // ==========================
 
   useEffect(() => {
+
     const getProducts = async () => {
+
       try {
+
         setLoading(true);
 
-        const res = await api.get(
-          "/products"
-        );
+        const res = await api.get("/products");
 
         setProducts(
           res.data.products || []
         );
+
       } catch (error) {
+
         console.error(
           "Fetch Products Error:",
           error
         );
 
         setProducts([]);
+
       } finally {
+
         setLoading(false);
+
       }
+
     };
 
     getProducts();
+
   }, []);
 
   // ==========================
@@ -87,19 +99,22 @@ function Product() {
 
   let filteredProducts =
     products.filter((product) => {
+
       const categoryMatch =
         category === "All" ||
         product.category?.toLowerCase() ===
         category.toLowerCase();
 
       return categoryMatch;
+
     });
 
   // ==========================
-  // SORT PRODUCTS
+  // SORT
   // ==========================
 
   if (sort === "low-high") {
+
     filteredProducts = [
       ...filteredProducts,
     ].sort(
@@ -107,9 +122,11 @@ function Product() {
         Number(a.price) -
         Number(b.price)
     );
+
   }
 
   if (sort === "high-low") {
+
     filteredProducts = [
       ...filteredProducts,
     ].sort(
@@ -117,6 +134,7 @@ function Product() {
         Number(b.price) -
         Number(a.price)
     );
+
   }
 
   // ==========================
@@ -124,9 +142,13 @@ function Product() {
   // ==========================
 
   if (loading) {
+
     return (
+
       <div className="products-page">
+
         <div className="products-loading">
+
           <h2>
             Loading Products...
           </h2>
@@ -135,9 +157,13 @@ function Product() {
             Please wait while we fetch
             the latest products.
           </p>
+
         </div>
+
       </div>
+
     );
+
   }
 
   // ==========================
@@ -145,46 +171,90 @@ function Product() {
   // ==========================
 
   return (
+
     <div className="products-page">
+
+      {/* ==========================
+          CATEGORY BUTTON
+      ========================== */}
+
+      <button
+        type="button"
+        className="category-toggle"
+        onClick={() =>
+          setShowCategory(!showCategory)
+        }
+      >
+
+        {showCategory
+          ? "Hide Categories ▲"
+          : "Categories ▼"}
+
+      </button>
+
 
       <div className="products-container">
 
-        {/* FILTER SIDEBAR */}
+        {/* ==========================
+            FILTER SIDEBAR
+        ========================== */}
 
-        <aside className="left">
-          <FilterSidebar
-            category={category}
-            setCategory={setCategory}
-            sort={sort}
-            setSort={setSort}
-          />
-        </aside>
+        {showCategory && (
 
-        {/* PRODUCTS */}
+          <aside className="left">
 
-        <main className="right">
+            <FilterSidebar
+              category={category}
+              setCategory={setCategory}
+              sort={sort}
+              setSort={setSort}
+            />
+
+          </aside>
+
+        )}
+
+
+        {/* ==========================
+            PRODUCTS
+        ========================== */}
+
+        <main
+          className={
+            showCategory
+              ? "right"
+              : "right full-width"
+          }
+        >
 
           <div className="products-heading">
 
             <div>
 
               <h1>
+
                 {category !== "All"
                   ? category
                   : "All Products"}
+
               </h1>
 
               <p>
+
                 {filteredProducts.length}{" "}
+
                 {filteredProducts.length === 1
                   ? "product"
                   : "products"}{" "}
+
                 found
+
               </p>
 
             </div>
 
           </div>
+
 
           {filteredProducts.length === 0 ? (
 
@@ -202,8 +272,11 @@ function Product() {
               <button
                 type="button"
                 onClick={() => {
+
                   setCategory("All");
                   setSort("");
+                  setShowCategory(false);
+
                 }}
               >
                 Clear Filters
@@ -217,10 +290,12 @@ function Product() {
 
               {filteredProducts.map(
                 (product) => (
+
                   <ProductCard
                     key={product._id}
                     product={product}
                   />
+
                 )
               )}
 
@@ -233,7 +308,9 @@ function Product() {
       </div>
 
     </div>
+
   );
+
 }
 
 export default Product;

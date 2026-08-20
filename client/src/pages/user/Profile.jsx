@@ -5,216 +5,196 @@ import { logout } from "../../redux/slice/authSlice";
 
 import "./Profile.css";
 
-
 function Profile() {
-
   const dispatch = useDispatch();
-
   const navigate = useNavigate();
 
-
-  // ==========================
-  // GET USER FROM REDUX
-  // ==========================
-
-  const { user } = useSelector(
-    (state) => state.auth
-  );
-
+  const { user } = useSelector((state) => state.auth);
 
   // ==========================
   // LOGOUT
   // ==========================
 
   const handleLogout = () => {
-
     dispatch(logout());
 
-    navigate("/login");
+    // Optional local storage cleanup
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
 
+    navigate("/login", { replace: true });
   };
-
 
   // ==========================
   // USER NOT FOUND
   // ==========================
 
   if (!user) {
-
     return (
+      <main className="profile-page">
+        <section className="profile-card profile-error-card">
+          <div className="profile-error-icon">!</div>
 
-      <div className="profile-page">
+          <h2>User information not found</h2>
 
-        <div className="profile-card">
-
-          <h2>
-            User information not found
-          </h2>
+          <p>
+            Please login to view your profile information.
+          </p>
 
           <button
+            type="button"
+            className="profile-login-btn"
             onClick={() => navigate("/login")}
           >
             Login
           </button>
-
-        </div>
-
-      </div>
-
+        </section>
+      </main>
     );
-
   }
 
+  // ==========================
+  // USER INITIAL
+  // ==========================
+
+  const userInitial =
+    user?.name?.trim()?.charAt(0)?.toUpperCase() || "U";
 
   return (
-
-    <div className="profile-page">
-
-
-      {/* ==========================
-          PROFILE CARD
-      ========================== */}
-
-      <div className="profile-card">
-
+    <main className="profile-page">
+      <section className="profile-card">
 
         {/* ==========================
-            PROFILE HEADER
+            HEADER
         ========================== */}
 
-        <div className="profile-header">
-
+        <header className="profile-header">
           <div className="profile-avatar">
-
-            {user.name
-              ?.charAt(0)
-              .toUpperCase()}
-
+            {userInitial}
           </div>
 
-
-          <div>
-
+          <div className="profile-header-content">
             <h1>
-              {user.name}
+              {user.name || "User"}
             </h1>
 
             <p>
               {user.role || "User"}
             </p>
-
           </div>
-
-        </div>
+        </header>
 
 
         {/* ==========================
-            USER INFORMATION
+            PROFILE INFORMATION
         ========================== */}
 
-        <div className="profile-info">
-
+        <section className="profile-info">
 
           {/* NAME */}
 
           <div className="profile-row">
+            <div className="profile-label">
+              <span className="profile-label-icon">
+                👤
+              </span>
 
-            <span>
-              Name
-            </span>
+              <span>Name</span>
+            </div>
 
             <strong>
-              {user.name}
+              {user.name || "Not provided"}
             </strong>
-
           </div>
 
 
           {/* EMAIL */}
 
           <div className="profile-row">
+            <div className="profile-label">
+              <span className="profile-label-icon">
+                ✉
+              </span>
 
-            <span>
-              Email
-            </span>
+              <span>Email</span>
+            </div>
 
             <strong>
-              {user.email}
+              {user.email || "Not provided"}
             </strong>
-
           </div>
 
 
           {/* PHONE */}
 
           <div className="profile-row">
+            <div className="profile-label">
+              <span className="profile-label-icon">
+                ☎
+              </span>
 
-            <span>
-              Phone
-            </span>
+              <span>Phone</span>
+            </div>
 
             <strong>
               {user.phone || "Not provided"}
             </strong>
-
           </div>
 
 
-          {/* ROLE */}
+          {/* ACCOUNT TYPE */}
 
-          <div className="profile-row">
+          {/* <div className="profile-row">
+            <div className="profile-label">
+              <span className="profile-label-icon">
+                ◈
+              </span>
 
-            <span>
-              Account Type
-            </span>
+              <span>Account Type</span>
+            </div>
 
-            <strong>
-              {user.role || "user"}
+            <strong className="profile-role">
+              {user.role || "User"}
             </strong>
+          </div> */}
 
-          </div>
-
-
-        </div>
+        </section>
 
 
         {/* ==========================
-            ACTIONS
+            ACTION BUTTONS
         ========================== */}
 
-        <div className="profile-actions">
+        <footer className="profile-actions">
 
+          {/* DASHBOARD */}
 
-          <button
+          {/* <button
             type="button"
             className="dashboard-btn"
-            onClick={() =>
-              navigate("/user/dashboard")
-            }
+            onClick={() => navigate("/user/dashboard")}
           >
+            <span>▣</span>
             Go To Dashboard
-          </button>
+          </button> */}
 
+
+          {/* LOGOUT */}
 
           <button
             type="button"
             className="logout-btn"
             onClick={handleLogout}
           >
+            <span>↪</span>
             Logout
           </button>
 
+        </footer>
 
-        </div>
-
-
-      </div>
-
-    </div>
-
+      </section>
+    </main>
   );
-
 }
-
 
 export default Profile;

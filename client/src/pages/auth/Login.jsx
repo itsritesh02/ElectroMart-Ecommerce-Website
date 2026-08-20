@@ -58,17 +58,33 @@ function Login() {
       );
 
 
-      dispatch(loginSuccess(res.data));
+      // ==========================
+      // SAVE LOGIN DATA
+      // ==========================
 
+      dispatch(
+        loginSuccess(res.data)
+      );
+
+
+      // ==========================
+      // SUCCESS ALERT
+      // ==========================
 
       await Swal.fire({
         icon: "success",
+
         title: "Login Successful!",
+
         text: `Welcome back, ${res.data.user?.name || "User"
           } 👋`,
+
         confirmButtonText: "Continue",
+
         confirmButtonColor: "#111827",
+
         timer: 1800,
+
         timerProgressBar: true,
       });
 
@@ -81,11 +97,13 @@ function Login() {
         res.data.user?.role === "admin"
       ) {
 
+        // Admin → Admin Dashboard
         navigate("/admin/dashboard");
 
       } else {
 
-        navigate("/user/dashboard");
+        // Normal User → Home
+        navigate("/");
 
       }
 
@@ -98,14 +116,24 @@ function Login() {
       );
 
 
+      // ==========================
+      // LOGIN ERROR
+      // ==========================
+
       Swal.fire({
+
         icon: "error",
+
         title: "Login Failed",
+
         text:
           err.response?.data?.message ||
           "Invalid email or password.",
+
         confirmButtonText: "Try Again",
+
         confirmButtonColor: "#dc2626",
+
       });
 
     }
@@ -123,6 +151,7 @@ function Login() {
           Login
         </h1>
 
+
         <p className="auth-subtitle">
           Login to your ElectroMart account
         </p>
@@ -131,7 +160,9 @@ function Login() {
         <form onSubmit={handleSubmit}>
 
 
-          {/* EMAIL */}
+          {/* ==========================
+              EMAIL
+          ========================== */}
 
           <div className="form-group">
 
@@ -152,7 +183,9 @@ function Login() {
           </div>
 
 
-          {/* PASSWORD */}
+          {/* ==========================
+              PASSWORD
+          ========================== */}
 
           <div className="form-group">
 
@@ -190,7 +223,9 @@ function Login() {
           </div>
 
 
-          {/* LOGIN BUTTON */}
+          {/* ==========================
+              LOGIN BUTTON
+          ========================== */}
 
           <button
             type="submit"
@@ -202,7 +237,9 @@ function Login() {
         </form>
 
 
-        {/* REGISTER */}
+        {/* ==========================
+            REGISTER
+        ========================== */}
 
         <p className="auth-bottom">
 

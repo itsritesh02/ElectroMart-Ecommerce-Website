@@ -5,19 +5,17 @@
 .hero {
   width: 100%;
 
-  min-height: 560px;
-
-  padding: 70px 7%;
+  min-height: 500px;
+  padding: 55px 6%;
 
   box-sizing: border-box;
 
   display: grid;
-
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 
   align-items: center;
 
-  gap: 60px;
+  gap: 45px;
 
   background:
     linear-gradient(
@@ -30,36 +28,34 @@
   overflow: hidden;
 }
 
-
 /* ==========================
    HERO CONTENT
 ========================== */
 
 .hero-content {
-  max-width: 620px;
+  max-width: 600px;
 }
 
+/* ==========================
+   BADGE
+========================== */
 
 .hero-badge {
   display: inline-block;
 
-  margin-bottom: 18px;
+  margin-bottom: 14px;
 
-  padding: 7px 13px;
+  padding: 6px 11px;
 
   border-radius: 20px;
 
   background: #fff3d6;
-
   color: #d97706;
 
-  font-size: 11px;
-
+  font-size: 10px;
   font-weight: 800;
-
   letter-spacing: 1px;
 }
-
 
 /* ==========================
    HEADING
@@ -70,39 +66,34 @@
 
   color: #111827;
 
-  font-size: clamp(42px, 5vw, 68px);
+  font-size: clamp(38px, 4.5vw, 60px);
 
   line-height: 1.05;
 
   font-weight: 800;
 
-  letter-spacing: -2px;
+  letter-spacing: -1.8px;
 }
-
 
 .hero-content h1 span {
   display: block;
-
   color: #f59e0b;
 }
-
 
 /* ==========================
    DESCRIPTION
 ========================== */
 
 .hero-content > p {
-  max-width: 560px;
+  max-width: 520px;
 
-  margin: 24px 0 30px;
+  margin: 18px 0 24px;
 
   color: #6b7280;
 
-  font-size: 16px;
-
-  line-height: 1.8;
+  font-size: 14px;
+  line-height: 1.7;
 }
-
 
 /* ==========================
    BUTTONS
@@ -113,30 +104,27 @@
 
   align-items: center;
 
-  gap: 14px;
+  gap: 10px;
 
   flex-wrap: wrap;
 }
-
 
 .shop-btn,
 .explore-btn {
   display: inline-flex;
 
   align-items: center;
-
   justify-content: center;
 
-  min-height: 46px;
+  min-height: 42px;
 
-  padding: 0 24px;
+  padding: 0 20px;
 
   border-radius: 7px;
 
   box-sizing: border-box;
 
-  font-size: 14px;
-
+  font-size: 13px;
   font-weight: 700;
 
   text-decoration: none;
@@ -147,16 +135,13 @@
     box-shadow 0.2s ease;
 }
 
-
 .shop-btn {
   background: #f59e0b;
-
   color: #ffffff;
 
   box-shadow:
-    0 8px 20px rgba(245, 158, 11, 0.22);
+    0 7px 18px rgba(245, 158, 11, 0.20);
 }
-
 
 .shop-btn:hover {
   background: #d97706;
@@ -164,27 +149,22 @@
   transform: translateY(-2px);
 
   box-shadow:
-    0 12px 25px rgba(245, 158, 11, 0.28);
+    0 10px 22px rgba(245, 158, 11, 0.26);
 }
-
 
 .explore-btn {
   border: 1px solid #d1d5db;
 
   background: #ffffff;
-
   color: #111827;
 }
 
-
 .explore-btn:hover {
   border-color: #f59e0b;
-
   color: #d97706;
 
   transform: translateY(-2px);
 }
-
 
 /* ==========================
    FEATURES
@@ -195,30 +175,27 @@
 
   flex-wrap: wrap;
 
-  gap: 24px;
+  gap: 16px;
 
-  margin-top: 35px;
+  margin-top: 25px;
 }
-
 
 .hero-feature {
   display: flex;
 
   align-items: center;
 
-  gap: 8px;
+  gap: 7px;
 
   color: #4b5563;
 
-  font-size: 12px;
-
+  font-size: 11px;
   font-weight: 600;
 }
 
-
 .hero-feature strong {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
 
   display: flex;
 
@@ -228,12 +205,10 @@
   border-radius: 50%;
 
   background: #dcfce7;
-
   color: #16a34a;
 
-  font-size: 11px;
+  font-size: 10px;
 }
-
 
 /* ==========================
    HERO IMAGE
@@ -243,45 +218,40 @@
   position: relative;
 
   width: 100%;
-
-  max-width: 600px;
+  max-width: 540px;
 
   margin-left: auto;
 }
 
-
 .hero-image-card {
   width: 100%;
 
-  height: 420px;
+  height: 370px;
 
-  padding: 10px;
+  padding: 8px;
 
   box-sizing: border-box;
 
-  border-radius: 22px;
+  border-radius: 18px;
 
   background: #ffffff;
 
   box-shadow:
-    0 25px 60px rgba(0, 0, 0, 0.12);
+    0 20px 45px rgba(0, 0, 0, 0.11);
 
   transform: rotate(1deg);
 }
 
-
 .hero-image-card img {
   width: 100%;
-
   height: 100%;
 
   display: block;
 
   object-fit: cover;
 
-  border-radius: 16px;
+  border-radius: 13px;
 }
-
 
 /* ==========================
    FLOATING CARD
@@ -290,68 +260,59 @@
 .hero-floating-card {
   position: absolute;
 
-  left: -25px;
-
-  bottom: 30px;
+  left: -18px;
+  bottom: 25px;
 
   display: flex;
 
   align-items: center;
 
-  gap: 12px;
+  gap: 10px;
 
-  padding: 14px 18px;
+  padding: 11px 14px;
 
   border: 1px solid #e5e7eb;
-
-  border-radius: 12px;
+  border-radius: 10px;
 
   background: rgba(255, 255, 255, 0.96);
 
   box-shadow:
-    0 15px 35px rgba(0, 0, 0, 0.12);
+    0 12px 28px rgba(0, 0, 0, 0.11);
 }
 
-
 .floating-icon {
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
 
   display: flex;
 
   align-items: center;
   justify-content: center;
 
-  border-radius: 9px;
+  border-radius: 8px;
 
   background: #fff3d6;
 
-  font-size: 18px;
+  font-size: 16px;
 }
-
 
 .hero-floating-card div {
   display: flex;
 
   flex-direction: column;
 
-  gap: 3px;
+  gap: 2px;
 }
-
 
 .hero-floating-card strong {
   color: #111827;
-
-  font-size: 13px;
+  font-size: 12px;
 }
-
 
 .hero-floating-card small {
   color: #9ca3af;
-
-  font-size: 11px;
+  font-size: 10px;
 }
-
 
 /* ==========================
    TABLET
@@ -360,43 +321,43 @@
 @media (max-width: 950px) {
 
   .hero {
+    min-height: auto;
+
     grid-template-columns: 1fr;
 
-    padding: 60px 6%;
+    padding: 50px 6%;
 
-    gap: 45px;
+    gap: 35px;
   }
 
-
   .hero-content {
-    max-width: 700px;
+    max-width: 680px;
 
     text-align: center;
 
     margin: auto;
   }
 
-
   .hero-content > p {
     margin-left: auto;
     margin-right: auto;
   }
-
 
   .hero-buttons,
   .hero-features {
     justify-content: center;
   }
 
-
   .hero-image {
     margin: auto;
 
-    max-width: 650px;
+    max-width: 600px;
   }
 
+  .hero-image-card {
+    height: 340px;
+  }
 }
-
 
 /* ==========================
    MOBILE
@@ -405,69 +366,137 @@
 @media (max-width: 600px) {
 
   .hero {
-    min-height: auto;
+    padding: 32px 16px 40px;
 
-    padding: 45px 20px 55px;
-
-    gap: 35px;
+    gap: 28px;
   }
 
+  .hero-badge {
+    margin-bottom: 10px;
+
+    padding: 5px 10px;
+
+    font-size: 9px;
+  }
 
   .hero-content h1 {
-    font-size: 42px;
+    font-size: 36px;
 
-    letter-spacing: -1.5px;
+    letter-spacing: -1.2px;
   }
-
 
   .hero-content > p {
-    font-size: 14px;
+    margin: 14px 0 20px;
 
-    line-height: 1.7;
+    font-size: 13px;
+    line-height: 1.6;
   }
-
 
   .hero-buttons {
-    flex-direction: column;
-
     width: 100%;
-  }
 
+    gap: 8px;
+  }
 
   .shop-btn,
   .explore-btn {
     width: 100%;
-  }
 
+    min-height: 40px;
+
+    font-size: 12px;
+  }
 
   .hero-features {
-    gap: 12px;
+    gap: 9px;
 
     flex-direction: column;
+
+    align-items: center;
+
+    margin-top: 20px;
   }
 
+  .hero-feature {
+    font-size: 10px;
+  }
+
+  .hero-image {
+    width: 100%;
+  }
 
   .hero-image-card {
-    height: 280px;
+    height: 240px;
 
-    border-radius: 16px;
+    padding: 6px;
+
+    border-radius: 14px;
   }
 
+  .hero-image-card img {
+    border-radius: 10px;
+  }
 
   .hero-floating-card {
-    left: 10px;
+    left: 8px;
+    bottom: 12px;
 
-    bottom: 15px;
+    gap: 8px;
 
-    padding: 10px 13px;
+    padding: 8px 10px;
+
+    border-radius: 8px;
   }
-
 
   .floating-icon {
-    width: 32px;
-    height: 32px;
+    width: 29px;
+    height: 29px;
 
-    font-size: 15px;
+    font-size: 14px;
   }
 
+  .hero-floating-card strong {
+    font-size: 10px;
+  }
+
+  .hero-floating-card small {
+    font-size: 9px;
+  }
+}
+
+/* ==========================
+   VERY SMALL MOBILE
+========================== */
+
+@media (max-width: 360px) {
+
+  .hero {
+    padding: 28px 12px 34px;
+
+    gap: 24px;
+  }
+
+  .hero-content h1 {
+    font-size: 32px;
+  }
+
+  .hero-content > p {
+    font-size: 12px;
+  }
+
+  .hero-image-card {
+    height: 210px;
+  }
+
+  .hero-floating-card {
+    left: 6px;
+    bottom: 8px;
+
+    padding: 7px 9px;
+  }
+
+  .floating-icon {
+    width: 26px;
+    height: 26px;
+  }
 }

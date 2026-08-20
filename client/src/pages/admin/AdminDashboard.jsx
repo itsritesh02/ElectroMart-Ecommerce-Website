@@ -79,7 +79,7 @@ function AdminDashboard() {
             <span>
               {user?.name || "Admin"}
             </span>{" "}
-            👋
+            
           </h1>
 
           <p>

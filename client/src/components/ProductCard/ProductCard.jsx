@@ -2,83 +2,156 @@ import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaStar, FaHeart } from "react-icons/fa";
 
-import { addToCart } from "../../redux/slice/cartSlice";
-import { addToWishlist } from "../../redux/slice/wishlistSlice";
+import {
+  addToCart,
+  removeFromCart,
+} from "../../redux/slice/cartSlice";
+
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../redux/slice/wishlistSlice";
 
 import "./ProductCard.css";
 
+
 function ProductCard({ product }) {
+
   const dispatch = useDispatch();
+
 
   // ==========================
   // GET CART FROM REDUX
   // ==========================
 
   const cartItems = useSelector(
-    (state) => state.cart.items
+    (state) =>
+      state.cart?.items || []
   );
+
 
   // ==========================
   // GET WISHLIST FROM REDUX
   // ==========================
 
   const wishlistItems = useSelector(
-    (state) => state.wishlist.items
+    (state) =>
+      state.wishlist?.items || []
   );
+
+
+  // ==========================
+  // PRODUCT ID
+  // ==========================
+
+  const productId =
+    product._id;
+
 
   // ==========================
   // CHECK PRODUCT IN CART
   // ==========================
 
-  const isInCart = cartItems.some(
-    (item) =>
-      item.id === product._id ||
-      item._id === product._id
-  );
+  const isInCart =
+    cartItems.some(
+      (item) =>
+        item.id === productId ||
+        item._id === productId
+    );
+
 
   // ==========================
   // CHECK PRODUCT IN WISHLIST
   // ==========================
 
-  const isWishlisted = wishlistItems.some(
-    (item) => item.id === product._id
-  );
+  const isWishlisted =
+    wishlistItems.some(
+      (item) =>
+        item.id === productId ||
+        item._id === productId
+    );
 
-  // ==========================
-  // ADD TO CART
-  // ==========================
 
-  const handleAddToCart = () => {
-    // Already in cart
+  // =====================================================
+  // ADD / REMOVE FROM CART
+  // =====================================================
+
+  const handleCartToggle = () => {
+
+    // ==========================
+    // REMOVE FROM CART
+    // ==========================
+
     if (isInCart) {
+
+      dispatch(
+        removeFromCart(productId)
+      );
+
       return;
     }
+
+
+    // ==========================
+    // ADD TO CART
+    // ==========================
 
     dispatch(
       addToCart({
         ...product,
-        id: product._id,
+
+        id: productId,
+
         quantity: 1,
       })
     );
+
   };
 
-  // ==========================
-  // ADD TO WISHLIST
-  // ==========================
 
-  const handleAddToWishlist = () => {
+  // =====================================================
+  // ADD / REMOVE FROM WISHLIST
+  // =====================================================
+
+  const handleWishlistToggle = () => {
+
+    // ==========================
+    // REMOVE FROM WISHLIST
+    // ==========================
+
     if (isWishlisted) {
+
+      dispatch(
+        removeFromWishlist(productId)
+      );
+
       return;
     }
 
+
+    // ==========================
+    // ADD TO WISHLIST
+    // ==========================
+
     dispatch(
-      addToWishlist(product)
+      addToWishlist({
+        ...product,
+
+        id: productId,
+      })
     );
+
   };
 
+
+  // ==========================
+  // UI
+  // ==========================
+
   return (
+
     <div className="product-card">
+
 
       {/* ==========================
           PRODUCT IMAGE
@@ -88,12 +161,15 @@ function ProductCard({ product }) {
         to={`/product/${product._id}`}
         className="product-image-link"
       >
+
         <img
           src={product.image}
           alt={product.name}
           className="product-image"
         />
+
       </Link>
+
 
       {/* ==========================
           PRODUCT INFO
@@ -101,33 +177,48 @@ function ProductCard({ product }) {
 
       <div className="product-info">
 
-        {/* PRODUCT NAME */}
+
+        {/* ==========================
+            PRODUCT NAME
+        ========================== */}
 
         <h2>
           {product.name}
         </h2>
 
-        {/* CATEGORY */}
+
+        {/* ==========================
+            CATEGORY
+        ========================== */}
 
         <p className="product-category">
           {product.category}
         </p>
 
-        {/* RATING */}
+
+        {/* ==========================
+            RATING
+        ========================== */}
 
         <div className="product-rating">
+
           <FaStar />
 
           <span>
             {product.rating || "No rating"}
           </span>
+
         </div>
 
-        {/* PRICE */}
+
+        {/* ==========================
+            PRICE
+        ========================== */}
 
         <h3 className="product-price">
           ₹{product.price}
         </h3>
+
 
         {/* ==========================
             BUTTONS
@@ -135,7 +226,10 @@ function ProductCard({ product }) {
 
         <div className="product-buttons">
 
-          {/* VIEW DETAILS */}
+
+          {/* ==========================
+              VIEW DETAILS
+          ========================== */}
 
           <Link
             to={`/product/${product._id}`}
@@ -144,44 +238,63 @@ function ProductCard({ product }) {
             View Details
           </Link>
 
-          {/* ADD TO CART */}
+
+          {/* ==========================
+              ADD / REMOVE CART
+          ========================== */}
 
           <button
             type="button"
-            className={`cart-btn ${isInCart ? "added-to-cart" : ""
+
+            className={`cart-btn ${isInCart
+                ? "added-to-cart"
+                : ""
               }`}
-            onClick={handleAddToCart}
-            disabled={isInCart}
+
+            onClick={handleCartToggle}
           >
+
             {isInCart
-              ? "✓ Added To Cart"
+              ? "✓ Remove From Cart"
               : "Add To Cart"}
+
           </button>
+
 
         </div>
 
+
         {/* ==========================
-            WISHLIST
+            ADD / REMOVE WISHLIST
         ========================== */}
 
         <button
           type="button"
-          className={`wishlist-card-btn ${isWishlisted ? "wishlisted" : ""
+
+          className={`wishlist-card-btn ${isWishlisted
+              ? "wishlisted"
+              : ""
             }`}
-          onClick={handleAddToWishlist}
-          disabled={isWishlisted}
+
+          onClick={handleWishlistToggle}
         >
+
           <FaHeart />
 
           {isWishlisted
-            ? "Wishlisted"
-            : "Add To Wishlist"}
+            ? " Remove from Wishlist"
+            : " Add To Wishlist"}
+
         </button>
+
 
       </div>
 
     </div>
+
   );
+
 }
+
 
 export default ProductCard;

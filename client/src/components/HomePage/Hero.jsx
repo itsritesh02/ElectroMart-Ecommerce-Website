@@ -13,18 +13,18 @@ function Hero() {
       <div className="hero-content">
 
         <span className="hero-badge">
-          NEW COLLECTION 2026
+          SMART TECH • BETTER LIFE
         </span>
 
         <h1>
-          Upgrade Your
-          <span> Tech Life</span>
+          Discover
+          <span> Smart Technology</span>
         </h1>
 
         <p>
-          Discover the latest laptops, smartphones,
-          headphones, smart watches and accessories
-          at great prices.
+          Shop the latest smartphones, laptops, headphones,
+          smart watches and everyday tech essentials —
+          all in one place at prices you'll love.
         </p>
 
         <div className="hero-buttons">
@@ -53,17 +53,17 @@ function Hero() {
 
           <div className="hero-feature">
             <strong>✓</strong>
-            <span>Quality Products</span>
+            <span>Premium Products</span>
           </div>
 
           <div className="hero-feature">
             <strong>✓</strong>
-            <span>Secure Payment</span>
+            <span>Secure Checkout</span>
           </div>
 
           <div className="hero-feature">
             <strong>✓</strong>
-            <span>Fast Delivery</span>
+            <span>Fast & Reliable Delivery</span>
           </div>
 
         </div>
@@ -81,7 +81,7 @@ function Hero() {
 
           <img
             src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1000&q=80"
-            alt="Modern electronics workspace"
+            alt="Latest technology and electronics"
           />
 
         </div>
@@ -93,10 +93,10 @@ function Hero() {
           </span>
 
           <div>
-            <strong>Latest Tech</strong>
+            <strong>Trending Tech</strong>
 
             <small>
-              Explore now
+              Shop the latest
             </small>
           </div>
 
