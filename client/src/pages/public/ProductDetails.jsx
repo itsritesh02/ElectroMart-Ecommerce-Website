@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
+import Swal from "sweetalert2";
+
 import api from "../../services/api";
 
 import {
@@ -42,11 +44,22 @@ function ProductDetails() {
 
 
   // ==========================
+  // GET AUTH STATE
+  // ==========================
+
+  const isAuthenticated = useSelector(
+    (state) =>
+      state.auth?.isAuthenticated
+  );
+
+
+  // ==========================
   // GET CART ITEMS
   // ==========================
 
   const cartItems = useSelector(
-    (state) => state.cart?.items || []
+    (state) =>
+      state.cart?.items || []
   );
 
 
@@ -67,6 +80,44 @@ function ProductDetails() {
 
     }
   );
+
+
+  // ==========================
+  // LOGIN REQUIRED
+  // ==========================
+
+  const showLoginFirst = () => {
+
+    Swal.fire({
+
+      icon: "warning",
+
+      title: "Login First",
+
+      text:
+        "Please login first to continue shopping.",
+
+      confirmButtonText:
+        "Go to Login",
+
+      showCancelButton: true,
+
+      cancelButtonText:
+        "Cancel",
+
+      reverseButtons: true,
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        navigate("/login");
+
+      }
+
+    });
+
+  };
 
 
   // ==========================
@@ -127,12 +178,28 @@ function ProductDetails() {
 
   const handleAddToCart = () => {
 
+
+    // ==========================
+    // CHECK LOGIN
+    // ==========================
+
+    if (!isAuthenticated) {
+
+      showLoginFirst();
+
+      return;
+
+    }
+
+
     // ==========================
     // PRODUCT NOT AVAILABLE
     // ==========================
 
     if (!product) {
+
       return;
+
     }
 
 
@@ -185,8 +252,24 @@ function ProductDetails() {
 
   const handleBuyNow = () => {
 
-    if (!product) {
+
+    // ==========================
+    // CHECK LOGIN
+    // ==========================
+
+    if (!isAuthenticated) {
+
+      showLoginFirst();
+
       return;
+
+    }
+
+
+    if (!product) {
+
+      return;
+
     }
 
 
@@ -304,9 +387,7 @@ function ProductDetails() {
           </h1>
 
 
-          {/* ==========================
-              CATEGORY
-          ========================== */}
+          {/* CATEGORY */}
 
           <p className="product-category">
 
@@ -317,9 +398,7 @@ function ProductDetails() {
           </p>
 
 
-          {/* ==========================
-              RATING
-          ========================== */}
+          {/* RATING */}
 
           <div className="rating">
 
@@ -335,9 +414,7 @@ function ProductDetails() {
           </div>
 
 
-          {/* ==========================
-              PRICE
-          ========================== */}
+          {/* PRICE */}
 
           <h2>
 
@@ -346,9 +423,7 @@ function ProductDetails() {
           </h2>
 
 
-          {/* ==========================
-              DESCRIPTION
-          ========================== */}
+          {/* DESCRIPTION */}
 
           <p>
 
@@ -357,9 +432,7 @@ function ProductDetails() {
           </p>
 
 
-          {/* ==========================
-              QUANTITY
-          ========================== */}
+          {/* QUANTITY */}
 
           <QuantitySelector
             quantity={quantity}
@@ -367,16 +440,12 @@ function ProductDetails() {
           />
 
 
-          {/* ==========================
-              BUTTONS
-          ========================== */}
+          {/* BUTTONS */}
 
           <div className="details-buttons">
 
 
-            {/* ==========================
-                ADD / REMOVE CART
-            ========================== */}
+            {/* ADD / REMOVE CART */}
 
             <button
               type="button"
@@ -389,15 +458,13 @@ function ProductDetails() {
             >
 
               {isInCart
-                ? "Added to Cart"
+                ? "Remove From Cart"
                 : "Add To Cart"}
 
             </button>
 
 
-            {/* ==========================
-                BUY NOW
-            ========================== */}
+            {/* BUY NOW */}
 
             <button
               type="button"
@@ -417,9 +484,7 @@ function ProductDetails() {
       </div>
 
 
-      {/* ==========================
-          SIMILAR PRODUCTS
-      ========================== */}
+      {/* SIMILAR PRODUCTS */}
 
       <SimilarProducts
         category={product.category}

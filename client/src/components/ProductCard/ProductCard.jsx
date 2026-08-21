@@ -1,6 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { FaStar, FaHeart } from "react-icons/fa";
+
+import Swal from "sweetalert2";
 
 import {
   addToCart,
@@ -18,6 +20,17 @@ import "./ProductCard.css";
 function ProductCard({ product }) {
 
   const dispatch = useDispatch();
+
+  const navigate = useNavigate();
+
+
+  // ==========================
+  // GET AUTH STATE
+  // ==========================
+
+  const isAuthenticated = useSelector(
+    (state) => state.auth?.isAuthenticated
+  );
 
 
   // ==========================
@@ -44,8 +57,7 @@ function ProductCard({ product }) {
   // PRODUCT ID
   // ==========================
 
-  const productId =
-    product._id;
+  const productId = product._id;
 
 
   // ==========================
@@ -73,10 +85,62 @@ function ProductCard({ product }) {
 
 
   // =====================================================
+  // LOGIN REQUIRED
+  // =====================================================
+
+  const showLoginFirst = () => {
+
+    Swal.fire({
+
+      icon: "warning",
+
+      title: "Login First",
+
+      text:
+        "Please login first to add products to Cart or Wishlist.",
+
+      confirmButtonText:
+        "Go to Login",
+
+      showCancelButton: true,
+
+      cancelButtonText:
+        "Cancel",
+
+      reverseButtons: true,
+
+    }).then((result) => {
+
+      if (result.isConfirmed) {
+
+        navigate("/login");
+
+      }
+
+    });
+
+  };
+
+
+  // =====================================================
   // ADD / REMOVE FROM CART
   // =====================================================
 
   const handleCartToggle = () => {
+
+
+    // ==========================
+    // CHECK LOGIN
+    // ==========================
+
+    if (!isAuthenticated) {
+
+      showLoginFirst();
+
+      return;
+
+    }
+
 
     // ==========================
     // REMOVE FROM CART
@@ -89,6 +153,7 @@ function ProductCard({ product }) {
       );
 
       return;
+
     }
 
 
@@ -98,11 +163,13 @@ function ProductCard({ product }) {
 
     dispatch(
       addToCart({
+
         ...product,
 
         id: productId,
 
         quantity: 1,
+
       })
     );
 
@@ -115,6 +182,20 @@ function ProductCard({ product }) {
 
   const handleWishlistToggle = () => {
 
+
+    // ==========================
+    // CHECK LOGIN
+    // ==========================
+
+    if (!isAuthenticated) {
+
+      showLoginFirst();
+
+      return;
+
+    }
+
+
     // ==========================
     // REMOVE FROM WISHLIST
     // ==========================
@@ -126,6 +207,7 @@ function ProductCard({ product }) {
       );
 
       return;
+
     }
 
 
@@ -135,9 +217,11 @@ function ProductCard({ product }) {
 
     dispatch(
       addToWishlist({
+
         ...product,
 
         id: productId,
+
       })
     );
 
@@ -178,27 +262,21 @@ function ProductCard({ product }) {
       <div className="product-info">
 
 
-        {/* ==========================
-            PRODUCT NAME
-        ========================== */}
+        {/* PRODUCT NAME */}
 
         <h2>
           {product.name}
         </h2>
 
 
-        {/* ==========================
-            CATEGORY
-        ========================== */}
+        {/* CATEGORY */}
 
         <p className="product-category">
           {product.category}
         </p>
 
 
-        {/* ==========================
-            RATING
-        ========================== */}
+        {/* RATING */}
 
         <div className="product-rating">
 
@@ -211,25 +289,19 @@ function ProductCard({ product }) {
         </div>
 
 
-        {/* ==========================
-            PRICE
-        ========================== */}
+        {/* PRICE */}
 
         <h3 className="product-price">
           ₹{product.price}
         </h3>
 
 
-        {/* ==========================
-            BUTTONS
-        ========================== */}
+        {/* BUTTONS */}
 
         <div className="product-buttons">
 
 
-          {/* ==========================
-              VIEW DETAILS
-          ========================== */}
+          {/* VIEW DETAILS */}
 
           <Link
             to={`/product/${product._id}`}
@@ -239,9 +311,7 @@ function ProductCard({ product }) {
           </Link>
 
 
-          {/* ==========================
-              ADD / REMOVE CART
-          ========================== */}
+          {/* ADD / REMOVE CART */}
 
           <button
             type="button"
@@ -264,9 +334,7 @@ function ProductCard({ product }) {
         </div>
 
 
-        {/* ==========================
-            ADD / REMOVE WISHLIST
-        ========================== */}
+        {/* ADD / REMOVE WISHLIST */}
 
         <button
           type="button"
